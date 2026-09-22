@@ -1,0 +1,3173 @@
+[
+  {
+    "id": "sample-001",
+    "title": "Tadhana",
+    "artist": "Up Dharma Down",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "MJd_6nqxIYw",
+    "tags": [
+      "love",
+      "opm"
+    ]
+  },
+  {
+    "id": "sample-002",
+    "title": "Buwan",
+    "artist": "Juan Karlos",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "EAkIjq46Rlg",
+    "tags": [
+      "love",
+      "opm",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-003",
+    "title": "214",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "hNmgGtSTqb8",
+    "tags": [
+      "easy",
+      "opm",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-004",
+    "title": "Dancing Queen",
+    "artist": "ABBA",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1970s",
+    "mood": [
+      "party"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": "a3vO3thiYV4",
+    "tags": [
+      "easy",
+      "party",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-005",
+    "title": "Perfect",
+    "artist": "Ed Sheeran",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "acPB4mDoRZY",
+    "tags": [
+      "easy",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-006",
+    "title": "The Scientist",
+    "artist": "Coldplay",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "-TWflZWV6C8",
+    "tags": [
+      "international",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-007",
+    "title": "A Thousand Years",
+    "artist": "Christina Perri",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "UVea7f7tyKg",
+    "tags": [
+      "love",
+      "ballad"
+    ]
+  },
+  {
+    "id": "sample-008",
+    "title": "Lucky",
+    "artist": "Jason Mraz & Colbie Caillat",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "youtubeVideoId": null,
+    "tags": [
+      "easy",
+      "duet",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-009",
+    "title": "Endless Love",
+    "artist": "Diana Ross & Lionel Richie",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "duet",
+    "youtubeVideoId": null,
+    "tags": [
+      "duet",
+      "love",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-010",
+    "title": "No Scrubs",
+    "artist": "TLC",
+    "language": "English",
+    "genre": "R&B",
+    "era": "1990s",
+    "mood": [
+      "party"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "established",
+    "youtubeVideoId": null,
+    "tags": [
+      "easy",
+      "party",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-011",
+    "title": "Kahit Kailan",
+    "artist": "South Border",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "lXnHfM6pDKw",
+    "tags": [
+      "opm",
+      "love",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-012",
+    "title": "With a Smile",
+    "artist": "Eraserheads",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "4QdkGihjFoM",
+    "tags": [
+      "easy",
+      "opm",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-013",
+    "title": "Jopay",
+    "artist": "Mayonnaise",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "MfEaylAx7Mk",
+    "tags": [
+      "opm",
+      "modern",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-014",
+    "title": "Bakit Nga Ba Mahal Kita",
+    "artist": "Roselle Nava",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "TbJyk49XX8Q",
+    "tags": [
+      "opm",
+      "classics",
+      "female-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-015",
+    "title": "Mahal Pa Rin Kita",
+    "artist": "Rockstar",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "gw8z4fSkV5A",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-016",
+    "title": "Anak",
+    "artist": "Freddie Aguilar",
+    "language": "Filipino",
+    "genre": "Folk",
+    "era": "1970s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "v5_CXC8HVzI",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-017",
+    "title": "Maging Sino Ka Man",
+    "artist": "Rey Valera",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "EIe03DLVvcU",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-018",
+    "title": "Kahit Maputi Na Ang Buhok Ko",
+    "artist": "Rey Valera",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "nostalgic",
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "Ym38LjJsE7Q",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-019",
+    "title": "Hawak Kamay",
+    "artist": "Yeng Constantino",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "r0lS1NIbqyg",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-020",
+    "title": "Torete",
+    "artist": "Moonstar88",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "tBvLeaU411w",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-021",
+    "title": "Migraine",
+    "artist": "Moonstar88",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "K1Ys4LV1D5Q",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-022",
+    "title": "Beer",
+    "artist": "Itchyworms",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "C8twukz-0g0",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-023",
+    "title": "Kisapmata",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "rAqrj4Fse8k",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-024",
+    "title": "Harana",
+    "artist": "Parokya ni Edgar",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "2QcJ8lwbtsE",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-025",
+    "title": "Halaga",
+    "artist": "Parokya ni Edgar",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "DaDWBKABYmU",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-026",
+    "title": "The Day You Said Goodnight",
+    "artist": "Hale",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "zfEaYbWoxko",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-027",
+    "title": "Kung Wala Ka",
+    "artist": "Hale",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "U59si105SaE",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-028",
+    "title": "Akin Ka Na Lang",
+    "artist": "Morissette",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "NTKklJficS8",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-029",
+    "title": "Sa Aking Puso",
+    "artist": "Kaye Cal",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "QBb9wO3Bj0k",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-030",
+    "title": "Forevermore",
+    "artist": "Side A",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "ZG4W4sqMS_U",
+    "tags": [
+      "opm",
+      "classics",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-031",
+    "title": "Nobela",
+    "artist": "Join The Club",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "DuqjG3vWiUo",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-032",
+    "title": "Bakit Ngayon Ka Lang",
+    "artist": "Ogie Alcasid",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "KnSsOL-n9r0",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-033",
+    "title": "My Way",
+    "artist": "Frank Sinatra",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1960s",
+    "mood": [
+      "nostalgic",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "c7qAHxBt-z4",
+    "tags": [
+      "international",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-034",
+    "title": "Can't Help Falling in Love",
+    "artist": "Elvis Presley",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1960s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "-2hvWP9Hulg",
+    "tags": [
+      "international",
+      "classics",
+      "male-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-035",
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "language": "English",
+    "genre": "Rock",
+    "era": "1970s",
+    "mood": [
+      "nostalgic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "tzbsJjq7MME",
+    "tags": [
+      "international",
+      "classics",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-036",
+    "title": "Love Story",
+    "artist": "Taylor Swift",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "hbn7b1T_SQo",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-037",
+    "title": "Top of the World",
+    "artist": "Carpenters",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1970s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "tY8o1TD_frk",
+    "tags": [
+      "international",
+      "classics",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-038",
+    "title": "Himala",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "yi1jwM6WIPk",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-039",
+    "title": "Luha",
+    "artist": "Aegis",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "fbk5bwNCIng",
+    "tags": [
+      "opm",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-040",
+    "title": "Basang-Basa Sa Ulan",
+    "artist": "Aegis",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "hHLKw2SmWz0",
+    "tags": [
+      "opm",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-041",
+    "title": "S2pid Love",
+    "artist": "Salbakuta",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "sQOIU-tO3SA",
+    "tags": [
+      "opm",
+      "modern",
+      "party",
+      "crowd"
+    ]
+  },
+  {
+    "id": "sample-042",
+    "title": "Mr. Suave",
+    "artist": "Andrew E.",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": null,
+    "tags": [
+      "opm",
+      "modern",
+      "party",
+      "crowd"
+    ]
+  },
+  {
+    "id": "sample-043",
+    "title": "Pare Ko",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "Zy1rjdnjGg8",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-044",
+    "title": "Spoliarium",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "ee9LfX4P9Us",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-045",
+    "title": "Alapaap",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "nci9aK4fboU",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-046",
+    "title": "Magasin",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "k3Vcm0Nw_nU",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-047",
+    "title": "Rainbow",
+    "artist": "South Border",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "1IWqURONwoA",
+    "tags": [
+      "opm",
+      "classics",
+      "love",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-048",
+    "title": "Ikaw Nga",
+    "artist": "South Border",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "established",
+    "youtubeVideoId": "ULfqKMGSFuo",
+    "tags": [
+      "opm",
+      "modern",
+      "love",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-049",
+    "title": "Hanggang Kailan",
+    "artist": "Orange & Lemons",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "Ls4mFGU2HQg",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-050",
+    "title": "Pinoy Ako",
+    "artist": "Orange & Lemons",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "f9-DjRVuzgk",
+    "tags": [
+      "opm",
+      "modern",
+      "party",
+      "crowd"
+    ]
+  },
+  {
+    "id": "sample-051",
+    "title": "Jeepney",
+    "artist": "Sponge Cola",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "DSsnMIsMas8",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-052",
+    "title": "Bitiw",
+    "artist": "Sponge Cola",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "6p4HS_H4p_o",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-053",
+    "title": "Sa Ngalan Ng Pag-ibig",
+    "artist": "December Avenue",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "DIVOBV2eaM4",
+    "tags": [
+      "opm",
+      "modern",
+      "love",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-054",
+    "title": "Kung 'Di Rin Lang Ikaw",
+    "artist": "December Avenue feat. Moira Dela Torre",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "duet",
+    "youtubeVideoId": "RDc_QsLE75o",
+    "tags": [
+      "opm",
+      "modern",
+      "duet",
+      "love",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-055",
+    "title": "Huling Sandali",
+    "artist": "December Avenue",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "HValnEZ-eLE",
+    "tags": [
+      "opm",
+      "modern",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-056",
+    "title": "Di Na Babalik",
+    "artist": "Ang Bandang Shirley",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "PZt0dFlPxEw",
+    "tags": [
+      "opm",
+      "modern"
+    ]
+  },
+  {
+    "id": "sample-057",
+    "title": "Kathang Isip",
+    "artist": "Ben&Ben",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": "Qyc-as1mx7s",
+    "tags": [
+      "opm",
+      "modern",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-058",
+    "title": "Leaves",
+    "artist": "Ben&Ben",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "reflective",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "rRDYOBa6ySA",
+    "tags": [
+      "opm",
+      "modern",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-059",
+    "title": "Maybe The Night",
+    "artist": "Ben&Ben",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "VXcGsSO6_io",
+    "tags": [
+      "opm",
+      "modern",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-060",
+    "title": "Pagtingin",
+    "artist": "Ben&Ben",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "uK7zpeG6jeE",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-061",
+    "title": "Sundo",
+    "artist": "Imago",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "tZOQeEzjaBE",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-062",
+    "title": "Akap",
+    "artist": "Imago",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "xuGZr7WWpkM",
+    "tags": [
+      "opm",
+      "modern",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-063",
+    "title": "Your Song",
+    "artist": "Parokya ni Edgar",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "42gq2tqst8w",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-064",
+    "title": "One Hit Combo",
+    "artist": "Parokya ni Edgar",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "UwvRIwRG7_o",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-065",
+    "title": "Gitara",
+    "artist": "Parokya ni Edgar",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "1MwpsJdi7MM",
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-066",
+    "title": "Burnout",
+    "artist": "Sugarfree",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "3CIw7iRuWgU",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-067",
+    "title": "Hari Ng Sablay",
+    "artist": "Sugarfree",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "nostalgic",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "8BRmS7BO2j8",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-068",
+    "title": "Prom",
+    "artist": "Sugarfree",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "CMK4tmo9b4g",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-069",
+    "title": "Mundo",
+    "artist": "IV of Spades",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "qTWdhI1bMJs",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-070",
+    "title": "Come Inside of My Heart",
+    "artist": "IV of Spades",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "Be4jxRrths0",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-071",
+    "title": "Dati",
+    "artist": "Sam Concepcion, Tippy Dos Santos & Quest",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "youtubeVideoId": "ST766rF2KMM",
+    "tags": [
+      "opm",
+      "modern",
+      "duet"
+    ]
+  },
+  {
+    "id": "sample-072",
+    "title": "Araw-Araw",
+    "artist": "Ben&Ben",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": null,
+    "tags": [
+      "opm",
+      "modern",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-073",
+    "title": "Pagsamo",
+    "artist": "Arthur Nery",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "L7C2484q5C8",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-074",
+    "title": "Binibini",
+    "artist": "Zack Tabudlo",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "6mZ-pmdevWA",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-075",
+    "title": "Nangangamba",
+    "artist": "Zack Tabudlo",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "2ntxMXRQQBg",
+    "tags": [
+      "opm",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-076",
+    "title": "Ikaw at Ako",
+    "artist": "Johnoy Danao",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "youtubeVideoId": "MHCVZRpMDdE",
+    "tags": [
+      "opm",
+      "modern",
+      "duet",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-077",
+    "title": "Salamat",
+    "artist": "The Dawn",
+    "language": "Filipino",
+    "genre": "Rock",
+    "era": "1980s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "youtubeVideoId": "n_kUj3HL_uc",
+    "tags": [
+      "opm",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-078",
+    "title": "I Want It That Way",
+    "artist": "Backstreet Boys",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "love"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "classics",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-079",
+    "title": "As Long As You Love Me",
+    "artist": "Backstreet Boys",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "IiunHnGo2Mg",
+    "tags": [
+      "international",
+      "classics",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-080",
+    "title": "The Power of Love",
+    "artist": "Celine Dion",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "Hvt_Cxm925s",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-081",
+    "title": "Because You Loved Me",
+    "artist": "Celine Dion",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "J7wmUBV0jPQ",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-082",
+    "title": "All By Myself",
+    "artist": "Celine Dion",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "reflective",
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "PQQG3AAXcPA",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-083",
+    "title": "Listen",
+    "artist": "Beyonce",
+    "language": "English",
+    "genre": "R&B",
+    "era": "2000s",
+    "mood": [
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "C_zvTrtj0fk",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-084",
+    "title": "If I Ain't Got You",
+    "artist": "Alicia Keys",
+    "language": "English",
+    "genre": "R&B",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-085",
+    "title": "No One",
+    "artist": "Alicia Keys",
+    "language": "English",
+    "genre": "R&B",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "8AgBaZq_--c",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-086",
+    "title": "I Have Nothing",
+    "artist": "Whitney Houston",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "0hFYU_mXFsU",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-087",
+    "title": "Saving All My Love for You",
+    "artist": "Whitney Houston",
+    "language": "English",
+    "genre": "R&B",
+    "era": "1980s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "1NChdqcgmeI",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-088",
+    "title": "Take a Bow",
+    "artist": "Madonna",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-089",
+    "title": "Torn",
+    "artist": "Natalie Imbruglia",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "cyzDWwdFoXE",
+    "tags": [
+      "international",
+      "classics",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-090",
+    "title": "Complicated",
+    "artist": "Avril Lavigne",
+    "language": "English",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "B2CYIvLWuGs",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-091",
+    "title": "Sk8er Boi",
+    "artist": "Avril Lavigne",
+    "language": "English",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-092",
+    "title": "Mr. Brightside",
+    "artist": "The Killers",
+    "language": "English",
+    "genre": "Rock",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "modern",
+      "group",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-093",
+    "title": "Wonderwall",
+    "artist": "Oasis",
+    "language": "English",
+    "genre": "Rock",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "reflective"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "classics",
+      "group",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-094",
+    "title": "Iris",
+    "artist": "Goo Goo Dolls",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "OqtWMNZS-M0",
+    "tags": [
+      "international",
+      "classics",
+      "male-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-095",
+    "title": "100 Years",
+    "artist": "Five for Fighting",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "modern",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-096",
+    "title": "Just the Way You Are",
+    "artist": "Bruno Mars",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "modern",
+      "male-vocal",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-097",
+    "title": "When I Was Your Man",
+    "artist": "Bruno Mars",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "7yMA3ek3c2Q",
+    "tags": [
+      "international",
+      "modern",
+      "male-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-098",
+    "title": "Someone Like You",
+    "artist": "Adele",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "HLICtsnNb9A",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-099",
+    "title": "Rolling in the Deep",
+    "artist": "Adele",
+    "language": "English",
+    "genre": "R&B",
+    "era": "2010s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "established",
+    "youtubeVideoId": "yjWsTlqKYuk",
+    "tags": [
+      "international",
+      "modern",
+      "female-vocal",
+      "party",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-100",
+    "title": "Shallow",
+    "artist": "Lady Gaga & Bradley Cooper",
+    "language": "English",
+    "genre": "Pop Rock",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "duet",
+    "demandTier": "very-high",
+    "youtubeVideoId": "smu-0V7E7wI",
+    "tags": [
+      "international",
+      "modern",
+      "duet",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-101",
+    "title": "Kung Sakali",
+    "artist": "Michael Pangilinan",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "9hrT301x000",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-102",
+    "title": "Kung Ako Na Lang Sana",
+    "artist": "Bituin Escalante",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "ZFBdzKUp-JI",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "power-vocal"
+    ]
+  },
+  {
+    "id": "sample-103",
+    "title": "Palagi",
+    "artist": "TJ Monterde",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "-Ji_rJnKB_c",
+    "tags": [
+      "opm",
+      "modern",
+      "popular",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-104",
+    "title": "Kay Tagal",
+    "artist": "Rachel Alejandro",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "gMetRQodtF8",
+    "tags": [
+      "opm",
+      "classics",
+      "ballad",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-105",
+    "title": "Sa 'Yo Lamang",
+    "artist": "Joey Albert",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "OsxDn74jIbY",
+    "tags": [
+      "opm",
+      "classics",
+      "ballad",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-106",
+    "title": "Nanghihinayang",
+    "artist": "Jeremiah",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "CDVYjRyw_aM",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "heartbreak"
+    ]
+  },
+  {
+    "id": "sample-107",
+    "title": "Ika'y Mahal Pa Rin",
+    "artist": "Rockstar 2",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "2FBF7arHW5c",
+    "tags": [
+      "opm",
+      "popular",
+      "rock",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-108",
+    "title": "Para Lang Sa Yo",
+    "artist": "Aiza Seguerra",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "CTM7tXU4FbY",
+    "tags": [
+      "opm",
+      "popular",
+      "love",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-109",
+    "title": "Katawan",
+    "artist": "Hagibis",
+    "language": "Filipino",
+    "genre": "Disco",
+    "era": "1970s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": "cehpq0qcF7k",
+    "tags": [
+      "opm",
+      "classics",
+      "party",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-110",
+    "title": "Liwanag Sa Dilim",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "2000s",
+    "mood": [
+      "hopeful",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "9X9gQtk5Oiw",
+    "tags": [
+      "opm",
+      "rock",
+      "popular",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-111",
+    "title": "Paubaya",
+    "artist": "Moira Dela Torre",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2020s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "dWpBJUAV5N0",
+    "tags": [
+      "opm",
+      "modern",
+      "popular",
+      "ballad"
+    ]
+  },
+  {
+    "id": "sample-112",
+    "title": "Kailanman",
+    "artist": "Introvoys",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "CTclPs-JGIU",
+    "tags": [
+      "opm",
+      "classics",
+      "rock",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-113",
+    "title": "Gaano Kadalas Ang Minsan",
+    "artist": "Basil Valdez",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "Ij3MFqfDUdo",
+    "tags": [
+      "opm",
+      "classics",
+      "ballad",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-114",
+    "title": "Mahal Kita, Alam Mo Ba",
+    "artist": "Rockstar 2",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "WeI_LxDZFs4",
+    "tags": [
+      "opm",
+      "popular",
+      "rock",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-115",
+    "title": "Pangarap Ko Ang Ibigin Ka",
+    "artist": "Regine Velasquez",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "ENox0-dvveg",
+    "tags": [
+      "opm",
+      "classics",
+      "ballad",
+      "power-vocal"
+    ]
+  },
+  {
+    "id": "sample-116",
+    "title": "Ikaw Lang At Ako",
+    "artist": "Donna Cruz",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "demandTier": "high",
+    "youtubeVideoId": "egoyXwBqIZI",
+    "tags": [
+      "opm",
+      "classics",
+      "duet",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-117",
+    "title": "Ganyan Talaga Ang Pag-Ibig",
+    "artist": "April Boys",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": "Lcn2v1gfzpA",
+    "tags": [
+      "opm",
+      "classics",
+      "group",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-118",
+    "title": "Buko",
+    "artist": "Jireh Lim",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "R5aWjamIf_Q",
+    "tags": [
+      "opm",
+      "modern",
+      "easy",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-119",
+    "title": "Laki Sa Layaw",
+    "artist": "Mike Hanopol",
+    "language": "Filipino",
+    "genre": "Rock",
+    "era": "1970s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "0iFAK1hIB88",
+    "tags": [
+      "opm",
+      "classics",
+      "rock",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-120",
+    "title": "Larawang Kupas",
+    "artist": "Jerome Abalos",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "nostalgic",
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "aYuVq2sQ9Jo",
+    "tags": [
+      "opm",
+      "classics",
+      "ballad",
+      "heartbreak"
+    ]
+  },
+  {
+    "id": "sample-121",
+    "title": "Dadalhin",
+    "artist": "Cinderella",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": null,
+    "tags": [
+      "opm",
+      "classics",
+      "group",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-122",
+    "title": "Tayong Dalawa",
+    "artist": "Aicelle Santos",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "1LikErFudsc",
+    "tags": [
+      "opm",
+      "modern",
+      "ballad",
+      "power-vocal"
+    ]
+  },
+  {
+    "id": "sample-123",
+    "title": "Dahil Sa'yong Pag-Ibig",
+    "artist": "Lani Misalucha",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "hrtSi9pfMGc",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "power-vocal"
+    ]
+  },
+  {
+    "id": "sample-124",
+    "title": "Hanggang Ngayo'y Mahal",
+    "artist": "Jaya",
+    "language": "Filipino",
+    "genre": "R&B",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "j1B-M559MJo",
+    "tags": [
+      "opm",
+      "classics",
+      "rnb",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-125",
+    "title": "Umaaraw, Umuulan",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "F2qvj4yU3VI",
+    "tags": [
+      "opm",
+      "rock",
+      "classics",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-126",
+    "title": "Sweet Caroline",
+    "artist": "Neil Diamond",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1960s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": "UcWEfvu6F_s",
+    "tags": [
+      "international",
+      "classics",
+      "popular",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-127",
+    "title": "Lose Control",
+    "artist": "Teddy Swims",
+    "language": "English",
+    "genre": "R&B",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "geFcauqvN4E",
+    "tags": [
+      "international",
+      "modern",
+      "popular",
+      "rnb"
+    ]
+  },
+  {
+    "id": "sample-128",
+    "title": "Tennessee Whiskey",
+    "artist": "Chris Stapleton",
+    "language": "English",
+    "genre": "Country",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "3cwFlAjSg9Y",
+    "tags": [
+      "international",
+      "modern",
+      "country",
+      "popular"
+    ]
+  },
+  {
+    "id": "sample-129",
+    "title": "Creep",
+    "artist": "Radiohead",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "reflective",
+      "dramatic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "ZFg3XnyILPk",
+    "tags": [
+      "international",
+      "rock",
+      "popular",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-130",
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1980s",
+    "mood": [
+      "feel-good",
+      "party"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "ibQ2T6RjE0U",
+    "tags": [
+      "international",
+      "classics",
+      "popular",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-131",
+    "title": "Pink Pony Club",
+    "artist": "Chappell Roan",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "party",
+      "empowering"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "13AOpqkuh5U",
+    "tags": [
+      "international",
+      "modern",
+      "popular",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-132",
+    "title": "Before He Cheats",
+    "artist": "Carrie Underwood",
+    "language": "English",
+    "genre": "Country Pop",
+    "era": "2000s",
+    "mood": [
+      "empowering",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "very-high",
+    "youtubeVideoId": "THBqaXIyv-w",
+    "tags": [
+      "international",
+      "country",
+      "popular",
+      "empowering"
+    ]
+  },
+  {
+    "id": "sample-133",
+    "title": "Golden",
+    "artist": "HUNTR/X",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "empowering",
+      "feel-good"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": "WT3sn5gV8iA",
+    "tags": [
+      "international",
+      "modern",
+      "popular",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-134",
+    "title": "Take Me Home, Country Roads",
+    "artist": "John Denver",
+    "language": "English",
+    "genre": "Country",
+    "era": "1970s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "demandTier": "very-high",
+    "youtubeVideoId": "nawRw6pR_f8",
+    "tags": [
+      "international",
+      "classics",
+      "country",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-135",
+    "title": "I Will Survive",
+    "artist": "Gloria Gaynor",
+    "language": "English",
+    "genre": "Disco",
+    "era": "1970s",
+    "mood": [
+      "empowering",
+      "party"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "ycotHxAZTLE",
+    "tags": [
+      "international",
+      "classics",
+      "party",
+      "empowering"
+    ]
+  },
+  {
+    "id": "sample-136",
+    "title": "Party in the U.S.A.",
+    "artist": "Miley Cyrus",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "UA7dQKS94jI",
+    "tags": [
+      "international",
+      "popular",
+      "party",
+      "easy"
+    ]
+  },
+  {
+    "id": "sample-137",
+    "title": "In the End",
+    "artist": "Linkin Park",
+    "language": "English",
+    "genre": "Alternative Rock",
+    "era": "2000s",
+    "mood": [
+      "dramatic",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": "O7xFdFjW0nQ",
+    "tags": [
+      "international",
+      "rock",
+      "popular",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-138",
+    "title": "Neon Moon",
+    "artist": "Brooks & Dunn",
+    "language": "English",
+    "genre": "Country",
+    "era": "1990s",
+    "mood": [
+      "heartbreak",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "duet",
+    "demandTier": "high",
+    "youtubeVideoId": "UPRhGxdLWSI",
+    "tags": [
+      "international",
+      "country",
+      "popular",
+      "duet"
+    ]
+  },
+  {
+    "id": "sample-139",
+    "title": "Baby",
+    "artist": "Justin Bieber",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "6l4iNbBpYqM",
+    "tags": [
+      "international",
+      "popular",
+      "easy",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-140",
+    "title": "Santeria",
+    "artist": "Sublime",
+    "language": "English",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "m_q_KX6Brso",
+    "tags": [
+      "international",
+      "rock",
+      "popular",
+      "classics"
+    ]
+  },
+  {
+    "id": "sample-141",
+    "title": "Picture",
+    "artist": "Kid Rock & Sheryl Crow",
+    "language": "English",
+    "genre": "Country Rock",
+    "era": "2000s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "demandTier": "high",
+    "youtubeVideoId": "DRKyel8tmxU",
+    "tags": [
+      "international",
+      "country",
+      "popular",
+      "duet"
+    ]
+  },
+  {
+    "id": "sample-142",
+    "title": "What's Up?",
+    "artist": "4 Non Blondes",
+    "language": "English",
+    "genre": "Alternative Rock",
+    "era": "1990s",
+    "mood": [
+      "feel-good",
+      "empowering"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": "0V0yLCvOrYY",
+    "tags": [
+      "international",
+      "rock",
+      "popular",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-143",
+    "title": "Valerie",
+    "artist": "Mark Ronson & Amy Winehouse",
+    "language": "English",
+    "genre": "Soul",
+    "era": "2000s",
+    "mood": [
+      "feel-good",
+      "party"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "demandTier": "high",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "popular",
+      "soul",
+      "party"
+    ]
+  },
+  {
+    "id": "sample-144",
+    "title": "Friends in Low Places",
+    "artist": "Garth Brooks",
+    "language": "English",
+    "genre": "Country",
+    "era": "1990s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "demandTier": "high",
+    "youtubeVideoId": "LEp8jEFINPU",
+    "tags": [
+      "international",
+      "country",
+      "popular",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-145",
+    "title": "Love Shack",
+    "artist": "The B-52's",
+    "language": "English",
+    "genre": "Pop Rock",
+    "era": "1980s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "demandTier": "high",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "classics",
+      "party",
+      "duet"
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+tools/youtube-verification.json
+tools/youtube-verification.json.tmp
+tools/youtube-verification.local.json
+tools/youtube-candidates.json
+tools/youtube-candidates.json.tmp
+tools/youtube-review.json
+tools/youtube-review.json.tmp
