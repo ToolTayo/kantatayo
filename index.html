@@ -8,8 +8,8 @@
     <meta name="description" content="Discover your next karaoke song with KantaTayo." />
     <title>KantaTayo — Your next song is waiting</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=13" />
-    <script type="module" src="src/app.js?v=10"></script>
+    <link rel="stylesheet" href="styles/main.css?v=14" />
+    <script type="module" src="src/app.js?v=11"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -26,10 +26,10 @@
           <label class="sr-only" for="song-search">Search songs or artists</label>
           <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
           <input id="song-search" type="search" placeholder="Search a song, artist, mood, or era" autocomplete="off" />
-          <button class="search-clear" type="button" data-action="clear-search" aria-label="Clear search" hidden>×</button>
+          <button class="search-clear" type="button" data-action="clear-search" aria-label="Clear search" title="Clear search" hidden>×</button>
           <button class="topbar-search-submit" type="submit">Find song</button>
         </form>
-        <button class="queue-button" type="button" data-action="toggle-queue" aria-expanded="false" aria-controls="queue-drawer">
+        <button class="queue-button" type="button" data-action="toggle-queue" aria-label="Open singing queue" title="Open singing queue" aria-expanded="false" aria-controls="queue-drawer">
           <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M6 5.5h12M6 12h12M6 18.5h8"></path><path d="M18 15.5v4.2a2.3 2.3 0 1 1-1.5-2.2v-6.8l4-1.2v4.2a2.3 2.3 0 1 1-1.5-2.2"></path></svg>
           <span>Queue</span><span aria-hidden="true">·</span>
           <span class="queue-count" data-queue-count>0</span>
@@ -45,7 +45,7 @@
           </a>
           <p class="sidebar-label">Your night</p>
           <nav class="primary-nav">
-            <a class="nav-link is-active" href="#top" data-filter="all" aria-pressed="true"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3.5 10.5 8.5-7 8.5 7"></path><path d="M5.5 9.5v10h13v-10M9.5 19.5v-5h5v5"></path></svg><span>Home</span></a>
+            <a class="nav-link is-active" href="#top" data-filter="all" aria-pressed="true" aria-current="page"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3.5 10.5 8.5-7 8.5 7"></path><path d="M5.5 9.5v10h13v-10M9.5 19.5v-5h5v5"></path></svg><span>Home</span></a>
             <a class="nav-link" href="#discovery" data-filter="all" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="10.5" cy="10.5" r="6"></circle><path d="m15 15 5 5"></path></svg><span>Discover</span></a>
             <a class="nav-link" href="#discovery" data-filter="favorites" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M12 19.5S4.5 15.2 4.5 9.3A3.8 3.8 0 0 1 12 7.4a3.8 3.8 0 0 1 7.5 1.9c0 5.9-7.5 10.2-7.5 10.2Z"></path></svg><span>Favorites</span></a>
             <a class="nav-link" href="#recent-title"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M5 7.5A8 8 0 1 1 4 14"></path><path d="M5 4v3.5h3.5M12 8v4l2.8 1.7"></path></svg><span>Recently sung</span></a>
@@ -151,12 +151,13 @@
 
         <section class="view-panel discover-view" data-view-panel="discover" hidden>
           <section class="content-area" id="discover" aria-labelledby="discover-title">
-            <div class="section-heading view-heading"><div><p class="eyebrow">Browse the catalog</p><h2 id="discover-title">Discover</h2><p class="section-lede">Browse the KantaTayo catalog.</p></div><p class="view-count" data-discover-count>0 songs</p></div>
+            <div class="section-heading view-heading"><div><p class="eyebrow">Browse the catalog</p><h2 id="discover-title">Discover</h2><p class="section-lede">Browse the KantaTayo catalog. Use the quick filters to narrow the list without leaving this page.</p></div><p class="view-count" data-discover-count>0 songs</p></div>
             <div class="discover-controls">
-              <div class="discovery-filters quick-filters" aria-label="Quick catalog filters">
-                <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">All songs</button><button type="button" class="chip" data-filter="playable" aria-pressed="false">Playable now</button><button type="button" class="chip" data-filter="filipino" aria-pressed="false">OPM</button><button type="button" class="chip" data-filter="english" aria-pressed="false">International</button><button type="button" class="chip" data-filter="easy" aria-pressed="false">Easy</button><button type="button" class="chip" data-filter="medium" aria-pressed="false">Medium</button><button type="button" class="chip" data-filter="hard" aria-pressed="false">Hard</button><button type="button" class="chip" data-filter="solo" aria-pressed="false">Solo</button><button type="button" class="chip" data-filter="duet" aria-pressed="false">Duet</button><button type="button" class="chip" data-filter="group" aria-pressed="false">Group</button>
+              <div class="discovery-filters quick-filters" aria-label="Quick catalog filters" aria-describedby="discover-filter-guide">
+                <span class="filter-label">Quick filters</span><button type="button" class="chip is-active" data-filter="all" aria-pressed="true" title="Show all songs">All songs</button><button type="button" class="chip" data-filter="playable" aria-pressed="false" title="Show songs with a playable karaoke video">Playable now</button><button type="button" class="chip" data-filter="filipino" aria-pressed="false" title="Show Filipino and OPM songs">OPM</button><button type="button" class="chip" data-filter="english" aria-pressed="false" title="Show international and English songs">International</button><button type="button" class="chip" data-filter="easy" aria-pressed="false" title="Show easy songs">Easy</button><button type="button" class="chip" data-filter="medium" aria-pressed="false" title="Show medium-difficulty songs">Medium</button><button type="button" class="chip" data-filter="hard" aria-pressed="false" title="Show hard songs">Hard</button><button type="button" class="chip" data-filter="solo" aria-pressed="false" title="Show solo songs">Solo</button><button type="button" class="chip" data-filter="duet" aria-pressed="false" title="Show duet songs">Duet</button><button type="button" class="chip" data-filter="group" aria-pressed="false" title="Show group songs">Group</button>
               </div>
-              <button class="filter-toggle" type="button" data-action="toggle-discover-filters" aria-expanded="false" aria-controls="discover-filter-panel">More filters <span data-discovery-filter-count hidden>0</span></button>
+              <p class="discover-filter-guide" id="discover-filter-guide">OPM = Filipino music · International = English catalog · Easy / Medium / Hard = singing difficulty · Solo / Duet / Group = performance format.</p>
+              <button class="filter-toggle" type="button" data-action="toggle-discover-filters" aria-label="Open additional song filters" title="Open additional song filters" aria-expanded="false" aria-controls="discover-filter-panel">More filters <span data-discovery-filter-count hidden>0</span></button>
               <label class="sort-control"><span>Sort</span><select data-sort aria-label="Sort songs"><option value="relevance">Recommended</option><option value="popular">Popular</option><option value="title">Title A–Z</option><option value="artist">Artist A–Z</option></select></label>
             </div>
             <section class="discover-filter-panel" id="discover-filter-panel" data-discover-filter-panel hidden aria-label="More catalog filters">
@@ -169,7 +170,7 @@
                 <label><span>Performance</span><select data-discovery-filter="performanceType"><option value="any">Any format</option></select></label>
                 <label><span>Era</span><select data-discovery-filter="era"><option value="any">Any era</option></select></label>
               </div>
-              <div class="discover-filter-footer"><span data-discovery-filter-summary>All catalog songs</span><button class="text-button" type="button" data-action="reset-discovery-filters">Reset filters</button></div>
+              <div class="discover-filter-footer"><span data-discovery-filter-summary>All catalog songs</span><button class="text-button" type="button" data-action="reset-discovery-filters" disabled>Reset filters</button></div>
             </section>
             <div class="song-grid catalog-grid" data-grid="discover"></div>
             <div class="discover-load-more" data-discover-load-more hidden><button class="add-button" type="button" data-action="load-more-discover">Load more songs</button><span data-discover-remaining></span></div>
@@ -191,14 +192,14 @@
       </main>
 
       <aside class="queue-drawer" id="queue-drawer" data-queue-drawer role="dialog" aria-modal="true" aria-label="Karaoke queue" aria-hidden="true">
-        <div class="drawer-header"><div><p class="eyebrow">Up next</p><h2>Your queue</h2></div><button class="icon-button" type="button" data-action="toggle-queue" aria-label="Close queue">×</button></div>
+        <div class="drawer-header"><div><p class="eyebrow">Up next</p><h2>Your queue</h2></div><button class="icon-button" type="button" data-action="toggle-queue" aria-label="Close singing queue" title="Close singing queue">×</button></div>
         <div class="queue-content" data-queue-content role="list"></div>
         <div class="drawer-footer"><button class="text-button" type="button" data-action="clear-queue">Clear queue</button><span data-queue-summary>0 songs</span></div>
       </aside>
       <div class="drawer-backdrop" data-action="toggle-queue" aria-hidden="true"></div>
 
       <div class="player-panel" data-player-panel hidden role="region" aria-label="Now singing">
-        <div class="player-header"><div><p class="eyebrow">Now singing</p><h2 id="player-title" data-player-title>Select a song to begin</h2><p data-player-artist class="muted">Select a queued song to begin.</p><p data-player-position class="player-position"></p></div><button class="icon-button" type="button" data-action="close-player" aria-label="Close player">×</button></div>
+        <div class="player-header"><div><p class="eyebrow">Now singing</p><h2 id="player-title" data-player-title>Select a song to begin</h2><p data-player-artist class="muted">Select a queued song to begin.</p><p data-player-position class="player-position"></p></div><div class="player-header-actions"><button class="icon-button" type="button" data-action="expand-player" aria-label="Expand player" title="Expand player" aria-expanded="false">↗</button><button class="icon-button" type="button" data-action="close-player" aria-label="Close player" title="Close player">×</button></div></div>
         <div class="player-media" aria-label="YouTube karaoke player">
           <div class="youtube-player-shell" data-youtube-shell>
             <div class="youtube-player-container" data-youtube-mount hidden></div>
@@ -220,8 +221,8 @@
         <a class="mobile-nav-link is-active" href="#top" data-filter="all" aria-pressed="true"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3.5 10.5 8.5-7 8.5 7"></path><path d="M5.5 9.5v10h13v-10M9.5 19.5v-5h5v5"></path></svg><span>Home</span></a>
         <a class="mobile-nav-link" href="#discovery" data-filter="all" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="10.5" cy="10.5" r="6"></circle><path d="m15 15 5 5"></path></svg><span>Discover</span></a>
         <button class="mobile-nav-link" type="button" data-action="toggle-party-mode" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"></path></svg><span>Party</span></button>
-        <button class="mobile-nav-link" type="button" data-action="toggle-queue"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M6 5.5h12M6 12h12M6 18.5h8"></path><path d="M18 15.5v4.2a2.3 2.3 0 1 1-1.5-2.2v-6.8l4-1.2v4.2a2.3 2.3 0 1 1-1.5-2.2"></path></svg><span>Queue</span><b data-queue-count>0</b></button>
-        <button class="mobile-nav-link" type="button" data-action="toggle-mobile-more" aria-expanded="false" aria-controls="mobile-more-menu" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg><span>More</span></button>
+        <button class="mobile-nav-link" type="button" data-action="toggle-queue" aria-label="Open singing queue" title="Open singing queue"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M6 5.5h12M6 12h12M6 18.5h8"></path><path d="M18 15.5v4.2a2.3 2.3 0 1 1-1.5-2.2v-6.8l4-1.2v4.2a2.3 2.3 0 1 1-1.5-2.2"></path></svg><span>Queue</span><b data-queue-count>0</b></button>
+        <button class="mobile-nav-link" type="button" data-action="toggle-mobile-more" aria-label="Open more navigation" title="Open more navigation" aria-expanded="false" aria-controls="mobile-more-menu" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg><span>More</span></button>
       </nav>
       <div class="toast" data-toast role="status" aria-live="polite"></div>
     </div>

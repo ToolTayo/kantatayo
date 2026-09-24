@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=9";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=10";
 import { loadCatalog } from "./catalog.js";
 import { createDefaultDiscoveryFilters, createSearchIndex } from "./discovery.js";
 import { addSongToQueue, advanceQueue, clearPreferences, clearQueue, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js";
@@ -138,6 +138,14 @@ function bindEvents() {
         player.classList.add("is-expanded");
         setPlayerExpanded(player, true);
         player.querySelector('[data-action="close-player"]')?.focus();
+      }
+      return;
+    }
+    if (action === "expand-player") {
+      const player = document.querySelector("[data-player-panel]");
+      if (player && !player.hidden) {
+        setPlayerExpanded(player, !player.classList.contains("is-expanded"));
+        actionTarget.focus();
       }
       return;
     }
@@ -286,6 +294,9 @@ function toggleDiscoverFilters() {
   const isOpen = panel.hidden;
   panel.hidden = !isOpen;
   button.setAttribute("aria-expanded", String(isOpen));
+  const label = isOpen ? "Close additional song filters" : "Open additional song filters";
+  button.setAttribute("aria-label", label);
+  button.title = label;
   if (isOpen) document.querySelector('[data-discovery-filter="language"]')?.focus();
 }
 
@@ -306,6 +317,9 @@ function setMobileMoreOpen(isOpen) {
   menu.hidden = !isOpen;
   menu.classList.toggle("is-open", isOpen);
   button.setAttribute("aria-expanded", String(isOpen));
+  const label = isOpen ? "Close more navigation" : "Open more navigation";
+  button.setAttribute("aria-label", label);
+  button.title = label;
 }
 
 function getLegacyNavView(target) {
@@ -614,7 +628,12 @@ function toggleQueue() {
   if (isOpen) queueReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : document.querySelector('[data-action="toggle-queue"]');
   drawer.setAttribute("aria-hidden", String(!isOpen));
   backdrop.classList.toggle("is-visible", isOpen);
-  document.querySelectorAll('[data-action="toggle-queue"]').forEach((button) => button.setAttribute("aria-expanded", String(isOpen)));
+  const label = isOpen ? "Close singing queue" : "Open singing queue";
+  document.querySelectorAll('[data-action="toggle-queue"]').forEach((button) => {
+    button.setAttribute("aria-expanded", String(isOpen));
+    button.setAttribute("aria-label", label);
+    button.title = label;
+  });
   if (isOpen) document.querySelector("[data-queue-drawer] .icon-button")?.focus();
   else {
     const returnTarget = queueReturnFocus;

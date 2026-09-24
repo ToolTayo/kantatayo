@@ -756,3 +756,18 @@ body { line-height: 1.45; }
 @media (min-width: 800px) {
   .mobile-more-menu { display: none !important; }
 }
+
+/* Focused clarity pass: keep the player useful without letting it take over discovery. */
+.player-header-actions { align-items: center; display: flex; flex: 0 0 auto; gap: .4rem; }
+.player-header-actions .icon-button { cursor: pointer; }
+.discover-filter-guide { color: var(--text-muted); font-size: .68rem; line-height: 1.45; margin: .2rem 0 .15rem; }
+.text-button:disabled { color: var(--text-muted); cursor: not-allowed; opacity: .55; }
+
+@media (min-width: 800px) {
+  .player-panel { max-width: min(720px, calc(100vw - 17rem)); width: 100%; }
+  .player-panel.is-expanded { max-width: min(1080px, calc(100vw - 17rem)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player-panel, .drawer-backdrop, .toast { transition: none !important; }
+}

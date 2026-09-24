@@ -28,6 +28,10 @@ function updateViewPanels(view) {
       : (link.dataset.view || legacyView(link)) === view;
     link.classList.toggle("is-active", active);
     if (link.hasAttribute("aria-pressed")) link.setAttribute("aria-pressed", String(active));
+    if (link.matches("a[href]")) {
+      if (active) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    }
   });
 }
 
@@ -122,6 +126,12 @@ function renderDiscoveryFilterControls(songs, filters) {
   if (count) {
     count.hidden = activeLabels.length === 0;
     count.textContent = String(activeLabels.length);
+  }
+  const reset = document.querySelector('[data-action="reset-discovery-filters"]');
+  if (reset) {
+    reset.disabled = activeLabels.length === 0;
+    reset.setAttribute("aria-label", activeLabels.length ? "Reset active filters" : "Reset filters");
+    reset.title = activeLabels.length ? "Reset active filters" : "No filters to reset";
   }
 }
 
@@ -248,13 +258,13 @@ export function renderSongCard(song, interactionState, options = {}) {
   const thumbnail = renderSongThumbnail(song, options);
   const availability = options.catalogView && !playable ? `<p class="song-availability" role="status">Karaoke unavailable</p>` : "";
   const queueAction = playable
-    ? `<button class="add-button" type="button" data-action="add-queue" data-song-id="${escapeHtml(song.id)}">+ Queue</button>`
+    ? `<button class="add-button" type="button" data-action="add-queue" data-song-id="${escapeHtml(song.id)}" aria-label="Add ${escapeHtml(song.title)} to queue" title="Add to queue">+ Queue</button>`
     : `<button class="add-button" type="button" disabled aria-label="${escapeHtml(song.title)} is unavailable for karaoke">Unavailable</button>`;
   return `<article class="song-card">
     ${thumbnail}
     <div class="song-card-body"><div class="song-card-top"><div><h4>${escapeHtml(song.title)}</h4><p class="song-artist">${escapeHtml(song.artist)}</p></div><span aria-label="${escapeHtml(song.difficulty)} difficulty" class="difficulty-dot difficulty-${song.difficulty}"></span></div>
     <div class="song-meta">${meta}</div>${availability}${options.reason ? `<p class="song-reason">${escapeHtml(options.reason)}</p>` : ""}
-    <div class="song-card-actions">${queueAction}<button class="card-favorite${isFavorite ? " is-active" : ""}" type="button" data-action="toggle-favorite" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isFavorite}" aria-label="${isFavorite ? "Remove" : "Add"} ${escapeHtml(song.title)} ${isFavorite ? "from" : "to"} favorites"><span aria-hidden="true">${isFavorite ? "♥" : "♡"}</span><span class="sr-only">${isFavorite ? "Favorited" : "Favorite"}</span></button><details class="song-more-menu"><summary class="song-more-toggle" aria-label="More actions for ${escapeHtml(song.title)}"><span aria-hidden="true">•••</span></summary><div class="song-more-actions" aria-label="More song actions"><button class="feedback-button${isLiked ? " is-active" : ""}" type="button" data-action="toggle-like" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isLiked}" aria-label="${isLiked ? "Unlike" : "Like"} ${escapeHtml(song.title)}">${isLiked ? "✓ Liked" : "Like"}</button><button class="feedback-button${isDisliked ? " is-active" : ""}" type="button" data-action="toggle-dislike" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isDisliked}" aria-label="${isDisliked ? "Remove" : "Mark"} ${escapeHtml(song.title)} ${isDisliked ? "from" : "as"} not for me">${isDisliked ? "✓ Not for me" : "Not for me"}</button><button class="feedback-button" type="button" data-action="mark-sung" data-song-id="${escapeHtml(song.id)}" aria-label="Mark ${escapeHtml(song.title)} as sung">Sang it</button></div></details></div></div>
+    <div class="song-card-actions">${queueAction}<button class="card-favorite${isFavorite ? " is-active" : ""}" type="button" data-action="toggle-favorite" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isFavorite}" aria-label="${isFavorite ? "Remove" : "Add"} ${escapeHtml(song.title)} ${isFavorite ? "from" : "to"} favorites" title="${isFavorite ? "Remove from favorites" : "Add to favorites"}"><span aria-hidden="true">${isFavorite ? "♥" : "♡"}</span><span class="sr-only">${isFavorite ? "Favorited" : "Favorite"}</span></button><details class="song-more-menu"><summary class="song-more-toggle" aria-label="More actions for ${escapeHtml(song.title)}" title="More actions"><span aria-hidden="true">•••</span></summary><div class="song-more-actions" aria-label="More song actions"><button class="feedback-button${isLiked ? " is-active" : ""}" type="button" data-action="toggle-like" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isLiked}" aria-label="${isLiked ? "Unlike" : "Like"} ${escapeHtml(song.title)}">${isLiked ? "✓ Liked" : "Like"}</button><button class="feedback-button${isDisliked ? " is-active" : ""}" type="button" data-action="toggle-dislike" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isDisliked}" aria-label="${isDisliked ? "Remove" : "Mark"} ${escapeHtml(song.title)} ${isDisliked ? "from" : "as"} not for me">${isDisliked ? "✓ Not for me" : "Not for me"}</button><button class="feedback-button" type="button" data-action="mark-sung" data-song-id="${escapeHtml(song.id)}" aria-label="Mark ${escapeHtml(song.title)} as sung">Sang it</button></div></details></div></div>
   </article>`;
 }
 
@@ -287,7 +297,7 @@ export function renderQueue(queueSnapshot, partySession = {}) {
     const queueRole = isCurrent ? "Current song" : (currentIndex < 0 && index === 0) || (currentIndex >= 0 && index > currentIndex) ? "Up next" : "In queue";
     return `<div class="queue-item${isCurrent ? " is-current" : ""}" role="listitem" aria-current="${isCurrent}">
       <div class="queue-item-main"><span class="queue-item-number">${String(index + 1).padStart(2, "0")}</span><div class="queue-item-copy"><strong>${escapeHtml(song.title)}</strong><span>${escapeHtml(song.artist)}</span><span class="queue-item-state">${queueRole}</span></div></div>
-      <div class="queue-item-controls">${snapshot?.partyModeEnabled ? `<label class="queue-singer-control"><span class="sr-only">Singer for ${escapeHtml(song.title)}</span><select data-action="assign-singer" data-song-id="${escapeHtml(song.id)}" aria-label="Singer for ${escapeHtml(song.title)}">${renderSingerOptions(partySession, partyItems[index]?.singer?.id || "")}</select></label>` : ""}<button class="queue-select" type="button" data-action="select-queue" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isCurrent}" aria-label="${isCurrent ? "Current song" : "Select"} ${escapeHtml(song.title)}">${isCurrent ? "Current" : "Select"}</button><button class="queue-control" type="button" data-action="move-up" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} up"${index === 0 ? " disabled" : ""}>↑</button><button class="queue-control" type="button" data-action="move-down" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} down"${index === queue.length - 1 ? " disabled" : ""}>↓</button><button class="queue-control queue-top-control" type="button" data-action="move-top" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} to top"${index === 0 ? " disabled" : ""}>Top</button><button class="remove-button" type="button" data-action="remove-queue" data-song-id="${escapeHtml(song.id)}" aria-label="Remove ${escapeHtml(song.title)} from queue">×</button></div>
+      <div class="queue-item-controls">${snapshot?.partyModeEnabled ? `<label class="queue-singer-control"><span class="sr-only">Singer for ${escapeHtml(song.title)}</span><select data-action="assign-singer" data-song-id="${escapeHtml(song.id)}" aria-label="Singer for ${escapeHtml(song.title)}">${renderSingerOptions(partySession, partyItems[index]?.singer?.id || "")}</select></label>` : ""}<button class="queue-select" type="button" data-action="select-queue" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isCurrent}" aria-label="${isCurrent ? "Current song" : "Select"} ${escapeHtml(song.title)}" title="${isCurrent ? "Current song" : "Play this queued song"}">${isCurrent ? "Current" : "Select"}</button><button class="queue-control" type="button" data-action="move-up" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} up" title="Move up"${index === 0 ? " disabled" : ""}>↑</button><button class="queue-control" type="button" data-action="move-down" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} down" title="Move down"${index === queue.length - 1 ? " disabled" : ""}>↓</button><button class="queue-control queue-top-control" type="button" data-action="move-top" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} to top" title="Move to top"${index === 0 ? " disabled" : ""}>Top</button><button class="remove-button" type="button" data-action="remove-queue" data-song-id="${escapeHtml(song.id)}" aria-label="Remove ${escapeHtml(song.title)} from queue" title="Remove from queue">×</button></div>
     </div>`;
   }).join("") : `<div class="queue-empty"><strong>Your karaoke queue is empty.</strong><br />Add a few songs from discovery to get started.<br /><a href="#top" class="queue-empty-link" data-action="close-queue">Browse songs</a></div>`;
 }
@@ -423,6 +433,14 @@ export function setPlayerExpanded(panel, expanded) {
     panel.setAttribute("aria-label", "Now singing");
     panel.removeAttribute("aria-modal");
     panel.removeAttribute("aria-labelledby");
+  }
+  const toggle = panel.querySelector?.('[data-action="expand-player"]');
+  if (toggle) {
+    const isExpanded = Boolean(expanded);
+    toggle.setAttribute("aria-expanded", String(isExpanded));
+    toggle.setAttribute("aria-label", isExpanded ? "Collapse player" : "Expand player");
+    toggle.setAttribute("title", isExpanded ? "Collapse player" : "Expand player");
+    toggle.textContent = isExpanded ? "↙" : "↗";
   }
 }
 
