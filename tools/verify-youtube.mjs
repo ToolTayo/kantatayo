@@ -43,6 +43,7 @@ export const QUALITY_EXCLUSION_STATUS = "quality-excluded";
 export const QUALITY_UNASSIGNMENT_PROVENANCE = "user-product-quality-decision";
 export const PARTY_TYME_CHANNEL_PATTERN = /\bparty\s+tyme\s+karaoke(?:\s+channel)?\b/i;
 export const PARTY_TYME_UNASSIGNMENT_REASON = "user quality decision — Party Tyme presentation does not meet the desired KantaTayo visual experience standard";
+export const QUALITY_KARAOKE_PROVIDER_PATTERN = /\b(?:atomic karaoke|karaokeytv|zoom karaoke|karaoke media|sing king|my all time karaoke|easy karaoke|cc karaoke)\b/i;
 const BUILTIN_REVIEW_FLAGS = new Map([
   ["sample-008", { status: "unresolved", reason: "No acceptable standard duet candidate is currently selected." }],
   ["sample-009", { status: "unresolved", reason: "No acceptable standard duet candidate is currently selected." }],
@@ -55,13 +56,14 @@ const SEARCH_HARD_NEGATIVES = [
   { pattern: /\boriginal audio\b|\bfull song\b/i, label: "original audio" },
   { pattern: /\bvisualizer\b/i, label: "visualizer" },
   { pattern: /\blive\b|\bconcert\b|\bperformance\b/i, label: "live performance" },
+  { pattern: /\bguide\s+(?:vocal|melody)|\bwith\s+vocals?\b|\bvocal\s+guide\b/i, label: "guide-vocal" },
   { pattern: /\bcover\b|\bcovered\b/i, label: "cover" }
 ];
 const SEARCH_KEY_PENALTIES = [
   { pattern: /\blower key\b|\bhigher key\b|\bmale key\b|\bfemale key\b|\bkey change\b|\b[+-]\s*\d+\s*(?:key|semitone)/i, label: "altered key" }
 ];
 const DUET_PART_PATTERN = /\b(?:male|female)\s*(?:part|version|key)\b/i;
-const NON_STANDARD_VERSION_PATTERN = /\b(?:acoustic|remix|medley|short version|slow(?:ed)?|fast(?:er)?|piano(?:[- ]only)?|伴奏)\b/i;
+const NON_STANDARD_VERSION_PATTERN = /\b(?:acoustic|unplugged|remix|medley|short version|slow(?:ed)?|fast(?:er)?|piano(?:[- ]only)?|伴奏)\b/i;
 const LEGACY_CLOSE_SCORE_REASON = "multiple acceptable candidates are too close in score";
 const RETRYABLE_API_REASONS = new Set(["rateLimitExceeded", "userRateLimitExceeded", "tooManyRequests"]);
 const QUOTA_API_REASONS = new Set(["quotaExceeded", "dailyLimitExceeded", "dailyLimitExceededUnreg"]);
@@ -90,6 +92,12 @@ export function createVerificationRecord(values = {}) {
     madeForKids: booleanOrNull(values.madeForKids),
     videoTitle: stringOrNull(values.videoTitle),
     channelTitle: stringOrNull(values.channelTitle),
+    publishedAt: stringOrNull(values.publishedAt),
+    description: stringOrNull(values.description),
+    definition: values.definition === "hd" || values.definition === "sd" ? values.definition : null,
+    duration: stringOrNull(values.duration),
+    viewCount: nonNegativeIntegerOrNull(values.viewCount),
+    likeCount: nonNegativeIntegerOrNull(values.likeCount),
     manuallyMatched: values.manuallyMatched === true,
     karaokeSuitable: values.karaokeSuitable === true,
     provenance: VALID_PROVENANCE.has(values.provenance) ? values.provenance : null,
@@ -142,6 +150,12 @@ export function parseVideoResponse(payload, requestedIds, checkedAt = new Date()
       madeForKids,
       videoTitle: stringOrNull(item.snippet?.title),
       channelTitle: stringOrNull(item.snippet?.channelTitle),
+      publishedAt: stringOrNull(item.snippet?.publishedAt),
+      description: stringOrNull(item.snippet?.description),
+      definition: item.contentDetails?.definition === "hd" || item.contentDetails?.definition === "sd" ? item.contentDetails.definition : null,
+      duration: stringOrNull(item.contentDetails?.duration),
+      viewCount: nonNegativeIntegerOrNull(item.statistics?.viewCount),
+      likeCount: nonNegativeIntegerOrNull(item.statistics?.likeCount),
       checkedAt,
       lastError: apiVerified ? null : "returned-id-mismatch"
     });
@@ -269,7 +283,7 @@ async function verifyCandidates(options) {
 
   const checkedAt = new Date().toISOString();
   const url = new URL(API_URL);
-  url.searchParams.set("part", "snippet,status");
+  url.searchParams.set("part", "snippet,status,statistics,contentDetails");
   url.searchParams.set("id", ids.join(","));
   url.searchParams.set("key", apiKey.trim());
 
@@ -394,7 +408,7 @@ function buildSearchQuery(song) {
   return `${song.title} ${song.artist} karaoke`.replace(/\s+/g, " ").trim();
 }
 
-async function requestSearchResults(query, maxResults, apiKey, fetchImplementation, requestUrl = SEARCH_API_URL, requestConfig = {}) {
+export async function requestSearchResults(query, maxResults, apiKey, fetchImplementation, requestUrl = SEARCH_API_URL, requestConfig = {}) {
   const url = new URL(requestUrl);
   url.searchParams.set("part", "snippet");
   url.searchParams.set("q", query);
@@ -402,6 +416,9 @@ async function requestSearchResults(query, maxResults, apiKey, fetchImplementati
   url.searchParams.set("order", "relevance");
   url.searchParams.set("maxResults", String(maxResults));
   url.searchParams.set("videoEmbeddable", "true");
+  if (requestConfig.videoDefinition === "high" || requestConfig.videoDefinition === "standard") {
+    url.searchParams.set("videoDefinition", requestConfig.videoDefinition);
+  }
   url.searchParams.set("key", apiKey.trim());
 
   const payload = await requestJsonWithRetry(url, fetchImplementation, requestConfig, "search");
@@ -472,12 +489,41 @@ function parseRetryAfter(headers) {
 }
 
 export function rankSearchCandidates(song, candidates) {
-  return candidates
+  const scored = candidates
     .map((candidate) => scoreSearchCandidate(song, candidate))
+  const hasQualifiedHd = scored.some((candidate) => candidate.selectable && candidate.technicalGatePass && !candidate.hardBlocked && candidate.hdDefinition);
+  const qualified = scored.filter((candidate) => candidate.selectable && candidate.technicalGatePass && !candidate.hardBlocked && candidate.popularityMetric > 0 && (!hasQualifiedHd || !candidate.sdDefinition));
+  const maxPopularityMetric = Math.max(0, ...qualified.map((candidate) => candidate.popularityMetric));
+  const minPopularityMetric = qualified.length > 1 ? Math.min(...qualified.map((candidate) => candidate.popularityMetric)) : 0;
+  const useRelativePopularity = qualified.length > 1
+    && maxPopularityMetric >= 100000
+    && minPopularityMetric > 0
+    && maxPopularityMetric / minPopularityMetric >= 4;
+
+  return scored
+    .map((candidate) => {
+      const relativePopularityPoints = useRelativePopularity
+        ? getRelativePopularityPoints(candidate.popularityMetric, minPopularityMetric, maxPopularityMetric)
+        : 0;
+      const sdSuppressed = hasQualifiedHd && candidate.sdDefinition && candidate.selectable;
+      const score = candidate.score + relativePopularityPoints - (sdSuppressed ? 40 : 0);
+      const reasons = [...candidate.reasons];
+      if (relativePopularityPoints > 0) reasons.push("relative popularity signal");
+      if (sdSuppressed) reasons.push("warning: SD suppressed because a qualified HD alternative exists");
+      return {
+        ...candidate,
+        score,
+        selectable: candidate.selectable && !sdSuppressed,
+        confidence: candidate.selectable && !sdSuppressed && score >= 90 ? "high" : candidate.selectable && !sdSuppressed ? "medium" : "low",
+        popularityPoints: candidate.popularityPoints + relativePopularityPoints,
+        relativePopularityPoints,
+        reasons: [...new Set(reasons)]
+      };
+    })
     .sort((left, right) => right.score - left.score || left.videoId.localeCompare(right.videoId));
 }
 
-function scoreSearchCandidate(song, candidate) {
+export function scoreSearchCandidate(song, candidate) {
   const videoTitle = stringOrNull(candidate.videoTitle) || "";
   const channelTitle = stringOrNull(candidate.channelTitle) || "";
   const titleText = normalizeSearchText(videoTitle);
@@ -501,6 +547,10 @@ function scoreSearchCandidate(song, candidate) {
   const instrumentalOnly = /\binstrumental(?:\s+only)?\b/i.test(titleText) && !/\b(?:karaoke|backing track|minus one)\b/i.test(titleText);
   const partOnly = DUET_PART_PATTERN.test(searchableText);
   const nonStandardVersion = NON_STANDARD_VERSION_PATTERN.test(searchableText);
+  const hdDefinition = candidate.definition === "hd";
+  const sdDefinition = candidate.definition === "sd";
+  const providerEvidence = QUALITY_KARAOKE_PROVIDER_PATTERN.test(channelTitle);
+  const technicalFailures = getTechnicalGateFailures(candidate);
   const warnings = [];
   let score = 0;
 
@@ -514,6 +564,9 @@ function scoreSearchCandidate(song, candidate) {
   if (normalKey) score += 3;
   if (channelText.includes("karaoke")) score += 5;
   if (positiveTerms.includes("instrumental") || positiveTerms.includes("backing track") || positiveTerms.includes("minus one")) score += 4;
+  if (hdDefinition) score += 10;
+  if (sdDefinition) score -= 8;
+  if (providerEvidence) score += 3;
   if (partyTymeProvider) {
     score -= 100;
     warnings.push("quality-excluded provider: Party Tyme Karaoke");
@@ -545,13 +598,24 @@ function scoreSearchCandidate(song, candidate) {
   if (!artistMatched) warnings.push("artist match is not clear");
   if (positiveTerms.length === 0) warnings.push("karaoke suitability is not clear from title/channel metadata");
 
-  const hardBlocked = hardNegatives.length > 0 || keyPenalties.length > 0 || partOnly || instrumentalOnly || nonStandardVersion || partyTymeProvider;
+  const hardBlocked = hardNegatives.length > 0 || keyPenalties.length > 0 || partOnly || instrumentalOnly || nonStandardVersion || partyTymeProvider || technicalFailures.length > 0;
+  technicalFailures.forEach((failure) => warnings.push(failure));
+  const popularityPoints = !hardBlocked && titleComplete && artistMatched && positiveTerms.length > 0
+    ? getPopularityPoints(candidate.viewCount, candidate.publishedAt)
+    : 0;
+  if (popularityPoints > 0) score += popularityPoints;
+  const positiveQualityReasons = [];
+  if (hdDefinition) positiveQualityReasons.push("HD metadata");
+  if (sdDefinition) warnings.push("API definition=sd");
+  if (providerEvidence) positiveQualityReasons.push("known karaoke provider signal");
+  if (popularityPoints > 0) positiveQualityReasons.push("bounded popularity signal");
   const selectable = titleComplete && artistMatched && positiveTerms.length > 0 && !hardBlocked && score >= 70;
   const confidence = selectable && score >= 90 ? "high" : selectable ? "medium" : "low";
   const reasons = [];
   if (titleComplete || titlePhraseMatch) reasons.push("title match");
   if (artistMatched) reasons.push("artist match");
   if (positiveTerms.length > 0) reasons.push(positiveTerms[0]);
+  reasons.push(...positiveQualityReasons);
   if (warnings.length > 0) reasons.push(...warnings.map((warning) => `warning: ${warning}`));
 
   return {
@@ -560,8 +624,57 @@ function scoreSearchCandidate(song, candidate) {
     confidence,
     selectable,
     partyTymeProvider,
+    hardBlocked,
+    hardBlockReasons: [
+      ...hardNegatives.map(({ label }) => label),
+      ...keyPenalties.map(({ label }) => label),
+      ...(partOnly ? ["part-only"] : []),
+      ...(instrumentalOnly ? ["instrumental-only"] : []),
+      ...(nonStandardVersion ? ["non-standard version"] : []),
+      ...technicalFailures
+    ],
+    technicalGatePass: technicalFailures.length === 0,
+    hdDefinition,
+    sdDefinition,
+    providerEvidence,
+    popularityPoints,
+    popularityMetric: getPopularityMetric(candidate.viewCount, candidate.publishedAt),
+    relativePopularityPoints: 0,
     reasons: [...new Set(reasons)]
   };
+}
+
+export function getPopularityPoints(viewCount, publishedAt, now = Date.now()) {
+  const popularityMetric = getPopularityMetric(viewCount, publishedAt, now);
+  if (popularityMetric <= 0) return 0;
+  return Math.min(24, Math.max(0, Math.round((Math.log10(popularityMetric) - 2) * 4)));
+}
+
+export function getPopularityMetric(viewCount, publishedAt, now = Date.now()) {
+  const views = Number(viewCount);
+  if (!Number.isFinite(views) || views <= 0) return 0;
+  const publishedMs = Date.parse(publishedAt || "");
+  const ageYears = Number.isFinite(publishedMs)
+    ? Math.max(0.5, (now - publishedMs) / (365.25 * 86400000))
+    : 3;
+  return views / (ageYears ** 0.35);
+}
+
+function getRelativePopularityPoints(popularityMetric, minimum, maximum) {
+  if (!Number.isFinite(popularityMetric) || popularityMetric <= 0 || maximum <= minimum) return 0;
+  const range = Math.log10(maximum) - Math.log10(minimum);
+  if (range <= 0) return 0;
+  const position = (Math.log10(popularityMetric) - Math.log10(minimum)) / range;
+  return Math.min(14, Math.max(0, Math.round(position * 14)));
+}
+
+function getTechnicalGateFailures(candidate) {
+  const failures = [];
+  if (candidate?.apiVerified === false) failures.push("video unavailable");
+  if (candidate?.embeddable === false) failures.push("not embeddable");
+  if (candidate?.madeForKids === true) failures.push("Made-for-Kids policy failure");
+  if (candidate?.qualityExcluded === true) failures.push("quality-excluded provider");
+  return failures;
 }
 
 function normalizeSearchText(value) {
@@ -702,6 +815,8 @@ export function evaluateAutoHighConfidence(song, rankedCandidates, technicalReco
   if (!technicalRecord || technicalRecord.apiVerified !== true) reasons.push("video was not returned by videos.list");
   if (technicalRecord && technicalRecord.embeddable !== true) reasons.push(`embeddable=${formatBoolean(technicalRecord.embeddable)}`);
   if (technicalRecord && technicalRecord.madeForKids !== false) reasons.push(`madeForKids=${formatBoolean(technicalRecord.madeForKids)}`);
+  const definition = technicalRecord?.definition || candidate?.definition || null;
+  if (definition === "sd") reasons.push("video definition is SD; automatic promotion requires an HD candidate when available");
   if (candidate && !candidate.reasons.includes("title match")) reasons.push("title match is not exact or strongly normalized");
   if (candidate && !candidate.reasons.includes("artist match")) reasons.push("expected artist is not clearly represented");
   if (candidate && !candidate.reasons.some((reason) => ["karaoke", "instrumental", "backing track", "minus one", "sing along"].includes(reason))) reasons.push("karaoke wording is missing from the video title");
@@ -1456,9 +1571,9 @@ export function normalizeCandidateMappings(value, catalog, options = {}) {
   return { candidates, rejected };
 }
 
-async function requestVideoBatch(ids, apiKey, checkedAt, fetchImplementation, requestUrl = API_URL, requestConfig = {}) {
+export async function requestVideoBatch(ids, apiKey, checkedAt, fetchImplementation, requestUrl = API_URL, requestConfig = {}) {
   const url = new URL(requestUrl);
-  url.searchParams.set("part", "snippet,status");
+  url.searchParams.set("part", "snippet,status,statistics,contentDetails");
   url.searchParams.set("id", ids.join(","));
   url.searchParams.set("key", apiKey.trim());
 
@@ -2265,7 +2380,8 @@ function nonNegativeIntegerOrZero(value) {
 }
 
 function nonNegativeIntegerOrNull(value) {
-  return Number.isInteger(value) && value >= 0 ? value : null;
+  const numericValue = typeof value === "string" && /^\d+$/.test(value.trim()) ? Number(value.trim()) : value;
+  return Number.isSafeInteger(numericValue) && numericValue >= 0 ? numericValue : null;
 }
 
 function validHttpStatus(value) {
@@ -2415,7 +2531,7 @@ function printUsageWithQuery() {
     "Search is discovery only: it uses search.list, never approves or promotes, and never writes catalog or verification data.",
     "--query is exact and cannot be combined with --all. --all is capped by default to control quota usage.",
     "auto-batch searches only null catalog IDs, skips unresolved/review-required/quality-excluded songs, conservatively selects candidates, binds them before videos.list verification, and never promotes.",
-    "auto-complete processes the entire eligible catalog in one run, reuses or searches candidates, technically verifies them, promotes only strict auto-high-confidence matches, and leaves exceptions in REVIEW REQUIRED.",
+    "auto-complete processes the entire eligible catalog in one run, reuses or searches candidates, technically verifies them, promotes only strict auto-high-confidence matches, and leaves exceptions in REVIEW REQUIRED. Explicitly SD candidates are not auto-promoted.",
     "auto-complete retries temporary 429 throttling with bounded backoff, persists deferred-rate-limit songs, and stops cleanly on distinguishable daily quota exhaustion.",
     "approve-batch is the one-command human approval path: list only reviewed song IDs and include --manual-match --karaoke-suitable --confirm. It skips every record that fails a technical or catalog gate.",
     "cleanup-verification removes only identical duplicates and orphan records with exactly one matching promoted song-linked record; ambiguous records are kept.",

@@ -77,11 +77,11 @@ test("app registers the service worker safely and keeps offline playback explici
 
 test("PWA boundaries preserve the local catalog and protected video assignments", async () => {
   const songs = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
-    assert.equal(songs.length, 145);
-  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 129);
-    assert.deepEqual(songs.map((song) => song.id), Array.from({ length: 145 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
-    assert.equal(new Set(songs.map((song) => song.id)).size, 145);
-    assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 145);
+    assert.equal(songs.length, 170);
+  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 151);
+    assert.deepEqual(songs.map((song) => song.id), Array.from({ length: 170 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
+    assert.equal(new Set(songs.map((song) => song.id)).size, 170);
+    assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 170);
   assert.equal(songs.find((song) => song.id === "sample-008").youtubeVideoId, null);
   assert.equal(songs.find((song) => song.id === "sample-009").youtubeVideoId, null);
   assert.equal(songs.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");

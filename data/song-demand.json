@@ -26,6 +26,14 @@
       "url": "https://singa.com/blog/100-most-popular-karaoke-songs-united-states/",
       "measurement": "real song plays in the Singa karaoke app from US users during the previous 12 months",
       "lastUpdated": "2026-05-08"
+    },
+    {
+      "id": "singa-pop-2026",
+      "publisher": "Singa",
+      "title": "100 Most Popular Pop Karaoke Songs in 2026",
+      "url": "https://singa.com/blog/pop-karaoke-songs/",
+      "measurement": "real song plays in the Singa karaoke app from the previous 12 months, filtered to pop tracks",
+      "lastUpdated": "2026-06-02"
     }
   ],
   "signals": [
@@ -86,6 +94,31 @@
     { "songId": "sample-142", "demandTier": "high", "evidence": [{ "sourceId": "singa-us-2026", "rank": 20 }] },
     { "songId": "sample-143", "demandTier": "high", "evidence": [{ "sourceId": "singa-us-2026", "rank": 21 }] },
     { "songId": "sample-144", "demandTier": "high", "evidence": [{ "sourceId": "singa-us-2026", "rank": 22 }] },
-    { "songId": "sample-145", "demandTier": "high", "evidence": [{ "sourceId": "singa-us-2026", "rank": 24 }] }
+    { "songId": "sample-145", "demandTier": "high", "evidence": [{ "sourceId": "singa-us-2026", "rank": 24 }] },
+    { "songId": "sample-146", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 41 }] },
+    { "songId": "sample-147", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 42 }] },
+    { "songId": "sample-148", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 43 }] },
+    { "songId": "sample-149", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 45 }] },
+    { "songId": "sample-150", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 46 }] },
+    { "songId": "sample-151", "demandTier": "high", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 27 }] },
+    { "songId": "sample-152", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 47 }] },
+    { "songId": "sample-153", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 48 }] },
+    { "songId": "sample-154", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 49 }] },
+    { "songId": "sample-155", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 50 }] },
+    { "songId": "sample-156", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 40 }] },
+    { "songId": "sample-157", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 38 }] },
+    { "songId": "sample-158", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 39 }] },
+    { "songId": "sample-159", "demandTier": "established", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 37 }] },
+    { "songId": "sample-160", "demandTier": "high", "evidence": [{ "sourceId": "singa-tagalog-2026", "rank": 29 }] },
+    { "songId": "sample-161", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-global-top15", "rank": 4 }] },
+    { "songId": "sample-162", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-global-top15", "rank": 9 }] },
+    { "songId": "sample-163", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 11 }] },
+    { "songId": "sample-164", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 12 }] },
+    { "songId": "sample-165", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 13 }] },
+    { "songId": "sample-166", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 14 }] },
+    { "songId": "sample-167", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 15 }] },
+    { "songId": "sample-168", "demandTier": "high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 18 }] },
+    { "songId": "sample-169", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-global-top15", "rank": 13 }] },
+    { "songId": "sample-170", "demandTier": "very-high", "evidence": [{ "sourceId": "singa-pop-2026", "rank": 9 }] }
   ]
 }

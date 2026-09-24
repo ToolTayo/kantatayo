@@ -15,7 +15,7 @@ test("view state maps Home and catalog routes without changing the catalog", () 
   assert.equal(normalizeView("discover"), "discover");
   assert.equal(normalizeView("unknown"), "home");
   assert.equal(viewHash("favorites"), "#favorites");
-  assert.equal(getDiscoverySongs(index, { filter: "all" }).length, 145);
+  assert.equal(getDiscoverySongs(index, { filter: "all" }).length, 170);
   assert.equal(getDiscoverySongs(index, { filter: "english" }).length > 0, true);
 });
 

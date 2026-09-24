@@ -8,3 +8,10 @@ tools/youtube-candidates.json
 tools/youtube-candidates.json.tmp
 tools/youtube-review.json
 tools/youtube-review.json.tmp
+tools/youtube-production-audit.json
+tools/youtube-production-audit.md
+tools/youtube-production-decisions.json
+tools/youtube-catalog-batch-2.json
+tools/youtube-batch-2-final-audit.json
+tools/youtube-batch-2-final-audit.md
+tools/youtube-batch-2-production-decisions.json

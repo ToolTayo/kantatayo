@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-22T10:42:05.930Z",
+  "generatedAt": "2026-09-24T01:56:32.996Z",
   "scope": "Persisted verified YouTube assignments; identity, karaoke metadata, audio evidence, presentation evidence, public catalog state, and replacement history are recorded per row.",
-  "auditedCount": 95,
+  "auditedCount": 137,
   "counts": {
     "KEEP — STRONG EXPERIENCE": 0,
     "KEEP — ACCEPTABLE": 0,
-    "KEEP — AUDIO QUALITY UNRESOLVED": 91,
+    "KEEP — AUDIO QUALITY UNRESOLVED": 133,
     "KEEP — VISUAL QUALITY UNRESOLVED": 0,
     "REVIEW — LISTENING REQUIRED": 4,
     "REVIEW — VISUAL INSPECTION REQUIRED": 0,
@@ -15,9 +15,9 @@
   },
   "inspectionSummary": {
     "visualInspectedCount": 0,
-    "visualUnresolvedCount": 95,
+    "visualUnresolvedCount": 137,
     "audioListenedCount": 0,
-    "audioUnresolvedCount": 95,
+    "audioUnresolvedCount": 137,
     "presentationQuality": "UNRESOLVED"
   },
   "unassignedCatalogSongIds": [
@@ -33,7 +33,11 @@
     "sample-092",
     "sample-093",
     "sample-095",
-    "sample-096"
+    "sample-096",
+    "sample-121",
+    "sample-139",
+    "sample-143",
+    "sample-145"
   ],
   "qualityUnassignments": [
     {
@@ -9351,6 +9355,4022 @@
       "source": {
         "videoTitle": "Shallow - Lady Gaga, Bradley Cooper (Karaoke)",
         "channelTitle": "Mi Balmz Karaoke Tracks",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-101",
+      "songTitle": "Kung Sakali",
+      "artist": "Michael Pangilinan",
+      "currentVideoId": "9hrT301x000",
+      "videoId": "9hrT301x000",
+      "publicCatalogVideoId": "9hrT301x000",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Kung Sakali - Michael Pangilinan (Karaoke Version)",
+        "channelTitle": "KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-102",
+      "songTitle": "Kung Ako Na Lang Sana",
+      "artist": "Bituin Escalante",
+      "currentVideoId": "ZFBdzKUp-JI",
+      "videoId": "ZFBdzKUp-JI",
+      "publicCatalogVideoId": "ZFBdzKUp-JI",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "KUNG AKO NA LANG SANA - Bituin Escalante (HD Karaoke)",
+        "channelTitle": "Atomic Karaoke...",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-103",
+      "songTitle": "Palagi",
+      "artist": "TJ Monterde",
+      "currentVideoId": "-Ji_rJnKB_c",
+      "videoId": "-Ji_rJnKB_c",
+      "publicCatalogVideoId": "-Ji_rJnKB_c",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "PALAGI - TJ Monterde (HD Karaoke)",
+        "channelTitle": "Atomic Karaoke...",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-104",
+      "songTitle": "Kay Tagal",
+      "artist": "Rachel Alejandro",
+      "currentVideoId": "gMetRQodtF8",
+      "videoId": "gMetRQodtF8",
+      "publicCatalogVideoId": "gMetRQodtF8",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "KAY TAGAL / KARAOKE - Rachel Alejandro",
+        "channelTitle": "TopHits Karaoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-105",
+      "songTitle": "Sa 'Yo Lamang",
+      "artist": "Joey Albert",
+      "currentVideoId": "OsxDn74jIbY",
+      "videoId": "OsxDn74jIbY",
+      "publicCatalogVideoId": "OsxDn74jIbY",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "SA'YO LAMANG - JOEY ALBERT (karaoke version)",
+        "channelTitle": "My All Time Karaoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-106",
+      "songTitle": "Nanghihinayang",
+      "artist": "Jeremiah",
+      "currentVideoId": "CDVYjRyw_aM",
+      "videoId": "CDVYjRyw_aM",
+      "publicCatalogVideoId": "CDVYjRyw_aM",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "NANGHIHINAYANG - Jeremiah (HD Karaoke)",
+        "channelTitle": "Atomic Karaoke...",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-107",
+      "songTitle": "Ika'y Mahal Pa Rin",
+      "artist": "Rockstar 2",
+      "currentVideoId": "2FBF7arHW5c",
+      "videoId": "2FBF7arHW5c",
+      "publicCatalogVideoId": "2FBF7arHW5c",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "IKA'Y MAHAL PA RIN - Rockstar 2 (HD Karaoke)",
+        "channelTitle": "Global KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-108",
+      "songTitle": "Para Lang Sa Yo",
+      "artist": "Aiza Seguerra",
+      "currentVideoId": "CTM7tXU4FbY",
+      "videoId": "CTM7tXU4FbY",
+      "publicCatalogVideoId": "CTM7tXU4FbY",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Aiza Seguerra - PARA LANG SA'YO [Karaoke Version]",
+        "channelTitle": "The Singing Bee",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-109",
+      "songTitle": "Katawan",
+      "artist": "Hagibis",
+      "currentVideoId": "cehpq0qcF7k",
+      "videoId": "cehpq0qcF7k",
+      "publicCatalogVideoId": "cehpq0qcF7k",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Hagibis - Katawan (karaoke version)",
+        "channelTitle": "DPLYRICSPH",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-110",
+      "songTitle": "Liwanag Sa Dilim",
+      "artist": "Rivermaya",
+      "currentVideoId": "9X9gQtk5Oiw",
+      "videoId": "9X9gQtk5Oiw",
+      "publicCatalogVideoId": "leP8DEWLkZc",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Rivermaya | Liwanag Sa Dilim 🎤HQ Karaoke🎤",
+        "channelTitle": "Otep333 Karaoke Trackz",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-111",
+      "songTitle": "Paubaya",
+      "artist": "Moira Dela Torre",
+      "currentVideoId": "dWpBJUAV5N0",
+      "videoId": "dWpBJUAV5N0",
+      "publicCatalogVideoId": "dWpBJUAV5N0",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "PAUBAYA - Moira Dela Torre (KARAOKE VERSION)",
+        "channelTitle": "CoversPH",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-112",
+      "songTitle": "Kailanman",
+      "artist": "Introvoys",
+      "currentVideoId": "CTclPs-JGIU",
+      "videoId": "CTclPs-JGIU",
+      "publicCatalogVideoId": "xOv6__Hk5mY",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Introvoys | Kailanman 🎤HQ Karaoke🎤",
+        "channelTitle": "Otep333 Karaoke Trackz",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-113",
+      "songTitle": "Gaano Kadalas Ang Minsan",
+      "artist": "Basil Valdez",
+      "currentVideoId": "Ij3MFqfDUdo",
+      "videoId": "Ij3MFqfDUdo",
+      "publicCatalogVideoId": "Ij3MFqfDUdo",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "GAANO KADALAS ANG MINSAN - Karaoke version in the style of BASIL VALDEZ",
+        "channelTitle": "MyKaraoke Channel",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-114",
+      "songTitle": "Mahal Kita, Alam Mo Ba",
+      "artist": "Rockstar 2",
+      "currentVideoId": "WeI_LxDZFs4",
+      "videoId": "WeI_LxDZFs4",
+      "publicCatalogVideoId": "WeI_LxDZFs4",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "♫  Mahal Kita, Alam Mo Ba - Rockstar 2  ♫ KARAOKE VERSION ♫",
+        "channelTitle": "PHM KARAOKE",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-115",
+      "songTitle": "Pangarap Ko Ang Ibigin Ka",
+      "artist": "Regine Velasquez",
+      "currentVideoId": "ENox0-dvveg",
+      "videoId": "ENox0-dvveg",
+      "publicCatalogVideoId": "v7pVBAebzkw",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Regine Velasquez - Pangarap ko Ang Ibigin Ka (Karaoke Version)",
+        "channelTitle": "Sing King",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-116",
+      "songTitle": "Ikaw Lang At Ako",
+      "artist": "Donna Cruz",
+      "currentVideoId": "egoyXwBqIZI",
+      "videoId": "egoyXwBqIZI",
+      "publicCatalogVideoId": "bk3vAuiGHxI",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "UNRESOLVED",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution",
+        "intended duet parts and arrangement"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Duet arrangement",
+          "detail": "The intended duet parts were not verified by listening."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "IKAW LANG AT AKO by Donna Cruz (Karaoke Version)",
+        "channelTitle": "LK Karaoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-117",
+      "songTitle": "Ganyan Talaga Ang Pag-Ibig",
+      "artist": "April Boys",
+      "currentVideoId": "Lcn2v1gfzpA",
+      "videoId": "Lcn2v1gfzpA",
+      "publicCatalogVideoId": "Lcn2v1gfzpA",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "April Boys | Ganyan Talaga Ang Pag-Ibig 🎤HQ Karaoke🎤",
+        "channelTitle": "Otep333 Karaoke Trackz",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-118",
+      "songTitle": "Buko",
+      "artist": "Jireh Lim",
+      "currentVideoId": "R5aWjamIf_Q",
+      "videoId": "R5aWjamIf_Q",
+      "publicCatalogVideoId": "R5aWjamIf_Q",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "BUKO - Jireh Lim (Karaoke Version) Hd",
+        "channelTitle": "KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-119",
+      "songTitle": "Laki Sa Layaw",
+      "artist": "Mike Hanopol",
+      "currentVideoId": "0iFAK1hIB88",
+      "videoId": "0iFAK1hIB88",
+      "publicCatalogVideoId": "cBO0_dhukb4",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "LAKI SA LAYAW - Mike Hanopol (Karaoke Version)",
+        "channelTitle": "Mic & Magic Karaoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-120",
+      "songTitle": "Larawang Kupas",
+      "artist": "Jerome Abalos",
+      "currentVideoId": "aYuVq2sQ9Jo",
+      "videoId": "aYuVq2sQ9Jo",
+      "publicCatalogVideoId": "aYuVq2sQ9Jo",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Larawang Kupas - Jerome Abalos (Karaoke Version)",
+        "channelTitle": "KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-122",
+      "songTitle": "Tayong Dalawa",
+      "artist": "Aicelle Santos",
+      "currentVideoId": "1LikErFudsc",
+      "videoId": "1LikErFudsc",
+      "publicCatalogVideoId": "1LikErFudsc",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "TAYONG DALAWA (Theme from \"Bakekang\") - Aicelle Santos (KARAOKE Version)",
+        "channelTitle": "KaraOcraze",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-123",
+      "songTitle": "Dahil Sa'yong Pag-Ibig",
+      "artist": "Lani Misalucha",
+      "currentVideoId": "hrtSi9pfMGc",
+      "videoId": "hrtSi9pfMGc",
+      "publicCatalogVideoId": "hrtSi9pfMGc",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "AVSEQ04 - Dahil Sa'yong Pag-Ibig | Sing Along With Lani Misalucha | Vivaoke/Viva Records",
+        "channelTitle": "ReynaOke623+",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-124",
+      "songTitle": "Hanggang Ngayo'y Mahal",
+      "artist": "Jaya",
+      "currentVideoId": "j1B-M559MJo",
+      "videoId": "j1B-M559MJo",
+      "publicCatalogVideoId": "j1B-M559MJo",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "HANGGANG NGAYO'Y MAHAL - Karaoke version in the style of JAYA",
+        "channelTitle": "MyKaraoke Channel",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-125",
+      "songTitle": "Umaaraw, Umuulan",
+      "artist": "Rivermaya",
+      "currentVideoId": "F2qvj4yU3VI",
+      "videoId": "F2qvj4yU3VI",
+      "publicCatalogVideoId": "F2qvj4yU3VI",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Umaaraw, Umuulan - Rivermaya (Karaoke Version)",
+        "channelTitle": "KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-126",
+      "songTitle": "Sweet Caroline",
+      "artist": "Neil Diamond",
+      "currentVideoId": "UcWEfvu6F_s",
+      "videoId": "UcWEfvu6F_s",
+      "publicCatalogVideoId": "UcWEfvu6F_s",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "SWEET CAROLINE - Neil Diamond (HD Karaoke)",
+        "channelTitle": "Atomic Karaoke...",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-127",
+      "songTitle": "Lose Control",
+      "artist": "Teddy Swims",
+      "currentVideoId": "geFcauqvN4E",
+      "videoId": "geFcauqvN4E",
+      "publicCatalogVideoId": "geFcauqvN4E",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Teddy Swims - Lose Control (Karaoke instrumental)",
+        "channelTitle": "KaraokeMedia",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-128",
+      "songTitle": "Tennessee Whiskey",
+      "artist": "Chris Stapleton",
+      "currentVideoId": "3cwFlAjSg9Y",
+      "videoId": "3cwFlAjSg9Y",
+      "publicCatalogVideoId": "3cwFlAjSg9Y",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Tennessee Whiskey karaoke Chris Stapleton",
+        "channelTitle": "GOLDEN KARAOKE",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-129",
+      "songTitle": "Creep",
+      "artist": "Radiohead",
+      "currentVideoId": "ZFg3XnyILPk",
+      "videoId": "ZFg3XnyILPk",
+      "publicCatalogVideoId": "iPy2YPjlrrY",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Radiohead • Creep (CC Karaoke / Instrumental)",
+        "channelTitle": "CC Karaoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-130",
+      "songTitle": "Take On Me",
+      "artist": "a-ha",
+      "currentVideoId": "ibQ2T6RjE0U",
+      "videoId": "ibQ2T6RjE0U",
+      "publicCatalogVideoId": "GK0hisiU6-c",
+      "previousVideoId": null,
+      "assignmentState": "CATALOG_ID_MISMATCH",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Catalog contains a different video ID for this song.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "A-Ha - Take On Me (MTV Unplugged) - Karaoke Version from Zoom Karaoke",
+        "channelTitle": "Zoom Karaoke Official",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-131",
+      "songTitle": "Pink Pony Club",
+      "artist": "Chappell Roan",
+      "currentVideoId": "13AOpqkuh5U",
+      "videoId": "13AOpqkuh5U",
+      "publicCatalogVideoId": "13AOpqkuh5U",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Chappell Roan - Pink Pony Club | Karaoke Version",
+        "channelTitle": "The Proper Volume Karaoke Studio",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-132",
+      "songTitle": "Before He Cheats",
+      "artist": "Carrie Underwood",
+      "currentVideoId": "THBqaXIyv-w",
+      "videoId": "THBqaXIyv-w",
+      "publicCatalogVideoId": "THBqaXIyv-w",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Carrie Underwood - Before He Cheats - Karaoke Version from Zoom Karaoke",
+        "channelTitle": "Zoom Karaoke Official",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-133",
+      "songTitle": "Golden",
+      "artist": "HUNTR/X",
+      "currentVideoId": "WT3sn5gV8iA",
+      "videoId": "WT3sn5gV8iA",
+      "publicCatalogVideoId": "WT3sn5gV8iA",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Golden by HUNTR/X - Karaoke with BG Vocals",
+        "channelTitle": "Luxanna Reyes",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-134",
+      "songTitle": "Take Me Home, Country Roads",
+      "artist": "John Denver",
+      "currentVideoId": "nawRw6pR_f8",
+      "videoId": "nawRw6pR_f8",
+      "publicCatalogVideoId": "nawRw6pR_f8",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Take Me Home, Country Roads - KARAOKE VERSION - as popularized by John Denver",
+        "channelTitle": "Pinoy Videoke Tambayan",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-135",
+      "songTitle": "I Will Survive",
+      "artist": "Gloria Gaynor",
+      "currentVideoId": "ycotHxAZTLE",
+      "videoId": "ycotHxAZTLE",
+      "publicCatalogVideoId": "ycotHxAZTLE",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "I WILL SURVIVE - Gloria Gaynor (HD Karaoke)",
+        "channelTitle": "Atomic Karaoke...",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-136",
+      "songTitle": "Party in the U.S.A.",
+      "artist": "Miley Cyrus",
+      "currentVideoId": "UA7dQKS94jI",
+      "videoId": "UA7dQKS94jI",
+      "publicCatalogVideoId": "UA7dQKS94jI",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Miley Cyrus - Party In The U.S.A. - Karaoke Version from Zoom Karaoke",
+        "channelTitle": "Zoom Karaoke Official",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-137",
+      "songTitle": "In the End",
+      "artist": "Linkin Park",
+      "currentVideoId": "O7xFdFjW0nQ",
+      "videoId": "O7xFdFjW0nQ",
+      "publicCatalogVideoId": "O7xFdFjW0nQ",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Linkin Park - In The End [(CC Karaoke / Instrumental)",
+        "channelTitle": "CC Karaoke X",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-138",
+      "songTitle": "Neon Moon",
+      "artist": "Brooks & Dunn",
+      "currentVideoId": "UPRhGxdLWSI",
+      "videoId": "UPRhGxdLWSI",
+      "publicCatalogVideoId": "UPRhGxdLWSI",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "UNRESOLVED",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution",
+        "intended duet parts and arrangement"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Duet arrangement",
+          "detail": "The intended duet parts were not verified by listening."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Brooks and Dunn - Neon Moon - Karaoke Version from Zoom Karaoke",
+        "channelTitle": "Zoom Karaoke Official",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-139",
+      "songTitle": "Baby",
+      "artist": "Justin Bieber",
+      "currentVideoId": "6l4iNbBpYqM",
+      "videoId": "6l4iNbBpYqM",
+      "publicCatalogVideoId": null,
+      "previousVideoId": null,
+      "assignmentState": "PERSISTED_NOT_YET_PUBLIC",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Persisted verified assignment is not yet present in the public catalog.",
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Baby ft. Ludacris - Justin Bieber Karaoke 【With Guide Melody】 Instrumental",
+        "channelTitle": "EdKara",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-140",
+      "songTitle": "Santeria",
+      "artist": "Sublime",
+      "currentVideoId": "m_q_KX6Brso",
+      "videoId": "m_q_KX6Brso",
+      "publicCatalogVideoId": "m_q_KX6Brso",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Santeria - Sublime Reggae (karaoke version)",
+        "channelTitle": "PartTimemusic",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-141",
+      "songTitle": "Picture",
+      "artist": "Kid Rock & Sheryl Crow",
+      "currentVideoId": "DRKyel8tmxU",
+      "videoId": "DRKyel8tmxU",
+      "publicCatalogVideoId": "DRKyel8tmxU",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "UNRESOLVED",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution",
+        "intended duet parts and arrangement"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Duet arrangement",
+          "detail": "The intended duet parts were not verified by listening."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "Picture - Kid Rock F-Sheryl Crow (Karaoke Version)",
+        "channelTitle": "EasyKaraoke",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-142",
+      "songTitle": "What's Up?",
+      "artist": "4 Non Blondes",
+      "currentVideoId": "0V0yLCvOrYY",
+      "videoId": "0V0yLCvOrYY",
+      "publicCatalogVideoId": "0V0yLCvOrYY",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "What's Up - 4 Non Blondes (Karaoke Version)",
+        "channelTitle": "KaraokeyTV",
+        "descriptionAvailable": false,
+        "durationAvailable": false
+      }
+    },
+    {
+      "catalogId": "sample-144",
+      "songTitle": "Friends in Low Places",
+      "artist": "Garth Brooks",
+      "currentVideoId": "LEp8jEFINPU",
+      "videoId": "LEp8jEFINPU",
+      "publicCatalogVideoId": "LEp8jEFINPU",
+      "previousVideoId": null,
+      "assignmentState": "PUBLIC_CATALOG",
+      "productQualityStatus": "NOT_REMOVED",
+      "unassignmentReason": null,
+      "unassignedAt": null,
+      "unassignmentProvenance": null,
+      "verificationProvenance": "auto-high-confidence",
+      "technicalStatus": "VERIFIED",
+      "identityStatus": "MATCHED_METADATA",
+      "karaokeSuitabilityStatus": "METADATA INDICATION ONLY",
+      "keyStatus": "NO ALTERED-KEY INDICATOR FOUND",
+      "pitchSpeedStatus": "UNRESOLVED",
+      "vocalInstrumentalStatus": "UNRESOLVED",
+      "instrumentalVocalStatus": "UNRESOLVED",
+      "versionArrangementStatus": "NO METADATA RED FLAG FOUND",
+      "arrangementStatus": "UNRESOLVED",
+      "completenessStatus": "UNRESOLVED",
+      "audioQualityStatus": "UNRESOLVED",
+      "audioInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityStatus": "UNRESOLVED",
+      "visualInspectionStatus": "NOT_PERFORMED",
+      "presentationQualityDetail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved.",
+      "duetSuitability": "NOT_APPLICABLE",
+      "overallAuditClassification": "KEEP — AUDIO QUALITY UNRESOLVED",
+      "replacementAction": "NONE",
+      "replacementReason": null,
+      "replacementHistory": [],
+      "flaggedInvestigation": null,
+      "remainingUncertainty": [
+        "original/standard key",
+        "pitch and speed",
+        "instrumental quality and guide vocals",
+        "audio quality",
+        "completeness and arrangement",
+        "lyric readability and synchronization",
+        "presentation quality and apparent resolution"
+      ],
+      "evidence": [
+        {
+          "type": "FACT",
+          "claim": "Video ID and technical gate state",
+          "detail": "Persisted record says status=verified, apiVerified=true, embeddable=true, madeForKids=false."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Song identity",
+          "detail": "Video title contains the catalog song title and enough catalog artist anchors."
+        },
+        {
+          "type": "METADATA INDICATION",
+          "claim": "Karaoke suitability",
+          "detail": "Stored title/channel metadata contains karaoke or instrumental wording."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Original key",
+          "detail": "No altered-key indicator was found; original key is not confirmed."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Audio quality",
+          "detail": "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Presentation quality",
+          "detail": "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+        },
+        {
+          "type": "UNRESOLVED",
+          "claim": "Completeness and arrangement",
+          "detail": "Stored verification data does not establish full length, arrangement, or absence of a medley."
+        }
+      ],
+      "evidenceReasons": [
+        "Video metadata includes karaoke/instrumental wording; this does not prove audio quality.",
+        "Description and duration evidence are not present in the persisted verification record.",
+        "This environment did not listen to the YouTube playback; key, pitch, speed, guide vocals, backing quality, and completeness remain unresolved.",
+        "No representative playback-frame inspection was available; visual quality, lyric readability, synchronization, and resolution remain unresolved."
+      ],
+      "recommendedAction": "Listen to the official embed and record playback findings before production sign-off.",
+      "source": {
+        "videoTitle": "FRIENDS IN LOW PLACES - GARTH BROOKS (karaoke version)",
+        "channelTitle": "My All Time Karaoke",
         "descriptionAvailable": false,
         "durationAvailable": false
       }

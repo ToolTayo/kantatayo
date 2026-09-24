@@ -88,16 +88,16 @@ const newlyPromotedIds = {
   "sample-107": "2FBF7arHW5c",
   "sample-108": "CTM7tXU4FbY",
   "sample-109": "cehpq0qcF7k",
-  "sample-110": "9X9gQtk5Oiw",
+  "sample-110": "leP8DEWLkZc",
   "sample-111": "dWpBJUAV5N0",
-  "sample-112": "CTclPs-JGIU",
+  "sample-112": "xOv6__Hk5mY",
   "sample-113": "Ij3MFqfDUdo",
   "sample-114": "WeI_LxDZFs4",
-  "sample-115": "ENox0-dvveg",
-  "sample-116": "egoyXwBqIZI",
+  "sample-115": "v7pVBAebzkw",
+  "sample-116": "bk3vAuiGHxI",
   "sample-117": "Lcn2v1gfzpA",
   "sample-118": "R5aWjamIf_Q",
-  "sample-119": "0iFAK1hIB88",
+  "sample-119": "cBO0_dhukb4",
   "sample-120": "aYuVq2sQ9Jo",
   "sample-122": "1LikErFudsc",
   "sample-123": "hrtSi9pfMGc",
@@ -106,8 +106,8 @@ const newlyPromotedIds = {
   "sample-126": "UcWEfvu6F_s",
   "sample-127": "geFcauqvN4E",
   "sample-128": "3cwFlAjSg9Y",
-  "sample-129": "ZFg3XnyILPk",
-  "sample-130": "ibQ2T6RjE0U",
+  "sample-129": "iPy2YPjlrrY",
+  "sample-130": "GK0hisiU6-c",
   "sample-131": "13AOpqkuh5U",
   "sample-132": "THBqaXIyv-w",
   "sample-133": "WT3sn5gV8iA",
@@ -116,7 +116,6 @@ const newlyPromotedIds = {
   "sample-136": "UA7dQKS94jI",
   "sample-137": "O7xFdFjW0nQ",
   "sample-138": "UPRhGxdLWSI",
-  "sample-139": "6l4iNbBpYqM",
   "sample-140": "m_q_KX6Brso",
   "sample-141": "DRKyel8tmxU",
   "sample-142": "0V0yLCvOrYY",
@@ -124,12 +123,12 @@ const newlyPromotedIds = {
 };
 
 test("expanded catalog has contiguous IDs, valid metadata, and no duplicate songs", () => {
-  assert.equal(rawCatalog.length, 145);
+  assert.equal(rawCatalog.length, 170);
   assert.equal(normalized.rejectedRecords, 0);
-  assert.deepEqual(rawCatalog.map((song) => song.id), Array.from({ length: 145 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
-  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 145);
-  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 145);
-  assert.equal(normalized.songs.length, 145);
+  assert.deepEqual(rawCatalog.map((song) => song.id), Array.from({ length: 170 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
+  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 170);
+  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 170);
+  assert.equal(normalized.songs.length, 170);
   assert.deepEqual(normalized.warnings, []);
 });
 
@@ -143,9 +142,9 @@ test("unrelated promoted IDs and protected null assignments remain unchanged", (
     assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, videoId, songId);
   }
 
-  assert.equal(Object.keys(newlyPromotedIds).length, 42);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 129);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 16);
+  assert.equal(Object.keys(newlyPromotedIds).length, 41);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 151);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 19);
   for (const songId of ["sample-010", "sample-078", "sample-088", "sample-091", "sample-092", "sample-093", "sample-095", "sample-096"]) {
     assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, null, songId);
   }
@@ -156,11 +155,12 @@ test("unrelated promoted IDs and protected null assignments remain unchanged", (
 
 test("new catalog records use current validator categories and preserve unresolved null IDs", () => {
   const newSongs = rawCatalog.slice(37);
-  assert.equal(newSongs.length, 108);
+  assert.equal(newSongs.length, 133);
   const unassignedNewSongs = newSongs.filter((song) => song.youtubeVideoId === null);
   assert.deepEqual(unassignedNewSongs.map((song) => song.id), [
     "sample-042", "sample-072", "sample-078", "sample-084", "sample-088", "sample-091", "sample-092", "sample-093", "sample-095", "sample-096",
-    "sample-121", "sample-143", "sample-145"
+    "sample-121", "sample-139", "sample-143", "sample-145",
+    "sample-166", "sample-168"
   ]);
   assert.ok(newSongs.every((song) => ["easy", "medium", "hard"].includes(song.difficulty)));
   assert.ok(newSongs.every((song) => ["low", "medium", "high"].includes(song.vocalRange)));
@@ -174,11 +174,14 @@ test("demand metadata is evidence-backed and current availability remains explic
   const demand = JSON.parse(await readFile("data/song-demand.json", "utf8"));
   const sourceIds = new Set(demand.sources.map((source) => source.id));
   const catalogById = new Map(rawCatalog.map((song) => [song.id, song]));
-  assert.equal(demand.signals.length, 58);
+  assert.equal(demand.signals.length, 83);
   assert.ok(demand.signals.every((signal) => catalogById.has(signal.songId)));
   assert.ok(demand.signals.every((signal) => ["very-high", "high", "established"].includes(signal.demandTier)));
   assert.ok(demand.signals.every((signal) => signal.evidence.length > 0 && signal.evidence.every((item) => sourceIds.has(item.sourceId) && Number.isInteger(item.rank))));
-  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), ["sample-121", "sample-143", "sample-145"]);
+  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), [
+    "sample-121", "sample-139", "sample-143", "sample-145",
+    "sample-166", "sample-168"
+  ]);
   for (const [songId, videoId] of Object.entries(newlyPromotedIds)) {
     assert.equal(catalogById.get(songId)?.youtubeVideoId, videoId, songId);
   }
@@ -186,13 +189,16 @@ test("demand metadata is evidence-backed and current availability remains explic
 });
 
 test("newly playable songs flow through local discovery and recommendations", () => {
-  const targetSongs = normalized.songs.filter((song) => /^sample-(10[1-9]|1[1-3][0-9]|14[0-5])$/.test(song.id));
+  const targetSongs = normalized.songs.filter((song) => {
+    const number = Number(String(song.id).replace(/^sample-/, ""));
+    return number >= 101 && number <= 170;
+  });
   const playableTargetSongs = targetSongs.filter((song) => song.youtubeVideoId);
   const searchIndex = createSearchIndex(normalized.songs);
   const searchResults = getDiscoverySongs(searchIndex, { query: "Kung Sakali" });
   const recommendations = getRecommendations(playableTargetSongs, {}, { limit: 5, now: "2026-09-22T00:00:00.000Z" });
 
-  assert.equal(playableTargetSongs.length, 42);
+  assert.equal(playableTargetSongs.length, 64);
   assert.equal(searchResults.find((song) => song.id === "sample-101")?.id, "sample-101");
   assert.equal(recommendations.length, 5);
   assert.ok(recommendations.every((item) => playableTargetSongs.includes(item.song)));

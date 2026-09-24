@@ -165,8 +165,9 @@ test("roulette stress preserves user state and handles zero and one-song pools",
   assert.ok(candidates.every((song) => song.youtubeVideoId && !userState.queue.includes(song.id) && song.id !== userState.currentSongId && !userState.dislikedSongs.includes(song.id)));
   assert.deepEqual(userState, before);
   assert.deepEqual(getRouletteCandidates(catalog, userState, { language: "spanish" }), []);
-  assert.deepEqual(getRouletteCandidates(catalog, userState, { genre: "folk" }).map((song) => song.id), ["sample-016"]);
-  assert.equal(selectRouletteSong(catalog, userState, { genre: "folk" })?.id, "sample-016");
+  const oneSongFolkCatalog = catalog.filter((song) => song.id === "sample-016");
+  assert.deepEqual(getRouletteCandidates(oneSongFolkCatalog, userState, { genre: "folk" }).map((song) => song.id), ["sample-016"]);
+  assert.equal(selectRouletteSong(oneSongFolkCatalog, userState, { genre: "folk" })?.id, "sample-016");
 });
 
 test("party state does not influence deterministic Sing Next recommendations", () => {

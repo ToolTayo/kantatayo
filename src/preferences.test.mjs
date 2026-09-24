@@ -113,9 +113,11 @@ test("preferences do not filter local discovery results", async () => {
 test("promoted IDs and intentionally unassigned songs remain unchanged", async () => {
   const raw = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
   const promoted = raw.filter((song) => song.youtubeVideoId !== null);
-  assert.equal(promoted.length, 129);
+  assert.equal(promoted.length, 151);
   assert.equal(raw.find((song) => song.id === "sample-008").youtubeVideoId, null);
   assert.equal(raw.find((song) => song.id === "sample-009").youtubeVideoId, null);
+  assert.equal(raw.find((song) => song.id === "sample-166").youtubeVideoId, null);
+  assert.equal(raw.find((song) => song.id === "sample-168").youtubeVideoId, null);
   assert.equal(raw.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });
 

@@ -2357,7 +2357,7 @@
     "vocalRange": "medium",
     "performanceType": "solo",
     "demandTier": "high",
-    "youtubeVideoId": "9X9gQtk5Oiw",
+    "youtubeVideoId": "leP8DEWLkZc",
     "tags": [
       "opm",
       "rock",
@@ -2403,7 +2403,7 @@
     "vocalRange": "medium",
     "performanceType": "solo",
     "demandTier": "high",
-    "youtubeVideoId": "CTclPs-JGIU",
+    "youtubeVideoId": "xOv6__Hk5mY",
     "tags": [
       "opm",
       "classics",
@@ -2472,7 +2472,7 @@
     "vocalRange": "high",
     "performanceType": "solo",
     "demandTier": "high",
-    "youtubeVideoId": "ENox0-dvveg",
+    "youtubeVideoId": "v7pVBAebzkw",
     "tags": [
       "opm",
       "classics",
@@ -2495,7 +2495,7 @@
     "vocalRange": "medium",
     "performanceType": "duet",
     "demandTier": "high",
-    "youtubeVideoId": "egoyXwBqIZI",
+    "youtubeVideoId": "bk3vAuiGHxI",
     "tags": [
       "opm",
       "classics",
@@ -2564,7 +2564,7 @@
     "vocalRange": "low",
     "performanceType": "solo",
     "demandTier": "high",
-    "youtubeVideoId": "0iFAK1hIB88",
+    "youtubeVideoId": "cBO0_dhukb4",
     "tags": [
       "opm",
       "classics",
@@ -2794,7 +2794,7 @@
     "vocalRange": "high",
     "performanceType": "solo",
     "demandTier": "very-high",
-    "youtubeVideoId": "ZFg3XnyILPk",
+    "youtubeVideoId": "iPy2YPjlrrY",
     "tags": [
       "international",
       "rock",
@@ -2817,7 +2817,7 @@
     "vocalRange": "high",
     "performanceType": "solo",
     "demandTier": "very-high",
-    "youtubeVideoId": "ibQ2T6RjE0U",
+    "youtubeVideoId": "GK0hisiU6-c",
     "tags": [
       "international",
       "classics",
@@ -3024,7 +3024,7 @@
     "vocalRange": "medium",
     "performanceType": "solo",
     "demandTier": "high",
-    "youtubeVideoId": "6l4iNbBpYqM",
+    "youtubeVideoId": null,
     "tags": [
       "international",
       "popular",
@@ -3168,6 +3168,603 @@
       "classics",
       "party",
       "duet"
+    ]
+  },
+  {
+    "id": "sample-146",
+    "demandTier": "established",
+    "title": "Manila",
+    "artist": "Hotdog",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1970s",
+    "mood": [
+      "nostalgic",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "6GAv4Vn5Few",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "group",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-147",
+    "demandTier": "established",
+    "title": "Bato Sa Buhangin",
+    "artist": "Cinderella",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1970s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "kgoIQqRAMeI",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-148",
+    "demandTier": "established",
+    "title": "Nakapagtataka",
+    "artist": "Rachel Alejandro",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "kdM9FOCP06I",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-149",
+    "demandTier": "established",
+    "title": "Hiram",
+    "artist": "Zsa Zsa Padilla",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "heCOt8YkMsU",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-150",
+    "demandTier": "established",
+    "title": "Bakit Iniwan Na",
+    "artist": "Freestyle",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "25yGEbckoHs",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-151",
+    "demandTier": "high",
+    "title": "Honey My Love (So Sweet)",
+    "artist": "April Boys",
+    "language": "Filipino",
+    "genre": "Pop Rock",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": "0m8vJvC39ec",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "group",
+      "love"
+    ]
+  },
+  {
+    "id": "sample-152",
+    "demandTier": "established",
+    "title": "Bakit Ngayon",
+    "artist": "Julie Anne San Jose",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "heartbreak",
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "vlQxis7zFFk",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-153",
+    "demandTier": "established",
+    "title": "Buhay Nga Naman Ng Tao",
+    "artist": "Freddie Aguilar",
+    "language": "Filipino",
+    "genre": "Folk",
+    "era": "1970s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "youtubeVideoId": "Uw1mCSrE8HE",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-154",
+    "demandTier": "established",
+    "title": "Kay Ganda Ng Ating Musika",
+    "artist": "Hajji Alejandro",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "1970s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "TGoyRvujBuo",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "male-vocal",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-155",
+    "demandTier": "established",
+    "title": "Muli",
+    "artist": "Rodel Naval",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "1IHl20MeoII",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "ballad",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-156",
+    "demandTier": "established",
+    "title": "Dahil Minahal Mo Ako",
+    "artist": "Sarah Geronimo",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "Z4uZw2ZSgUw",
+    "tags": [
+      "opm",
+      "popular",
+      "modern",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-157",
+    "demandTier": "established",
+    "title": "Huwag Ka Lang Mawawala",
+    "artist": "Ogie Alcasid",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "C_QgTbparPc",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-158",
+    "demandTier": "established",
+    "title": "Hanggang Ngayon",
+    "artist": "Regine Velasquez & Ogie Alcasid",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "duet",
+    "youtubeVideoId": "NA6SMVuNWrQ",
+    "tags": [
+      "opm",
+      "popular",
+      "ballad",
+      "duet"
+    ]
+  },
+  {
+    "id": "sample-159",
+    "demandTier": "established",
+    "title": "Kung Sakali Man",
+    "artist": "Rachel Alejandro",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "youtubeVideoId": "wN6FVZtQRpY",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "ballad",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-160",
+    "demandTier": "high",
+    "title": "Minamahal Kita",
+    "artist": "Freddie Aguilar",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1970s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "dq912y_GK3o",
+    "tags": [
+      "opm",
+      "popular",
+      "classics",
+      "ballad",
+      "male-vocal"
+    ]
+  },
+  {
+    "id": "sample-161",
+    "demandTier": "very-high",
+    "title": "Bohemian Rhapsody",
+    "artist": "Queen",
+    "language": "English",
+    "genre": "Rock",
+    "era": "1970s",
+    "mood": [
+      "dramatic",
+      "nostalgic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "xyF04rAhHaQ",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "rock",
+      "group",
+      "challenging"
+    ]
+  },
+  {
+    "id": "sample-162",
+    "demandTier": "very-high",
+    "title": "Don't Stop Believin'",
+    "artist": "Journey",
+    "language": "English",
+    "genre": "Rock",
+    "era": "1980s",
+    "mood": [
+      "hopeful",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "1pOFPExPDCY",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "rock",
+      "sing-along",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-163",
+    "demandTier": "very-high",
+    "title": "...Baby One More Time",
+    "artist": "Britney Spears",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "party",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "_XiectiL1z4",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "party",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-164",
+    "demandTier": "very-high",
+    "title": "Mamma Mia",
+    "artist": "ABBA",
+    "language": "English",
+    "genre": "Disco",
+    "era": "1970s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "U9UDH5N2K9o",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "party",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-165",
+    "demandTier": "very-high",
+    "title": "Gimme! Gimme! Gimme! (A Man After Midnight)",
+    "artist": "ABBA",
+    "language": "English",
+    "genre": "Disco",
+    "era": "1970s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "f18y0fz1rps",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "party",
+      "group"
+    ]
+  },
+  {
+    "id": "sample-166",
+    "demandTier": "very-high",
+    "title": "Breaking Free",
+    "artist": "High School Musical Cast",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good",
+      "empowering"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "duet",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "popular",
+      "modern",
+      "duet",
+      "feel-good"
+    ]
+  },
+  {
+    "id": "sample-167",
+    "demandTier": "very-high",
+    "title": "Call Me Maybe",
+    "artist": "Carly Rae Jepsen",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "BF2zUTehgeE",
+    "tags": [
+      "international",
+      "popular",
+      "modern",
+      "party",
+      "easy",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-168",
+    "demandTier": "high",
+    "title": "Don't Look Back in Anger",
+    "artist": "Oasis",
+    "language": "English",
+    "genre": "Rock",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "youtubeVideoId": null,
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "rock",
+      "sing-along"
+    ]
+  },
+  {
+    "id": "sample-169",
+    "demandTier": "very-high",
+    "title": "Espresso",
+    "artist": "Sabrina Carpenter",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "youtubeVideoId": "0fwASWgWTow",
+    "tags": [
+      "international",
+      "popular",
+      "modern",
+      "party",
+      "female-vocal"
+    ]
+  },
+  {
+    "id": "sample-170",
+    "demandTier": "very-high",
+    "title": "Wannabe",
+    "artist": "Spice Girls",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "party",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "group",
+    "youtubeVideoId": "DO1XCUjxrRk",
+    "tags": [
+      "international",
+      "popular",
+      "classics",
+      "party",
+      "group"
     ]
   }
 ]

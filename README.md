@@ -191,3 +191,36 @@ node tools/audit-youtube.mjs
 ```
 
 The audit reads the catalog and ignored verification store without making network requests. It writes durable JSON and Markdown reports to `tools/youtube-quality-audit.json` and `tools/youtube-quality-audit.md`. It flags explicit metadata indicators such as altered keys, live/remix/lyrics-only wording, or guide vocals, while keeping audio quality, original-key confirmation, completeness, and arrangement unresolved until a person listens through the official YouTube embed. It never changes catalog IDs, verification approvals, or promotion state.
+
+## Production assignment quality audit
+
+For a read-only audit of the promoted high-demand expansion, run:
+
+```text
+node tools/production-quality-audit.mjs --from sample-101 --to sample-145
+```
+
+The command searches three karaoke-oriented query variants per promoted song, then uses `videos.list` metadata for technical checks and bounded popularity signals. Candidate selection applies hard correctness and safety gates first: exact song/artist identity, karaoke suitability, standard-version wording, embeddability, Made-for-Kids policy, and quality/provider exclusions. Only qualified candidates are compared for HD, provider experience, and age-aware view popularity; when a qualified HD alternative exists, a qualified SD candidate is not treated as the preferred replacement. View counts are the ranking popularity signal, while like counts are retained as supplementary evidence when available. Popularity cannot rescue a wrong, unsafe, or technically invalid result, while modestly popular niche songs remain eligible. `contentDetails.definition=hd` means YouTube reported HD; it does not prove exact 1080p, audio quality, key, guide-vocal absence, completeness, or visual presentation.
+
+For a focused audit of selected assignments, use `--song-ids`:
+
+```text
+node tools/production-quality-audit.mjs --song-ids sample-130,sample-139,sample-142
+```
+
+Persisted evidence can be re-ranked without network access, and current-video statistics can be refreshed with one batched request:
+
+```text
+node tools/production-quality-audit.mjs --rerank-report tools/youtube-production-audit.json
+node tools/production-quality-audit.mjs --refresh-stats tools/youtube-production-audit.json
+```
+
+All audit/search/rerank commands are read-only with respect to the public catalog and promotion state. An explicit decision file is the only mutation path:
+
+```text
+node tools/production-quality-audit.mjs --decisions tools/youtube-production-decisions.json
+```
+
+That command accepts only persisted, technically passing HD alternatives, rejects duplicate promoted IDs, records the previous assignment and reason in the audit report, and can deliberately unassign a known-bad assignment when no safe alternative exists. It never claims visual/audio verification. A review flag requires human playback/quality comparison unless the decision file documents a defensible metadata-only production choice.
+
+The audit writes ignored JSON and Markdown reports to `tools/youtube-production-audit.json` and `tools/youtube-production-audit.md`. It is intentionally read-only: it never changes `data/songs.sample.json`, verification approvals, candidate mappings, or promoted IDs. Potential alternatives are reported for human playback comparison and are never automatically promoted or substituted.
