@@ -65,7 +65,19 @@ export function createAppState(userState = loadUserState()) {
     user: validateUserState(userState),
     query: "",
     filter: "all",
-    sortBy: "relevance"
+    sortBy: "relevance",
+    discoveryFilters: {
+      availability: "all",
+      language: "any",
+      genre: "any",
+      mood: "any",
+      difficulty: "any",
+      vocalRange: "any",
+      performanceType: "any",
+      era: "any",
+      favorites: false
+    },
+    discoveryPage: 1
   };
 }
 

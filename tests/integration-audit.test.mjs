@@ -127,6 +127,8 @@ test("Step 10 UI resilience hooks are present without changing catalog or player
   assert.match(html, /data-discover-empty/);
   assert.match(html, /data-player-status/);
   assert.match(html, /role="dialog" aria-modal="true" aria-label="Karaoke queue"/);
+  assert.match(html, /data-youtube-shell/);
+  assert.match(html, /data-youtube-mount/);
   assert.match(app, /event\.key !== "Escape"/);
   assert.match(app, /focusSongActionOrQueue/);
   assert.match(ui, /return document\.activeElement === target/);
@@ -145,8 +147,8 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=10/);
-  assert.match(html, /app\.js\?v=7/);
+  assert.match(html, /main\.css\?v=13/);
+  assert.match(html, /app\.js\?v=10/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);

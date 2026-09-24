@@ -1,16 +1,18 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=6";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=9";
 import { loadCatalog } from "./catalog.js";
-import { createSearchIndex } from "./discovery.js";
+import { createDefaultDiscoveryFilters, createSearchIndex } from "./discovery.js";
 import { addSongToQueue, advanceQueue, clearPreferences, clearQueue, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
 import { addPartySinger, assignPartySong, clearPartyAssignments, clearPartySession, getAssignedSinger, getNextPartySinger, recordPartyTurn, removePartySinger, renamePartySinger, selectRouletteSong, unassignPartySong } from "./party.js";
 import { normalizeView, viewFromHash, viewHash } from "./view.js";
+import { containFocus } from "./focus.js";
 
 const state = createAppState();
 let youtubeController = null;
 let recommendationSnapshot = [];
 let queueReturnFocus = null;
+let playerReturnFocus = null;
 let rouletteResult = null;
 let rouletteConstraints = { language: "any", genre: "any", mood: "any", difficulty: "any", era: "any" };
 let partyStatusMessage = "Party details stay on this device.";
@@ -23,7 +25,7 @@ async function startApp() {
     if (currentView === "party" && !state.user.partySession.enabled) state.user.partySession.enabled = true;
     refreshRecommendationsSnapshot();
     youtubeController = createYouTubePlayerController({
-      container: document.querySelector("[data-youtube-container]"),
+      container: document.querySelector("[data-youtube-mount]"),
       onReady: () => showPlayerReady(),
       onStateChange: handleYouTubeStateChange,
       onError: handleYouTubeError,
@@ -46,14 +48,14 @@ function render({ refreshRecommendations = false } = {}) {
   const loading = document.querySelector("[data-catalog-loading]");
   if (loading) loading.hidden = true;
   renderPreferences(state.songs, state.user.preferences);
-  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView);
+  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage);
   const searchInput = document.querySelector("#song-search");
   if (searchInput && searchInput.value !== state.query) searchInput.value = state.query;
   const searchClear = document.querySelector('[data-action="clear-search"]');
   if (searchClear) searchClear.hidden = !state.query.trim();
   const queueSnapshot = getQueueSnapshot(state);
   renderQueue(queueSnapshot, state.user.partySession);
-  renderPartyPanel(state.songs, state.user.partySession, queueSnapshot, rouletteResult, rouletteConstraints, partyStatusMessage);
+  renderPartyPanel(state.songs, state.user.partySession, queueSnapshot, rouletteResult, rouletteConstraints, partyStatusMessage, currentView);
 }
 
 function refreshRecommendationsSnapshot() {
@@ -70,9 +72,12 @@ function setViewHash(view) {
 }
 
 function navigateToView(view, { preserveQuery = false } = {}) {
+  closeMobileMore();
   currentView = normalizeView(view);
   if (!preserveQuery || currentView !== "discover") state.query = "";
   state.filter = "all";
+  state.discoveryFilters = createDefaultDiscoveryFilters();
+  state.discoveryPage = 1;
   if (currentView === "party" && !state.user.partySession.enabled) {
     state.user.partySession.enabled = true;
     persistAppState(state);
@@ -92,7 +97,7 @@ function bindEvents() {
   });
 
   document.addEventListener("click", (event) => {
-    const navTarget = event.target.closest(".primary-nav a, .mobile-nav a, .brand, .sidebar-brand, a[data-view]");
+    const navTarget = event.target.closest(".primary-nav a, .mobile-nav a, .mobile-more-menu a, .brand, .sidebar-brand, a[data-view]");
     const navView = navTarget?.dataset.view || getLegacyNavView(navTarget);
     if (navView) {
       event.preventDefault();
@@ -102,6 +107,11 @@ function bindEvents() {
     const actionTarget = event.target.closest("[data-action]");
     if (!actionTarget) return;
     const action = actionTarget.dataset.action;
+    if (action === "toggle-mobile-more") { toggleMobileMore(); return; }
+    if (action === "toggle-discover-filters") { toggleDiscoverFilters(); return; }
+    if (action === "load-more-discover") { state.discoveryPage += 1; render(); return; }
+    if (action === "reset-discovery-filters") { state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); return; }
+    if (action === "reset-discovery") { state.query = ""; state.filter = "all"; state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
     if (action === "toggle-party-mode") { togglePartyMode(); return; }
     if (action === "remove-party-singer") { removePartySingerFromUi(actionTarget.dataset.singerId); return; }
     if (action === "clear-party-session") { clearPartySessionFromUi(); return; }
@@ -124,7 +134,9 @@ function bindEvents() {
     if (action === "open-player") {
       const player = document.querySelector("[data-player-panel]");
       if (player && !player.hidden) {
+        rememberPlayerLauncher(actionTarget);
         player.classList.add("is-expanded");
+        setPlayerExpanded(player, true);
         player.querySelector('[data-action="close-player"]')?.focus();
       }
       return;
@@ -132,7 +144,7 @@ function bindEvents() {
     const song = state.songs.find((item) => item.id === actionTarget.dataset.songId);
     if (action === "add-queue" && song) addToQueue(song);
     if (action === "remove-queue") removeFromQueue(actionTarget.dataset.songId);
-    if ((action === "play" || action === "select-queue") && song) startSong(song);
+    if ((action === "play" || action === "select-queue") && song) startSong(song, actionTarget);
     if (["move-up", "move-down", "move-top"].includes(action) && song) reorderQueue(action, song);
     if (song && ["toggle-favorite", "toggle-like", "toggle-dislike", "mark-sung"].includes(action)) handleSongAction(action, song);
     if (action === "toggle-queue") toggleQueue();
@@ -140,7 +152,7 @@ function bindEvents() {
     if (action === "clear-queue") clearQueueFromUi();
     if (action === "player-next") advanceToNext();
     if (action === "player-prev") selectPrevious();
-    if (action === "close-player") { youtubeController?.stop(); hidePlayer(); }
+    if (action === "close-player") closePlayer();
   });
 
   document.addEventListener("error", (event) => {
@@ -170,6 +182,16 @@ function bindEvents() {
       render();
       return;
     }
+    const discoveryFilter = event.target.closest("[data-discovery-filter]");
+    if (discoveryFilter) {
+      currentView = "discover";
+      setViewHash("discover");
+      state.discoveryFilters[discoveryFilter.dataset.discoveryFilter] = discoveryFilter.value;
+      state.discoveryPage = 1;
+      render();
+      discoveryFilter.focus();
+      return;
+    }
     const input = event.target.closest("[data-preference-key]");
     if (!input) return;
     const key = input.dataset.preferenceKey;
@@ -183,13 +205,24 @@ function bindEvents() {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    const drawer = document.querySelector("[data-queue-drawer]");
-    if (drawer?.classList.contains("is-open")) closeQueue();
     const player = document.querySelector("[data-player-panel]");
+    const drawer = document.querySelector("[data-queue-drawer]");
+    if (event.key === "Tab") {
+      if (player && !player.hidden && player.classList.contains("is-expanded") && containFocus(player, event)) return;
+      if (drawer?.classList.contains("is-open")) containFocus(drawer, event);
+      return;
+    }
+    if (event.key !== "Escape") return;
+    if (!document.querySelector("[data-mobile-more]")?.hidden) {
+      closeMobileMore();
+      return;
+    }
+    if (drawer?.classList.contains("is-open")) {
+      closeQueue();
+      return;
+    }
     if (player && !player.hidden) {
-      youtubeController?.stop();
-      hidePlayer();
+      closePlayer();
     }
   });
 
@@ -221,6 +254,7 @@ function bindEvents() {
   });
   document.querySelector("#song-search").addEventListener("input", (event) => {
     state.query = event.target.value;
+    state.discoveryPage = 1;
     if (state.query.trim() && currentView !== "discover") {
       currentView = "discover";
       state.filter = "all";
@@ -228,20 +262,50 @@ function bindEvents() {
     }
     render();
   });
-  document.querySelector("[data-sort]").addEventListener("change", (event) => { state.sortBy = event.target.value; render(); });
+  document.querySelector("[data-sort]").addEventListener("change", (event) => { state.sortBy = event.target.value; state.discoveryPage = 1; render(); });
   document.querySelectorAll(".quick-filters [data-filter]").forEach((button) => button.addEventListener("click", () => {
     currentView = "discover";
     setViewHash("discover");
-    document.querySelectorAll("[data-filter]").forEach((item) => {
-      item.classList.remove("is-active");
-      item.setAttribute("aria-pressed", "false");
-    });
-    button.classList.add("is-active");
-    button.setAttribute("aria-pressed", "true");
-    state.filter = button.dataset.filter;
+    const filter = button.dataset.filter;
+    if (filter === "all") state.discoveryFilters = createDefaultDiscoveryFilters();
+    else if (filter === "playable") state.discoveryFilters.availability = "playable";
+    else if (["filipino", "english"].includes(filter)) state.discoveryFilters.language = filter;
+    else if (["easy", "medium", "hard"].includes(filter)) state.discoveryFilters.difficulty = filter;
+    else if (["solo", "duet", "group"].includes(filter)) state.discoveryFilters.performanceType = filter;
+    state.filter = "all";
+    state.discoveryPage = 1;
     render();
     button.focus();
   }));
+}
+
+function toggleDiscoverFilters() {
+  const panel = document.querySelector("[data-discover-filter-panel]");
+  const button = document.querySelector('[data-action="toggle-discover-filters"]');
+  if (!panel || !button) return;
+  const isOpen = panel.hidden;
+  panel.hidden = !isOpen;
+  button.setAttribute("aria-expanded", String(isOpen));
+  if (isOpen) document.querySelector('[data-discovery-filter="language"]')?.focus();
+}
+
+function toggleMobileMore() {
+  const menu = document.querySelector("[data-mobile-more]");
+  if (!menu) return;
+  setMobileMoreOpen(menu.hidden);
+}
+
+function closeMobileMore() {
+  setMobileMoreOpen(false);
+}
+
+function setMobileMoreOpen(isOpen) {
+  const menu = document.querySelector("[data-mobile-more]");
+  const button = document.querySelector('[data-action="toggle-mobile-more"]');
+  if (!menu || !button) return;
+  menu.hidden = !isOpen;
+  menu.classList.toggle("is-open", isOpen);
+  button.setAttribute("aria-expanded", String(isOpen));
 }
 
 function getLegacyNavView(target) {
@@ -408,7 +472,8 @@ function removeFromQueue(songId) {
   showToast("Removed from queue");
 }
 
-function startSong(song) {
+function startSong(song, launcher = null) {
+  rememberPlayerLauncher(launcher);
   addSongToQueue(state.user, song.id);
   if (state.user.partySession.enabled && !getAssignedSinger(state.user.partySession, song.id)) assignPartySong(state.user.partySession, song.id);
   setCurrentSong(state.user, song.id);
@@ -444,8 +509,7 @@ function clearQueueFromUi() {
   persistAppState(state);
   refreshRecommendationsSnapshot();
   render();
-  youtubeController?.stop();
-  hidePlayer();
+  closePlayer();
   document.querySelector('[data-action="toggle-queue"]')?.focus();
   showToast("Queue cleared");
 }
@@ -457,7 +521,7 @@ function advanceToNext() {
   render();
   if (result.currentSongId) syncPlayer(getQueueSnapshot(state));
   else if (result.status === "finished") { youtubeController?.stop(); showQueueFinished(getQueueSnapshot(state).total); }
-  else { youtubeController?.stop(); hidePlayer(); }
+  else { closePlayer(); }
   showToast(result.status === "finished" ? "Queue finished" : result.status === "empty" ? "Your queue is empty" : "Moved to the next song");
 }
 
@@ -467,7 +531,7 @@ function selectPrevious() {
   refreshRecommendationsSnapshot();
   render();
   if (result.currentSongId) syncPlayer(getQueueSnapshot(state));
-  else { youtubeController?.stop(); hidePlayer(); }
+  else { closePlayer(); }
   showToast(result.status === "boundary" ? "Already at the first song" : "Moved to the previous song");
 }
 
@@ -475,7 +539,7 @@ function syncPlayer(snapshot, { reloadVideo = true } = {}) {
   if (!snapshot.currentSong) {
     youtubeController?.stop();
     if (snapshot.queueFinished) showQueueFinished(snapshot.total);
-    else hidePlayer();
+    else closePlayer({ restoreFocus: false });
     return;
   }
   showPlayer(snapshot.currentSong, {
@@ -564,6 +628,37 @@ function closeQueue() {
   const drawer = document.querySelector("[data-queue-drawer]");
   if (!drawer.classList.contains("is-open")) return;
   toggleQueue();
+}
+
+function rememberPlayerLauncher(launcher = null) {
+  const player = document.querySelector("[data-player-panel]");
+  if (player && !player.hidden && playerReturnFocus) return;
+  const active = launcher instanceof HTMLElement ? launcher : document.activeElement;
+  playerReturnFocus = {
+    element: active instanceof HTMLElement ? active : null,
+    songId: active?.dataset?.songId || "",
+    action: active?.dataset?.action || ""
+  };
+}
+
+function closePlayer({ restoreFocus = true } = {}) {
+  youtubeController?.stop();
+  hidePlayer();
+  if (!restoreFocus) {
+    playerReturnFocus = null;
+    return;
+  }
+  const returnTarget = playerReturnFocus;
+  playerReturnFocus = null;
+  if (returnTarget?.element instanceof HTMLElement && document.contains(returnTarget.element)) {
+    returnTarget.element.focus();
+  } else if (returnTarget?.songId && returnTarget?.action && focusSongAction(returnTarget.songId, returnTarget.action)) {
+    return;
+  } else if (state.user.currentSongId && focusSongAction(state.user.currentSongId, "play")) {
+    return;
+  } else {
+    document.querySelector('[data-action="toggle-queue"]')?.focus();
+  }
 }
 
 startApp();

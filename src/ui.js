@@ -1,12 +1,12 @@
 import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
-import { getDiscoverySongs } from "./discovery.js";
+import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js";
 
-const homeSectionOrder = ["recommended", "favorites", "opm", "recent"];
+const homeSectionOrder = ["recommended", "favorites", "popular", "opm", "international", "easy", "duets", "recent"];
 
-export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home") {
+export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1) {
   updateViewPanels(view);
   const allSongs = searchIndex.map((entry) => entry.song);
   const favoriteIds = new Set((userState.favorites || []).map((id) => id.toLowerCase()));
@@ -14,7 +14,7 @@ export function renderSongSections(searchIndex, query = "", filter = "all", sort
   const dislikedIds = new Set((userState.dislikedSongs || []).map((id) => id.toLowerCase()));
 
   renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds });
-  if (view === "discover") renderCatalogView(searchIndex, query, filter, sortBy, userState, { favoriteIds, likedIds, dislikedIds });
+  if (view === "discover") renderCatalogView(searchIndex, query, filter, sortBy, userState, { favoriteIds, likedIds, dislikedIds }, discoveryFilters, discoveryPage);
   if (view === "favorites") renderCollectionView("favorites", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
   if (view === "recent") renderCollectionView("recent", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
 }
@@ -22,8 +22,10 @@ export function renderSongSections(searchIndex, query = "", filter = "all", sort
 function updateViewPanels(view) {
   document.body.dataset.view = view;
   document.querySelectorAll("[data-view-panel]").forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== view; });
-  document.querySelectorAll(".primary-nav a, .mobile-nav a, .brand, .sidebar-brand, a[data-view], [data-action=\"toggle-party-mode\"]").forEach((link) => {
-    const active = (link.dataset.view || legacyView(link)) === view;
+  document.querySelectorAll(".primary-nav a, .mobile-nav a, .mobile-more-menu a, .brand, .sidebar-brand, a[data-view], [data-action=\"toggle-party-mode\"], [data-action=\"toggle-mobile-more\"]").forEach((link) => {
+    const active = link.dataset.action === "toggle-mobile-more"
+      ? ["favorites", "recent", "preferences"].includes(view)
+      : (link.dataset.view || legacyView(link)) === view;
     link.classList.toggle("is-active", active);
     if (link.hasAttribute("aria-pressed")) link.setAttribute("aria-pressed", String(active));
   });
@@ -40,36 +42,21 @@ function legacyView(link) {
 }
 
 function renderHomeSections(allSongs, userState, recommendations, interactionState) {
-  const recentSongs = getRecentlySungSongs(allSongs, userState.sungHistory || []);
-  const recommendedIds = new Set((Array.isArray(recommendations) ? recommendations : []).map((item) => item.song?.id?.toLowerCase()).filter(Boolean));
-  const favoriteIds = new Set((userState.favorites || []).map((id) => id.toLowerCase()));
-  const sections = {
-    recommended: Array.isArray(recommendations) ? recommendations : [],
-    favorites: allSongs.filter((song) => favoriteIds.has(song.id.toLowerCase())).slice(0, 5),
-    opm: allSongs.filter((song) => (song.tags.includes("opm") || song.language.toLowerCase() === "filipino") && !recommendedIds.has(song.id.toLowerCase())).slice(0, 4),
-    recent: recentSongs.slice(0, 4)
-  };
+  const sections = getHomeShelves(allSongs, recommendations, userState);
+  const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
 
   homeSectionOrder.forEach((section) => {
     const grid = document.querySelector(`[data-grid="${section}"]`);
     const sectionElement = document.querySelector(`[data-section="${section}"]`);
     if (!grid || !sectionElement) return;
-    const isRecent = section === "recent";
     const isRecommended = section === "recommended";
-    sectionElement.hidden = isRecent || section === "favorites" ? sections[section].length === 0 : isRecommended ? false : sections[section].length === 0;
+    const songs = sections[section] || [];
+    sectionElement.hidden = isRecommended ? false : songs.length === 0;
     grid.hidden = sections[section].length === 0;
-    grid.innerHTML = sections[section].map((item) => {
-      const song = section === "recommended" ? item.song : item;
-      const reason = section === "recommended" ? item.reason : "";
-      return renderSongCard(song, interactionState, { reason });
-    }).join("");
-    if (isRecent) {
-      const empty = sectionElement.querySelector("[data-recent-empty]");
-      if (empty) empty.hidden = sections[section].length > 0;
-    }
+    grid.innerHTML = songs.map((song) => renderSongCard(song, interactionState, { reason: recommendationReasons.get(song.id.toLowerCase()) || "" })).join("");
     if (isRecommended) {
       const empty = sectionElement.querySelector("[data-section-empty]");
-      if (empty) empty.hidden = sections[section].length > 0;
+      if (empty) empty.hidden = songs.length > 0;
     }
   });
 
@@ -77,19 +64,70 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   if (homeCount) homeCount.textContent = `${sections.recommended.length} curated pick${sections.recommended.length === 1 ? "" : "s"}`;
 }
 
-function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState) {
-  const songs = getDiscoverySongs(searchIndex, { query, filter, sortBy, favoriteIds: userState.favorites });
+function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState, discoveryFilters, discoveryPage) {
+  const allSongs = searchIndex.map((entry) => entry.song);
+  const filters = normalizeDiscoveryFilters(discoveryFilters, filter);
+  const songs = getDiscoverySongs(searchIndex, { query, filters, sortBy, favoriteIds: userState.favorites });
+  const page = getDiscoveryPage(songs, discoveryPage, 24);
   const grid = document.querySelector('[data-grid="discover"]');
-  if (grid) grid.innerHTML = songs.map((song) => renderSongCard(song, interactionState, { catalogView: true })).join("");
+  if (grid) grid.innerHTML = page.songs.map((song) => renderSongCard(song, interactionState, { catalogView: true })).join("");
   const count = document.querySelector("[data-discover-count]");
   if (count) count.textContent = `${songs.length} song${songs.length === 1 ? "" : "s"}`;
   const empty = document.querySelector("[data-discover-empty]");
   if (empty) empty.hidden = songs.length > 0;
+  renderDiscoveryFilterControls(allSongs, filters);
+  const loadMore = document.querySelector("[data-discover-load-more]");
+  if (loadMore) loadMore.hidden = !page.hasMore || songs.length === 0;
+  const remaining = document.querySelector("[data-discover-remaining]");
+  if (remaining) remaining.textContent = page.hasMore ? `${songs.length - page.songs.length} more matches` : "";
+  const emptyTitle = document.querySelector("[data-discover-empty-title]");
+  const emptyCopy = document.querySelector("[data-discover-empty-copy]");
+  if (emptyTitle) emptyTitle.textContent = query.trim() || hasActiveDiscoveryFilters(filters) ? "No songs match those choices" : "No songs found";
+  if (emptyCopy) emptyCopy.textContent = query.trim() || hasActiveDiscoveryFilters(filters) ? "Clear a filter or try a different search." : "Try a different search or filter.";
+}
+
+function renderDiscoveryFilterControls(songs, filters) {
+  const options = getDiscoveryFilterOptions(songs);
+  const activeQuickFilter = filters.availability === "playable"
+    ? "playable"
+    : filters.language !== "any" && filters.genre === "any" && filters.mood === "any" && filters.difficulty === "any" && filters.vocalRange === "any" && filters.performanceType === "any" && filters.era === "any" ? filters.language
+      : filters.difficulty !== "any" && filters.language === "any" && filters.genre === "any" && filters.mood === "any" && filters.vocalRange === "any" && filters.performanceType === "any" && filters.era === "any" ? filters.difficulty
+        : filters.performanceType !== "any" && filters.language === "any" && filters.genre === "any" && filters.mood === "any" && filters.difficulty === "any" && filters.vocalRange === "any" && filters.era === "any" ? filters.performanceType
+          : "all";
   document.querySelectorAll(".discover-view [data-filter]").forEach((button) => {
-    const active = button.dataset.filter === filter;
+    const active = button.dataset.filter === activeQuickFilter;
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
+
+  document.querySelectorAll("[data-discovery-filter]").forEach((select) => {
+    const key = select.dataset.discoveryFilter;
+    const currentValue = filters[key] || "any";
+    const labels = { language: "Any language", genre: "Any genre", mood: "Any mood", difficulty: "Any difficulty", vocalRange: "Any range", performanceType: "Any format", era: "Any era" };
+    select.innerHTML = `<option value="any">${labels[key] || "Any"}</option>${(options[key] || []).map((value) => `<option value="${escapeHtml(normalizeQuery(value))}">${escapeHtml(formatDiscoveryValue(value, key))}</option>`).join("")}`;
+    select.value = currentValue;
+  });
+
+  const activeLabels = [];
+  if (filters.availability === "playable") activeLabels.push("Playable now");
+  for (const [key, label] of [["language", "language"], ["genre", "genre"], ["mood", "mood"], ["difficulty", "difficulty"], ["vocalRange", "vocalRange"], ["performanceType", "performanceType"], ["era", "era"]]) {
+    if (filters[key] === "any") continue;
+    const match = (options[key] || []).find((value) => normalizeQuery(value) === filters[key]);
+    activeLabels.push(match ? formatDiscoveryValue(match, label) : filters[key]);
+  }
+  if (filters.favorites) activeLabels.push("Favorites");
+  const summary = document.querySelector("[data-discovery-filter-summary]");
+  if (summary) summary.textContent = activeLabels.length ? activeLabels.join(" · ") : "All catalog songs";
+  const count = document.querySelector("[data-discovery-filter-count]");
+  if (count) {
+    count.hidden = activeLabels.length === 0;
+    count.textContent = String(activeLabels.length);
+  }
+}
+
+function formatDiscoveryValue(value, key) {
+  if (key === "era") return value;
+  return titleCase(value);
 }
 
 function renderCollectionView(kind, allSongs, userState, interactionState) {
@@ -118,16 +156,20 @@ export function updatePreferenceSummary(preferences = {}, options) {
   summary.textContent = getPreferenceSummary(preferences, options);
 }
 
-export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteResult = null, rouletteConstraints = {}, statusMessage = "Party details stay on this device.") {
+export function isPartyPanelVisible(currentView, enabled) {
+  return currentView === "party" && Boolean(enabled);
+}
+
+export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteResult = null, rouletteConstraints = {}, statusMessage = "Party details stay on this device.", currentView = "party") {
   const panel = document.querySelector("[data-party-panel]");
   if (!panel) return;
   const enabled = Boolean(partySession?.enabled);
-  panel.hidden = !enabled;
+  panel.hidden = !isPartyPanelVisible(currentView, enabled);
   document.querySelectorAll('[data-action="toggle-party-mode"], [data-view="party"]').forEach((button) => {
     button.setAttribute("aria-pressed", String(enabled));
     if (button.classList.contains("party-toggle")) button.textContent = enabled ? "♫ Party Mode on" : "♫ Party Mode";
   });
-  if (!enabled) return;
+  if (!enabled || currentView !== "party") return;
 
   const singers = document.querySelector("[data-party-singers]");
   if (singers) singers.innerHTML = partySession.singers.length ? partySession.singers.map((singer) => `<li class="party-singer"><input data-party-rename="${escapeHtml(singer.id)}" aria-label="Rename ${escapeHtml(singer.name)}" value="${escapeHtml(singer.name)}" maxlength="40" /><button class="remove-button" type="button" data-action="remove-party-singer" data-singer-id="${escapeHtml(singer.id)}" aria-label="Remove ${escapeHtml(singer.name)}">×</button></li>`).join("") : `<li class="party-empty">Add at least two singers for a full rotation.</li>`;
@@ -227,19 +269,6 @@ function renderSongThumbnail(song, options = {}) {
   return `<button class="song-thumbnail" type="button" data-action="play" data-song-id="${songId}" aria-label="Play karaoke: ${title} by ${artist}">${image}<span class="song-thumbnail-fallback" data-thumbnail-fallback${thumbnailUrl ? " hidden" : ""}><span class="thumbnail-note-icon" aria-hidden="true">♫</span><span>Video coming soon</span></span><span class="song-thumbnail-play" aria-hidden="true">▶</span></button>`;
 }
 
-export function getRecentlySungSongs(visibleSongs, history) {
-  const visibleById = new Map(visibleSongs.map((song) => [song.id.toLowerCase(), song]));
-  const seen = new Set();
-  return history.reduce((songs, entry) => {
-    const key = entry.id.toLowerCase();
-    const song = visibleById.get(key);
-    if (!song || seen.has(key)) return songs;
-    seen.add(key);
-    songs.push(song);
-    return songs;
-  }, []);
-}
-
 export function renderQueue(queueSnapshot, partySession = {}) {
   const snapshot = Array.isArray(queueSnapshot) ? { songs: queueSnapshot, currentSongId: null, queueFinished: false } : queueSnapshot;
   const queue = snapshot?.songs || [];
@@ -267,6 +296,7 @@ export function showPlayer(song, metadata = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
   panel.hidden = false;
+  setPlayerExpanded(panel, panel.classList.contains("is-expanded"));
   panel.querySelector("[data-player-title]").textContent = song.title;
   panel.querySelector("[data-player-artist]").textContent = song.artist;
   panel.querySelector("[data-player-position]").textContent = metadata.position && metadata.total ? `Song ${metadata.position} of ${metadata.total}` : "Current karaoke song";
@@ -344,6 +374,7 @@ export function showQueueFinished(total) {
   panel.querySelector("[data-player-status]").textContent = "Choose another song from the queue or return to discovery.";
   panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
   panel.classList.add("is-expanded");
+  setPlayerExpanded(panel, true);
   document.querySelector("[data-mini-player]")?.setAttribute("hidden", "");
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = total === 0;
@@ -355,6 +386,7 @@ export function hidePlayer() {
   if (panel) {
     panel.hidden = true;
     panel.classList.remove("is-expanded");
+    setPlayerExpanded(panel, false);
     setPlayerEmbedVisible(panel, false);
   }
   document.querySelector("[data-mini-player]")?.setAttribute("hidden", "");
@@ -378,10 +410,30 @@ function updateMiniPlayerStatus(message) {
   if (status) status.textContent = message;
 }
 
-function setPlayerEmbedVisible(panel, visible) {
-  const container = panel.querySelector("[data-youtube-container]");
+export function setPlayerExpanded(panel, expanded) {
+  if (!panel) return;
+  panel.classList.toggle("is-expanded", Boolean(expanded));
+  if (expanded) {
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
+    panel.setAttribute("aria-labelledby", "player-title");
+    panel.removeAttribute("aria-label");
+  } else {
+    panel.setAttribute("role", "region");
+    panel.setAttribute("aria-label", "Now singing");
+    panel.removeAttribute("aria-modal");
+    panel.removeAttribute("aria-labelledby");
+  }
+}
+
+export function setPlayerEmbedVisible(panel, visible) {
+  const shell = panel.querySelector("[data-youtube-shell]");
+  const mount = shell?.querySelector("[data-youtube-mount]");
+  const iframe = shell?.querySelector("iframe");
   const placeholder = panel.querySelector("[data-player-placeholder]");
-  if (container) container.hidden = !visible;
+  if (shell) shell.hidden = false;
+  if (mount) mount.hidden = Boolean(visible);
+  if (iframe) iframe.hidden = !visible;
   if (placeholder) placeholder.hidden = visible;
 }
 

@@ -42,8 +42,6 @@ test("Home and Discover are separate UI surfaces with a complete-catalog CTA", a
   assert.match(html, /data-grid="discover"/);
   assert.match(html, /data-filter="filipino"/);
   assert.match(html, /data-filter="english"/);
-  assert.match(app, /closest\("\.primary-nav a, \.mobile-nav a, \.brand, \.sidebar-brand, a\[data-view\]"\)/);
-  assert.doesNotMatch(app, /closest\("[^\"]*,\s*\[data-view\][^\"]*"\)/);
-  assert.match(ui, /sidebar-brand, a\[data-view\]/);
-  assert.doesNotMatch(ui, /sidebar-brand, \[data-view\],/);
+  assert.match(app, /closest\("\.primary-nav a, \.mobile-nav a, \.mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]"\)/);
+  assert.match(ui, /mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]/);
 });
