@@ -73,8 +73,9 @@ function renderCatalogView(searchIndex, query, filter, sortBy, userState, intera
   const filters = normalizeDiscoveryFilters(discoveryFilters, filter);
   const songs = getDiscoverySongs(searchIndex, { query, filters, sortBy, favoriteIds: userState.favorites });
   const page = getDiscoveryPage(songs, discoveryPage, 24);
+  const visibleSongs = songs.slice(0, page.page * page.pageSize);
   const grid = document.querySelector('[data-grid="discover"]');
-  if (grid) grid.innerHTML = page.songs.map((song) => renderSongCard(song, interactionState, { catalogView: true })).join("");
+  if (grid) grid.innerHTML = visibleSongs.map((song) => renderSongCard(song, interactionState, { catalogView: true })).join("");
   const count = document.querySelector("[data-discover-count]");
   if (count) count.textContent = `${songs.length} song${songs.length === 1 ? "" : "s"}`;
   const empty = document.querySelector("[data-discover-empty]");
@@ -83,7 +84,7 @@ function renderCatalogView(searchIndex, query, filter, sortBy, userState, intera
   const loadMore = document.querySelector("[data-discover-load-more]");
   if (loadMore) loadMore.hidden = !page.hasMore || songs.length === 0;
   const remaining = document.querySelector("[data-discover-remaining]");
-  if (remaining) remaining.textContent = page.hasMore ? `${songs.length - page.songs.length} more matches` : "";
+  if (remaining) remaining.textContent = page.hasMore ? `${songs.length - visibleSongs.length} more matches` : "";
   const emptyTitle = document.querySelector("[data-discover-empty-title]");
   const emptyCopy = document.querySelector("[data-discover-empty-copy]");
   if (emptyTitle) emptyTitle.textContent = query.trim() || hasActiveDiscoveryFilters(filters) ? "No songs match those choices" : "No songs found";

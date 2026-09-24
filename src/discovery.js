@@ -88,6 +88,16 @@ export function createDefaultDiscoveryFilters() {
   return { ...DEFAULT_DISCOVERY_FILTERS };
 }
 
+export function createQuickFilterState(filter) {
+  const next = createDefaultDiscoveryFilters();
+  const normalized = normalizeQuery(filter || "all");
+  if (normalized === "playable") next.availability = "playable";
+  else if (["filipino", "english"].includes(normalized)) next.language = normalized;
+  else if (["easy", "medium", "hard"].includes(normalized)) next.difficulty = normalized;
+  else if (["solo", "duet", "group"].includes(normalized)) next.performanceType = normalized;
+  return next;
+}
+
 export function getDiscoveryFilterOptions(songs = []) {
   const catalog = Array.isArray(songs) ? songs.filter(Boolean) : [];
   const collect = (read) => [...new Set(catalog.flatMap((song) => {

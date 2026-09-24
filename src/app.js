@@ -1,6 +1,6 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=10";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=11";
 import { loadCatalog } from "./catalog.js";
-import { createDefaultDiscoveryFilters, createSearchIndex } from "./discovery.js";
+import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=2";
 import { addSongToQueue, advanceQueue, clearPreferences, clearQueue, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
@@ -275,11 +275,7 @@ function bindEvents() {
     currentView = "discover";
     setViewHash("discover");
     const filter = button.dataset.filter;
-    if (filter === "all") state.discoveryFilters = createDefaultDiscoveryFilters();
-    else if (filter === "playable") state.discoveryFilters.availability = "playable";
-    else if (["filipino", "english"].includes(filter)) state.discoveryFilters.language = filter;
-    else if (["easy", "medium", "hard"].includes(filter)) state.discoveryFilters.difficulty = filter;
-    else if (["solo", "duet", "group"].includes(filter)) state.discoveryFilters.performanceType = filter;
+    state.discoveryFilters = createQuickFilterState(filter);
     state.filter = "all";
     state.discoveryPage = 1;
     render();

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   createDefaultDiscoveryFilters,
+  createQuickFilterState,
   createSearchIndex,
   getDiscoveryFilterOptions,
   getDiscoveryPage,
@@ -59,6 +60,14 @@ test("reset state has no active filters and preferences are not discovery filter
   assert.equal(getDiscoverySongs(index, { filters: createDefaultDiscoveryFilters() }).length, catalog.length);
 });
 
+test("quick filters replace the previous quick-filter state", () => {
+  assert.deepEqual(createQuickFilterState("all"), createDefaultDiscoveryFilters());
+  assert.deepEqual(createQuickFilterState("playable"), { ...createDefaultDiscoveryFilters(), availability: "playable" });
+  assert.deepEqual(createQuickFilterState("filipino"), { ...createDefaultDiscoveryFilters(), language: "filipino" });
+  assert.deepEqual(createQuickFilterState("easy"), { ...createDefaultDiscoveryFilters(), difficulty: "easy" });
+  assert.deepEqual(createQuickFilterState("duet"), { ...createDefaultDiscoveryFilters(), performanceType: "duet" });
+});
+
 test("popular sorting uses the catalog demand signal with deterministic ties", () => {
   const results = getDiscoverySongs(index, { sortBy: "popular" });
   const tiers = { "very-high": 0, high: 1, established: 2 };
@@ -75,6 +84,15 @@ test("pagination reports total matches and never duplicates pages", () => {
   assert.equal(first.songs.length, 24);
   assert.equal(new Set([...first.songs, ...second.songs].map((song) => song.id)).size, first.songs.length + second.songs.length);
   assert.equal(first.hasMore, true);
+});
+
+test("load-more pagination retains earlier results when the next page is shown", () => {
+  const results = getDiscoverySongs(index, {});
+  const second = getDiscoveryPage(results, 2, 24);
+  const visibleThroughSecondPage = results.slice(0, second.page * second.pageSize);
+  assert.equal(visibleThroughSecondPage.length, 48);
+  assert.deepEqual(visibleThroughSecondPage.slice(0, 24), results.slice(0, 24));
+  assert.deepEqual(visibleThroughSecondPage.slice(24), second.songs);
 });
 
 test("zero-result searches remain safe and countable", () => {
@@ -94,4 +112,3 @@ test("discover UI exposes availability, derived filters, sorting, reset, and loa
   assert.match(html, /data-action="reset-discovery-filters"/);
   assert.match(html, /data-action="load-more-discover"/);
 });
-
