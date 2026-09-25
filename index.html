@@ -8,8 +8,8 @@
     <meta name="description" content="Discover your next karaoke song with KantaTayo." />
     <title>KantaTayo — Your next song is waiting</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=14" />
-    <script type="module" src="src/app.js?v=14"></script>
+    <link rel="stylesheet" href="styles/main.css?v=15" />
+    <script type="module" src="src/app.js?v=15"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -64,7 +64,7 @@
           <div class="hero-copy">
             <p class="eyebrow">Local karaoke discovery</p>
             <h1 id="hero-title">Find your next <em>karaoke song.</em></h1>
-            <p class="hero-description">Search a song, pick your karaoke version, and start singing.</p>
+            <p class="hero-description">Start with a crowd favorite, follow your taste, or search the full catalog when you already know what you want.</p>
           </div>
         </section>
         </div>
@@ -111,36 +111,40 @@
           <div class="catalog-loading empty-state" data-catalog-loading role="status" aria-live="polite"><span class="empty-icon" aria-hidden="true">♫</span><div><strong>Loading your karaoke picks…</strong><p>The catalog will be ready in a moment.</p></div></div>
           <div class="song-sections" data-song-sections>
             <section class="song-section featured-section" data-section="recommended" aria-labelledby="recommended-title">
-              <div class="section-heading"><h3 id="recommended-title">Sing next</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="recommended-title" data-home-title>Sing now</h3><p class="section-lede" data-home-lede>Popular, playable picks to get your night moving.</p></div><span class="section-rule"></span></div>
               <div class="song-grid" data-grid="recommended"></div>
               <div class="empty-state section-empty" data-section-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No playable recommendations yet</strong><p>Try adding a preference or exploring the catalog.</p></div></div>
             </section>
+            <section class="song-section made-for-you-section" data-section="madeForYou" aria-labelledby="made-for-you-title" hidden>
+              <div class="section-heading home-section-heading"><div><h3 id="made-for-you-title" data-home-title>Made for you</h3><p class="section-lede" data-home-lede>A few more picks shaped by your preferences and history.</p></div><a class="section-link" href="#preferences-panel" data-view="preferences">Tune your taste <span aria-hidden="true">→</span></a></div>
+              <div class="song-grid" data-grid="madeForYou"></div>
+            </section>
             <section class="song-section" data-section="favorites" aria-labelledby="favorites-title" hidden>
-              <div class="section-heading"><h3 id="favorites-title">Favorites</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="favorites-title" data-home-title>Your favorites</h3><p class="section-lede" data-home-lede>The songs you want close at hand.</p></div><a class="section-link" href="#discovery" data-view="favorites">See collection <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="favorites"></div>
             </section>
             <section class="song-section" data-section="popular" aria-labelledby="popular-title" hidden>
-              <div class="section-heading"><h3 id="popular-title">Popular now</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="popular-title" data-home-title>Crowd favorites</h3><p class="section-lede" data-home-lede>Established karaoke picks with real demand evidence.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="playable">Explore playable <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="popular"></div>
             </section>
             <section class="song-section" data-section="opm" aria-labelledby="opm-title">
-              <div class="section-heading"><h3 id="opm-title">OPM picks</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="opm-title" data-home-title>Popular OPM</h3><p class="section-lede" data-home-lede>Filipino favorites for the next round.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="filipino">Explore OPM <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="opm"></div>
             </section>
             <section class="song-section" data-section="international" aria-labelledby="international-title" hidden>
-              <div class="section-heading"><h3 id="international-title">International hits</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="international-title" data-home-title>International hits</h3><p class="section-lede" data-home-lede>Familiar English songs made for a sing-along.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="english">Explore English <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="international"></div>
             </section>
             <section class="song-section" data-section="easy" aria-labelledby="easy-title" hidden>
-              <div class="section-heading"><h3 id="easy-title">Easy to sing</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="easy-title" data-home-title>Easy wins</h3><p class="section-lede" data-home-lede>Comfortable picks when you want a confident chorus.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="easy">Find easy songs <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="easy"></div>
             </section>
             <section class="song-section" data-section="duets" aria-labelledby="duets-title" hidden>
-              <div class="section-heading"><h3 id="duets-title">Duets</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="duets-title" data-home-title>Duet picks</h3><p class="section-lede" data-home-lede>Bring someone else to the mic.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="duet">Find duets <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="duets"></div>
             </section>
             <section class="song-section empty-section" data-section="recent" aria-labelledby="recent-title">
-              <div class="section-heading"><h3 id="recent-title">Recently sung</h3><span class="section-rule"></span></div>
+              <div class="section-heading home-section-heading"><div><h3 id="recent-title" data-home-title>Recently sung</h3><p class="section-lede" data-home-lede>Keep exploring from where you left off.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="recent"></div>
               <div class="empty-state" data-recent-empty><span class="empty-icon" aria-hidden="true">↺</span><div><strong>Your encore starts here</strong><p>Songs you mark as sung will show up in this spot later.</p></div></div>
             </section>

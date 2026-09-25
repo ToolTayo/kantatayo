@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { getHomeShelves, isInternationalSong, isOpmSong } from "../src/discovery.js";
+import { getHomeShelves, hasMeaningfulUserSignals, isInternationalSong, isOpmSong } from "../src/discovery.js";
 
 const playableId = (suffix) => `aaaaaaaaaa${suffix}`;
 
@@ -37,6 +37,42 @@ test("Popular now uses demand evidence, prefers playable songs, and stays bounde
   assert.deepEqual(shelves.popular.map((item) => item.id), ["very-high", "high", "established", "recommended"]);
   assert.ok(shelves.popular.every((item) => item.youtubeVideoId));
   assert.ok(shelves.popular.length <= 5);
+});
+
+test("cold-start top picks balance playable OPM and international demand", () => {
+  const catalog = [
+    song("intl-1", { demandTier: "very-high", language: "English", tags: ["international"] }),
+    song("opm-1", { demandTier: "very-high", language: "Filipino", tags: ["opm"] }),
+    song("intl-2", { demandTier: "high", language: "English", tags: ["international"] }),
+    song("opm-2", { demandTier: "high", language: "Filipino", tags: ["opm"] }),
+    song("intl-3", { demandTier: "established", language: "English", tags: ["international"] }),
+    song("unavailable", { demandTier: "very-high", language: "Filipino", tags: ["opm"], youtubeVideoId: null })
+  ];
+  const recommendations = catalog.filter((item) => item.youtubeVideoId).map((item) => ({ song: item, reason: "Popular karaoke pick" }));
+  const shelves = getHomeShelves(catalog, recommendations);
+  const topIds = new Set(shelves.recommended.map((item) => item.id));
+
+  assert.equal(shelves.recommended.length, 5);
+  assert.ok(shelves.recommended.every((item) => item.youtubeVideoId));
+  assert.ok(shelves.recommended.filter(isOpmSong).length >= 2);
+  assert.ok(shelves.recommended.filter(isInternationalSong).length >= 2);
+  assert.equal(topIds.has("unavailable"), false);
+});
+
+test("meaningful signals unlock a non-duplicating Made for you shelf", () => {
+  const catalog = Array.from({ length: 10 }, (_, index) => song(`personal-${index}`, {
+    language: index % 2 ? "Filipino" : "English",
+    tags: index % 2 ? ["opm"] : ["international"]
+  }));
+  const recommendations = catalog.map((item) => ({ song: item, reason: "Matches your preferences" }));
+  const userState = { preferences: { languages: ["filipino"] }, likedSongs: ["personal-1"], favorites: [], dislikedSongs: [], sungHistory: [] };
+  const shelves = getHomeShelves(catalog, recommendations, userState);
+  const recommendedIds = new Set(shelves.recommended.map((item) => item.id));
+
+  assert.equal(hasMeaningfulUserSignals(userState), true);
+  assert.equal(shelves.madeForYou.length, 4);
+  assert.ok(shelves.madeForYou.every((item) => !recommendedIds.has(item.id)));
+  assert.ok(shelves.madeForYou.every((item) => item.youtubeVideoId));
 });
 
 test("OPM and International shelves follow explicit catalog metadata", () => {
@@ -99,6 +135,17 @@ test("Sparse catalogs omit unsupported shelves without manufacturing songs", () 
   assert.deepEqual(shelves.opm, []);
 });
 
+test("all primary Home shelves exclude unavailable songs", () => {
+  const unavailable = song("unavailable", { youtubeVideoId: null, demandTier: "very-high", language: "Filipino", tags: ["opm"] });
+  const playable = song("playable", { demandTier: "very-high", language: "Filipino", tags: ["opm"] });
+  const shelves = getHomeShelves([unavailable, playable], [{ song: playable }]);
+
+  Object.entries(shelves).forEach(([name, items]) => {
+    if (name === "recent") return;
+    assert.ok(items.every((item) => item.youtubeVideoId), `${name} contains an unavailable song`);
+  });
+});
+
 test("Home and mobile navigation expose karaoke search and Preferences", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const app = await readFile(new URL("../src/app.js", import.meta.url), "utf8");
@@ -108,6 +155,9 @@ test("Home and mobile navigation expose karaoke search and Preferences", async (
   assert.match(html, /class="mobile-more-menu"[^>]*data-mobile-more/);
   assert.match(html, /data-action="toggle-mobile-more"[^>]*aria-controls="mobile-more-menu"/);
   assert.match(html, /href="#preferences-panel" data-view="preferences"/);
+  assert.match(html, /data-section="madeForYou"/);
+  assert.match(html, /data-home-filter="filipino"/);
+  assert.match(html, /Explore OPM/);
   assert.match(app, /action === "toggle-mobile-more"/);
   assert.match(app, /\.mobile-more-menu a/);
 });

@@ -7,6 +7,7 @@ const DIFFICULTY_ORDER = { easy: 0, medium: 1, hard: 2 };
 const DEMAND_ORDER = { "very-high": 0, high: 1, established: 2 };
 const HOME_SHELF_LIMITS = Object.freeze({
   recommended: 5,
+  madeForYou: 4,
   favorites: 5,
   popular: 5,
   opm: 4,
@@ -150,12 +151,17 @@ export function getDiscoveryPage(songs, page = 1, pageSize = 24) {
  */
 export function getHomeShelves(songs = [], recommendations = [], userState = {}) {
   const catalog = Array.isArray(songs) ? songs.filter(Boolean) : [];
-  const recommended = (Array.isArray(recommendations) ? recommendations : [])
+  const recommendationSongs = (Array.isArray(recommendations) ? recommendations : [])
     .map((item) => item?.song)
     .filter((song) => isPlayableSong(song))
-    .slice(0, HOME_SHELF_LIMITS.recommended);
+    .filter((song, index, all) => all.findIndex((item) => item.id.toLowerCase() === song.id.toLowerCase()) === index);
+  const personalized = hasMeaningfulUserSignals(userState);
+  const recommended = selectTopHomePicks(recommendationSongs, personalized);
   const recommendedIds = new Set(recommended.map((song) => song.id.toLowerCase()));
-  const usedIds = new Set(recommendedIds);
+  const madeForYou = personalized
+    ? recommendationSongs.filter((song) => !recommendedIds.has(song.id.toLowerCase())).slice(0, HOME_SHELF_LIMITS.madeForYou)
+    : [];
+  const usedIds = new Set([...recommendedIds, ...madeForYou.map((song) => song.id.toLowerCase())]);
   const favoriteIds = new Set((userState.favorites || []).map((id) => String(id).toLowerCase()));
   const recentSongs = getRecentlySungSongs(catalog, userState.sungHistory || []).filter(isPlayableSong);
   const favorites = catalog
@@ -165,6 +171,7 @@ export function getHomeShelves(songs = [], recommendations = [], userState = {})
 
   const shelves = {
     recommended,
+    madeForYou,
     favorites,
     popular: selectHomeShelf(catalog, (song) => Boolean(song.demandTier), HOME_SHELF_LIMITS.popular, usedIds),
     opm: selectHomeShelf(catalog, (song) => isOpmSong(song), HOME_SHELF_LIMITS.opm, usedIds),
@@ -175,6 +182,13 @@ export function getHomeShelves(songs = [], recommendations = [], userState = {})
   };
 
   return shelves;
+}
+
+export function hasMeaningfulUserSignals(userState = {}) {
+  const collectionSignal = ["favorites", "likedSongs", "dislikedSongs", "sungHistory"].some((key) => Array.isArray(userState[key]) && userState[key].length > 0);
+  const preferences = userState.preferences && typeof userState.preferences === "object" ? userState.preferences : {};
+  const preferenceSignal = Object.values(preferences).some((values) => Array.isArray(values) && values.length > 0);
+  return collectionSignal || preferenceSignal;
 }
 
 export function isPlayableSong(song) {
@@ -205,12 +219,49 @@ export function getRecentlySungSongs(visibleSongs, history) {
 }
 
 function selectHomeShelf(catalog, predicate, limit, usedIds) {
-  const candidates = catalog.filter((song) => predicate(song) && isPlayableSong(song));
-  const fresh = candidates.filter((song) => !usedIds.has(song.id.toLowerCase())).sort(compareHomeSongs);
-  const repeated = candidates.filter((song) => usedIds.has(song.id.toLowerCase())).sort(compareHomeSongs);
-  const selected = [...fresh, ...repeated].slice(0, limit);
+  const candidates = catalog.filter((song) => predicate(song) && isPlayableSong(song)).sort(compareHomeSongs);
+  const fresh = candidates.filter((song) => !usedIds.has(song.id.toLowerCase()));
+  const repeated = candidates.filter((song) => usedIds.has(song.id.toLowerCase()));
+  const selected = [...selectDiverseSongs(fresh, limit), ...selectDiverseSongs(repeated, limit)].slice(0, limit);
   selected.forEach((song) => usedIds.add(song.id.toLowerCase()));
   return selected;
+}
+
+function selectTopHomePicks(candidates, personalized) {
+  const limit = HOME_SHELF_LIMITS.recommended;
+  if (personalized || candidates.length <= limit) return candidates.slice(0, limit);
+
+  // Cold-start discovery should show both sides of the catalog when the
+  // recommendation window has enough playable choices to support it.
+  const targetPerCategory = Math.min(2, Math.floor(limit / 2));
+  const selected = [];
+  for (const category of ["opm", "international"]) {
+    candidates.filter((song) => category === "opm" ? isOpmSong(song) : isInternationalSong(song))
+      .slice(0, targetPerCategory)
+      .forEach((song) => {
+        if (!selected.some((item) => item.id.toLowerCase() === song.id.toLowerCase())) selected.push(song);
+      });
+  }
+  candidates.forEach((song) => {
+    if (selected.length >= limit) return;
+    if (!selected.some((item) => item.id.toLowerCase() === song.id.toLowerCase())) selected.push(song);
+  });
+  return selected.sort((left, right) => candidates.indexOf(left) - candidates.indexOf(right)).slice(0, limit);
+}
+
+function selectDiverseSongs(candidates, limit) {
+  const uniqueArtists = [];
+  const repeatedArtists = [];
+  const seenArtists = new Set();
+  candidates.forEach((song) => {
+    const artist = normalizeQuery(song.artist);
+    if (seenArtists.has(artist)) repeatedArtists.push(song);
+    else {
+      seenArtists.add(artist);
+      uniqueArtists.push(song);
+    }
+  });
+  return [...uniqueArtists, ...repeatedArtists].slice(0, limit);
 }
 
 function compareHomeSongs(left, right) {

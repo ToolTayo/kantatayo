@@ -55,12 +55,12 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=14"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=14"/);
-  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=2"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=11"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=15"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=15"/);
+  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=3"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=12"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v20"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v21"/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /request\.mode === "navigate"/);
   assert.match(serviceWorker, /key\.startsWith\(CACHE_PREFIX\)/);

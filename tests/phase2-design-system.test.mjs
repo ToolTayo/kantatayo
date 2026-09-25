@@ -31,7 +31,7 @@ test("long card content can wrap without widening the layout", () => {
 });
 
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=14/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=14"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v20"/);
+  assert.match(index, /styles\/main\.css\?v=15/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=15"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v21"/);
 });

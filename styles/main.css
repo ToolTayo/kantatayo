@@ -660,6 +660,14 @@ body { line-height: 1.45; }
 .discovery-filters .chip { min-height: 2.1rem; padding: .38rem .62rem; }
 .song-section { margin-top: 1.7rem; }
 .featured-section { margin-top: 1.45rem; }
+.home-section-heading { align-items: center; gap: 1rem; }
+.home-section-heading > div { min-width: 0; }
+.home-section-heading .section-rule { min-width: 2rem; }
+.home-section-heading .section-lede { color: var(--text-muted); font-size: .68rem; line-height: 1.4; margin: .25rem 0 0; }
+.section-link { align-items: center; color: var(--brand-lime); display: inline-flex; flex: 0 0 auto; font-size: .68rem; font-weight: 750; gap: .3rem; text-decoration: none; white-space: nowrap; }
+.section-link:hover, .section-link:focus-visible { color: var(--text-primary); }
+.section-link span { font-size: .95rem; }
+.made-for-you-section { border-top: 1px solid var(--border-subtle); padding-top: 1.35rem; }
 .song-card-body { padding: .8rem .85rem .7rem; }
 .song-card-top { gap: .5rem; }
 .song-card h4 { font-size: .98rem; margin: 0 0 .15rem; }
@@ -683,6 +691,9 @@ body { line-height: 1.45; }
   .discovery-filters::-webkit-scrollbar { display: none; }
   .discovery-filters .chip { flex: 0 0 auto; }
   .song-section { margin-top: 1.4rem; }
+  .home-section-heading { align-items: flex-start; }
+  .home-section-heading .section-rule { display: none; }
+  .home-section-heading .section-link { margin-top: .15rem; }
 }
 
 @media (min-width: 800px) {

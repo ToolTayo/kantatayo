@@ -1,10 +1,10 @@
 import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
-import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js";
+import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js";
 
-const homeSectionOrder = ["recommended", "favorites", "popular", "opm", "international", "easy", "duets", "recent"];
+const homeSectionOrder = ["recommended", "madeForYou", "favorites", "popular", "opm", "international", "easy", "duets", "recent"];
 
 export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1) {
   updateViewPanels(view);
@@ -48,6 +48,20 @@ function legacyView(link) {
 function renderHomeSections(allSongs, userState, recommendations, interactionState) {
   const sections = getHomeShelves(allSongs, recommendations, userState);
   const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
+  const personalized = hasMeaningfulUserSignals(userState);
+  const homeCopy = {
+    recommended: personalized
+      ? { title: "Sing now", lede: "Your strongest next-song picks, tuned to your taste." }
+      : { title: "Sing now", lede: "Popular, playable picks to get your night moving." },
+    madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
+    favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
+    popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
+    opm: { title: "Popular OPM", lede: "Filipino favorites for the next round." },
+    international: { title: "International hits", lede: "Familiar English songs made for a sing-along." },
+    easy: { title: "Easy wins", lede: "Comfortable picks when you want a confident chorus." },
+    duets: { title: "Duet picks", lede: "Bring someone else to the mic." },
+    recent: { title: "Recently sung", lede: "Keep exploring from where you left off." }
+  };
 
   homeSectionOrder.forEach((section) => {
     const grid = document.querySelector(`[data-grid="${section}"]`);
@@ -55,9 +69,14 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
     if (!grid || !sectionElement) return;
     const isRecommended = section === "recommended";
     const songs = sections[section] || [];
+    const copy = homeCopy[section];
     sectionElement.hidden = isRecommended ? false : songs.length === 0;
-    grid.hidden = sections[section].length === 0;
+    grid.hidden = songs.length === 0;
     grid.innerHTML = songs.map((song) => renderSongCard(song, interactionState, { reason: recommendationReasons.get(song.id.toLowerCase()) || "" })).join("");
+    const title = sectionElement.querySelector("[data-home-title]");
+    const lede = sectionElement.querySelector("[data-home-lede]");
+    if (title && copy) title.textContent = copy.title;
+    if (lede && copy) lede.textContent = copy.lede;
     if (isRecommended) {
       const empty = sectionElement.querySelector("[data-section-empty]");
       if (empty) empty.hidden = songs.length > 0;
@@ -65,7 +84,9 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   });
 
   const homeCount = document.querySelector("[data-home-count]");
-  if (homeCount) homeCount.textContent = `${sections.recommended.length} curated pick${sections.recommended.length === 1 ? "" : "s"}`;
+  if (homeCount) homeCount.textContent = `${sections.recommended.length} ready-to-sing pick${sections.recommended.length === 1 ? "" : "s"}`;
+  const resultsNote = document.querySelector("[data-results-note]");
+  if (resultsNote) resultsNote.textContent = personalized ? "Fresh ideas based on what you like and sing." : "Popular playable picks to get your night moving.";
 }
 
 function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState, discoveryFilters, discoveryPage) {

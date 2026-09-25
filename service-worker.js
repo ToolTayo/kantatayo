@@ -1,23 +1,23 @@
 const CACHE_PREFIX = "kantatayo-";
-const CACHE_NAME = "kantatayo-shell-v20";
+const CACHE_NAME = "kantatayo-shell-v21";
 const INDEX_URL = new URL("./index.html", self.location.href).href;
 const APP_SHELL_URLS = [
   "./",
   "./index.html",
   "./styles/main.css",
-  "./styles/main.css?v=14",
+  "./styles/main.css?v=15",
   "./src/app.js",
-  "./src/app.js?v=14",
+  "./src/app.js?v=15",
   "./src/catalog.js",
   "./src/discovery.js",
-  "./src/discovery.js?v=2",
+  "./src/discovery.js?v=3",
   "./src/preferences.js",
   "./src/recommendations.js",
   "./src/party.js",
   "./src/state.js",
   "./src/storage.js",
   "./src/ui.js",
-  "./src/ui.js?v=11",
+  "./src/ui.js?v=12",
   "./src/focus.js",
   "./src/utils.js",
   "./src/view.js",

@@ -1,6 +1,6 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=11";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongSections, setPlayerExpanded, showPlayer, showPlayerError, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerUnavailable, showQueueFinished, showToast } from "./ui.js?v=12";
 import { loadCatalog } from "./catalog.js";
-import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=2";
+import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=3";
 import { addSongToQueue, advanceQueue, clearPreferences, clearQueue, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
@@ -59,7 +59,7 @@ function render({ refreshRecommendations = false } = {}) {
 }
 
 function refreshRecommendationsSnapshot() {
-  recommendationSnapshot = getRecommendations(state.songs, state.user, { limit: 5 });
+  recommendationSnapshot = getRecommendations(state.songs, state.user, { limit: 12 });
   if (recommendationSnapshot.length > 0) {
     const changed = setRecentRecommendations(state.user, recommendationSnapshot.map((item) => item.song.id));
     if (changed) persistAppState(state);
@@ -71,12 +71,14 @@ function setViewHash(view) {
   if (window.location.hash !== nextHash) window.history.replaceState(null, "", nextHash);
 }
 
-function navigateToView(view, { preserveQuery = false } = {}) {
+function navigateToView(view, { preserveQuery = false, discoveryFilter = "" } = {}) {
   closeMobileMore();
   currentView = normalizeView(view);
   if (!preserveQuery || currentView !== "discover") state.query = "";
   state.filter = "all";
-  state.discoveryFilters = createDefaultDiscoveryFilters();
+  state.discoveryFilters = discoveryFilter && currentView === "discover"
+    ? createQuickFilterState(discoveryFilter)
+    : createDefaultDiscoveryFilters();
   state.discoveryPage = 1;
   if (currentView === "party" && !state.user.partySession.enabled) {
     state.user.partySession.enabled = true;
@@ -101,7 +103,7 @@ function bindEvents() {
     const navView = navTarget?.dataset.view || getLegacyNavView(navTarget);
     if (navView) {
       event.preventDefault();
-      navigateToView(navView, { preserveQuery: navView === "discover" });
+      navigateToView(navView, { preserveQuery: navView === "discover", discoveryFilter: navTarget?.dataset.homeFilter || "" });
       return;
     }
     const actionTarget = event.target.closest("[data-action]");
