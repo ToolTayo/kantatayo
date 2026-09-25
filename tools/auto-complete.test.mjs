@@ -340,14 +340,14 @@ test("a recovered deferred candidate transitions to review-required on technical
   }
 });
 
-test("cooldown-pending legacy state keeps sample-072 out of per-run review decisions and counts unique songs", async () => {
+test("cooldown-pending legacy state keeps a deferred fixture out of per-run review decisions and counts unique songs", async () => {
   const fixture = await createFixture([
     song("sample-071", "Dati", "Sam Concepcion", null),
-    song("sample-072", "Araw-Araw", "Ben&Ben", null),
+    song("fixture-072", "Araw-Araw", "Ben&Ben", null),
     song("sample-073", "Pagsamo", "Arthur Nery", null)
   ], [
     { songId: "sample-071", status: "deferred-rate-limit", reason: "legacy deferred", nextEligibleAt: "2026-09-22T01:00:00.000Z", attemptCount: "invalid" },
-    { songId: "sample-072", status: "deferred-rate-limit", reason: "legacy deferred", nextEligibleAt: "2026-09-22T01:00:00.000Z" },
+    { songId: "fixture-072", status: "deferred-rate-limit", reason: "legacy deferred", nextEligibleAt: "2026-09-22T01:00:00.000Z" },
     { songId: "sample-073", status: "review-required", reason: "persisted review" },
     { songId: "sample-073", status: "review-required", reason: "duplicate review" }
   ]);
@@ -362,7 +362,7 @@ test("cooldown-pending legacy state keeps sample-072 out of per-run review decis
     assert.equal(result.summary.deferredRateLimitTotal, 2);
     assert.equal(result.summary.reviewRequiredTotal, 1);
     assert.equal(result.summary.pendingEligibleTotal, 2);
-    assert.equal(result.rows.filter((row) => row.state === "pending").map((row) => row.song.id).sort().join(","), "sample-071,sample-072");
+    assert.equal(result.rows.filter((row) => row.state === "pending").map((row) => row.song.id).sort().join(","), "fixture-072,sample-071");
   } finally {
     process.exitCode = 0;
     await fixture.cleanup();
@@ -450,11 +450,14 @@ test("strict technical gates hold non-embeddable, Made-for-Kids, and unknown-sta
   }
 });
 
-test("known unresolved songs are skipped and auto-complete is idempotent", async () => {
+test("explicitly unresolved songs are skipped and auto-complete is idempotent", async () => {
   const fixture = await createFixture([
-    song("sample-008", "Lucky", "Jason Mraz & Colbie Caillat", null),
-    song("sample-042", "Mr. Suave", "Andrew E.", null),
+    song("fixture-008", "Lucky", "Jason Mraz & Colbie Caillat", null),
+    song("fixture-042", "Mr. Suave", "Andrew E.", null),
     song("test-007", "Song Seven", "Artist Seven", null)
+  ], [
+    { songId: "fixture-008", status: "unresolved", reason: "no acceptable fixture candidate" },
+    { songId: "fixture-042", status: "review-required", reason: "fixture needs review" }
   ]);
   const calls = [];
   try {
@@ -470,8 +473,8 @@ test("known unresolved songs are skipped and auto-complete is idempotent", async
     assert.equal(secondCalls.length, 0);
     assert.ok(firstCallCount > 0);
     const catalog = JSON.parse(await readFile(fixture.catalog, "utf8"));
-    assert.equal(catalog.find((item) => item.id === "sample-008").youtubeVideoId, null);
-    assert.equal(catalog.find((item) => item.id === "sample-042").youtubeVideoId, null);
+    assert.equal(catalog.find((item) => item.id === "fixture-008").youtubeVideoId, null);
+    assert.equal(catalog.find((item) => item.id === "fixture-042").youtubeVideoId, null);
   } finally {
     process.exitCode = 0;
     await fixture.cleanup();
@@ -616,9 +619,9 @@ test("sanitized real-state fixture completes safely across four idempotent runs"
     song("test-close", "Close Candidate", "Close Artist", null),
     song("test-no-candidate", "No Candidate", "No Artist", null),
     song("test-deferred", "Deferred Candidate", "Deferred Artist", null),
-    song("sample-008", "Lucky", "Jason Mraz & Colbie Caillat", null),
-    song("sample-009", "Endless Love", "Lionel Richie & Diana Ross", null),
-    song("sample-042", "Mr. Suave", "Andrew E.", null)
+    song("fixture-008", "Lucky", "Jason Mraz & Colbie Caillat", null),
+    song("fixture-009", "Endless Love", "Lionel Richie & Diana Ross", null),
+    song("fixture-042", "Mr. Suave", "Andrew E.", null)
   ];
   const fixture = await createFixture([...promotedSongs, ...eligibleSongs], [], [
     { songId: "test-close", candidateVideoId: "oldclose001" },
@@ -657,7 +660,7 @@ test("sanitized real-state fixture completes safely across four idempotent runs"
   const now = new Date("2026-09-22T00:00:00.000Z");
   try {
     await writeFile(fixture.verification, JSON.stringify({ version: 1, records: [...humanRecords, ...autoRecords, oldClose, deferredRecord, { songId: "malformed", candidateVideoId: null }] }, null, 2));
-    await writeFile(fixture.review, JSON.stringify({ version: 1, flags: [{ songId: "malformed-flag" }, { songId: "sample-008", status: "unresolved", reason: "built-in exception" }] }, null, 2));
+    await writeFile(fixture.review, JSON.stringify({ version: 1, flags: [{ songId: "malformed-flag" }, { songId: "fixture-008", status: "unresolved", reason: "fixture exception" }] }, null, 2));
 
     let videoAttempts = 0;
     const first = await autoComplete(options(fixture, { retryLimit: 0 }), {
@@ -721,9 +724,9 @@ test("sanitized real-state fixture completes safely across four idempotent runs"
     assert.equal(third.rows.length, 4);
     const finalCatalog = JSON.parse(await readFile(fixture.catalog, "utf8"));
     assert.equal(finalCatalog.filter((item) => item.youtubeVideoId).length, 70);
-    assert.equal(finalCatalog.find((item) => item.id === "sample-008").youtubeVideoId, null);
-    assert.equal(finalCatalog.find((item) => item.id === "sample-009").youtubeVideoId, null);
-    assert.equal(finalCatalog.find((item) => item.id === "sample-042").youtubeVideoId, null);
+    assert.equal(finalCatalog.find((item) => item.id === "fixture-008").youtubeVideoId, null);
+    assert.equal(finalCatalog.find((item) => item.id === "fixture-009").youtubeVideoId, null);
+    assert.equal(finalCatalog.find((item) => item.id === "fixture-042").youtubeVideoId, null);
     const finalRecords = JSON.parse(await readFile(fixture.verification, "utf8")).records;
     assert.equal(finalRecords.length, 70);
     assert.equal(new Set(finalRecords.map((record) => `${record.songId}::${record.candidateVideoId}`)).size, finalRecords.length);

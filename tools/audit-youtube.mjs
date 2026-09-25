@@ -310,7 +310,11 @@ export function auditPromotedAssignments(catalog, verificationStore, options = {
   const songs = Array.isArray(catalog) ? catalog : [];
   const records = Array.isArray(verificationStore?.records) ? verificationStore.records : [];
   const bySongId = new Map(songs.map((song) => [String(song?.id || "").toLowerCase(), song]));
-  const promotedRecords = records.filter((record) => record?.status === "verified" && isValidVideoId(record?.candidateVideoId));
+  const promotedRecords = records.filter((record) => (
+    record?.status === "verified" &&
+    isValidVideoId(record?.candidateVideoId) &&
+    bySongId.has(String(record?.songId || "").toLowerCase())
+  ));
   const videoOwners = new Map();
   for (const record of promotedRecords) {
     const videoId = record.candidateVideoId.trim();

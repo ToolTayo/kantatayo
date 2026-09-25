@@ -159,7 +159,69 @@ export function getPartyStats(session, songs = []) {
 }
 
 export function getPartyQueueItems(queueSongs, session) {
-  return queueSongs.map((song) => ({ song, singer: getAssignedSinger(session, song.id) }));
+  const queueSession = reconcilePartyQueue(session, queueSongs.map((song) => song.id));
+  return queueSongs.map((song) => ({ song, singer: getAssignedSinger(queueSession, song.id) }));
+}
+
+/**
+ * Reconciles party assignments against the displayed queue without changing
+ * completed turns. Existing assignments keep their singer; only unassigned
+ * queue entries are filled in displayed order from the current rotation.
+ */
+export function reconcilePartyQueue(session, queueIds = []) {
+  const normalized = normalizePartySession(session);
+  const canonicalQueue = [];
+  const seen = new Set();
+  queueIds.forEach((value) => {
+    const id = normalizeId(value);
+    const key = id.toLowerCase();
+    if (id && !seen.has(key)) {
+      seen.add(key);
+      canonicalQueue.push(id);
+    }
+  });
+
+  const allowed = new Set(canonicalQueue.map((id) => id.toLowerCase()));
+  const assignments = {};
+  const assignedKeys = new Set();
+  Object.entries(normalized.assignments).forEach(([songId, singerId]) => {
+    const key = songId.toLowerCase();
+    if (allowed.has(key) && !assignedKeys.has(key)) {
+      const canonicalId = canonicalQueue.find((id) => id.toLowerCase() === key) || songId;
+      assignments[canonicalId] = singerId;
+      assignedKeys.add(key);
+    }
+  });
+
+  let rotationIndex = normalized.rotationIndex;
+  canonicalQueue.forEach((songId) => {
+    if (assignedKeys.has(songId.toLowerCase())) return;
+    const singer = normalized.singers[rotationIndex % normalized.singers.length];
+    if (!singer) return;
+    assignments[songId] = singer.id;
+    assignedKeys.add(songId.toLowerCase());
+    rotationIndex = (rotationIndex + 1) % normalized.singers.length;
+  });
+
+  return { ...normalized, assignments, rotationIndex: normalized.singers.length ? rotationIndex % normalized.singers.length : 0 };
+}
+
+/**
+ * Removes optional constraints in a deliberate order. Language is retained
+ * until last so a relaxed roll still respects the strongest user intent when
+ * the catalog makes that possible.
+ */
+export function relaxRouletteConstraints(songs, userState, constraints = {}, options = {}) {
+  const next = { language: "any", genre: "any", mood: "any", difficulty: "any", era: "any", ...constraints };
+  const relaxed = [];
+  let candidates = getRouletteCandidates(songs, userState, next, options);
+  ["mood", "era", "difficulty", "genre", "language"].forEach((key) => {
+    if (candidates.length || next[key] === "any") return;
+    next[key] = "any";
+    relaxed.push(key);
+    candidates = getRouletteCandidates(songs, userState, next, options);
+  });
+  return { constraints: next, relaxed, candidates };
 }
 
 export function getRouletteCandidates(songs, userState, constraints = {}, options = {}) {
@@ -265,13 +327,9 @@ function secureRandomUnit() {
 function reconcilePartySession(session, songs, queueIds) {
   const normalized = normalizePartySession(session);
   const canonicalIds = new Map(songs.map((song) => [song.id.toLowerCase(), song.id]));
-  const allowedQueue = new Set(queueIds.map((id) => id.toLowerCase()));
-  const assignments = {};
-  Object.entries(normalized.assignments).forEach(([songId, singerId]) => {
-    const canonicalId = canonicalIds.get(songId.toLowerCase());
-    if (canonicalId && allowedQueue.has(songId.toLowerCase())) assignments[canonicalId] = singerId;
-  });
-  return { ...normalized, assignments };
+  const canonicalQueue = queueIds.map((id) => canonicalIds.get(String(id).toLowerCase())).filter(Boolean);
+  const canonicalSession = { ...normalized, assignments: Object.fromEntries(Object.entries(normalized.assignments).map(([songId, singerId]) => [canonicalIds.get(songId.toLowerCase()) || songId, singerId])) };
+  return reconcilePartyQueue(canonicalSession, canonicalQueue);
 }
 
 export function reconcilePartyState(session, songs, queueIds) {

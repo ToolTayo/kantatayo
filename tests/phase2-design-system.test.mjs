@@ -30,8 +30,17 @@ test("long card content can wrap without widening the layout", () => {
   assert.match(css, /\.song-card h4, \.song-artist, \.song-reason, \.song-availability \{ overflow-wrap: anywhere; \}/);
 });
 
+test("sparse shelves keep bounded card tracks and shared 16:9 media sizing", () => {
+  assert.match(css, /\.song-grid,\s*\.compact-grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(auto-fit, minmax\(min\(100%, 16rem\), 20rem\)\)/);
+  assert.match(css, /\.song-grid,\s*\.compact-grid\s*\{[\s\S]*?justify-content:\s*start/);
+  assert.match(css, /\.song-card\s*\{[\s\S]*?max-width:\s*20rem/);
+  assert.match(css, /\.song-thumbnail\s*\{[\s\S]*?aspect-ratio:\s*16\s*\/\s*9/);
+  assert.match(css, /\.song-thumbnail-image\s*\{[\s\S]*?height:\s*100%[\s\S]*?width:\s*100%/);
+  assert.match(css, /@media \(max-width: 619px\)[\s\S]*?\.song-card\s*\{[\s\S]*?max-width:\s*none/);
+});
+
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=15/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=15"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v21"/);
+  assert.match(index, /styles\/main\.css\?v=20/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=20"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v32"/);
 });

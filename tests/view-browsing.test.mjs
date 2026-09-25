@@ -15,12 +15,12 @@ test("view state maps Home and catalog routes without changing the catalog", () 
   assert.equal(normalizeView("discover"), "discover");
   assert.equal(normalizeView("unknown"), "home");
   assert.equal(viewHash("favorites"), "#favorites");
-  assert.equal(getDiscoverySongs(index, { filter: "all" }).length, 170);
+  assert.equal(getDiscoverySongs(index, { filter: "all" }).length, 171);
   assert.equal(getDiscoverySongs(index, { filter: "english" }).length > 0, true);
 });
 
-test("Discover keeps unavailable catalog songs browseable but removes playback affordance", () => {
-  const unavailable = catalog.songs.find((song) => song.youtubeVideoId === null);
+test("Discover keeps defensive unavailable records browseable but removes playback affordance", () => {
+  const unavailable = { ...catalog.songs[0], id: "fixture-unavailable", youtubeVideoId: null };
   const playable = catalog.songs.find((song) => song.youtubeVideoId);
   const unavailableCard = renderSongCard(unavailable, emptyInteraction, { catalogView: true });
   const playableCard = renderSongCard(playable, emptyInteraction, { catalogView: true });
@@ -43,5 +43,6 @@ test("Home and Discover are separate UI surfaces with a complete-catalog CTA", a
   assert.match(html, /data-filter="filipino"/);
   assert.match(html, /data-filter="english"/);
   assert.match(app, /closest\("\.primary-nav a, \.mobile-nav a, \.mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]"\)/);
+  assert.match(app, /currentView === "home" && typeof window\.scrollTo === "function"/);
   assert.match(ui, /mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]/);
 });

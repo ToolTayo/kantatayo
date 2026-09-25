@@ -37,6 +37,8 @@ test("service worker caches only the explicit first-party app shell", () => {
     "./src/app.js",
     "./src/catalog.js",
     "./src/discovery.js",
+    "./src/engagement.js",
+    "./src/collections.js",
     "./src/preferences.js",
     "./src/recommendations.js",
     "./src/party.js",
@@ -55,12 +57,13 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=15"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=15"/);
-  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=3"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=12"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=20"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=24"/);
+  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=4"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=19"/);
+  assert.match(serviceWorker, /"\.\/src\/state\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v21"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v32"/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /request\.mode === "navigate"/);
   assert.match(serviceWorker, /key\.startsWith\(CACHE_PREFIX\)/);
@@ -79,12 +82,10 @@ test("app registers the service worker safely and keeps offline playback explici
 
 test("PWA boundaries preserve the local catalog and protected video assignments", async () => {
   const songs = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
-    assert.equal(songs.length, 170);
-  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 151);
-    assert.deepEqual(songs.map((song) => song.id), Array.from({ length: 170 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
-    assert.equal(new Set(songs.map((song) => song.id)).size, 170);
-    assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 170);
-  assert.equal(songs.find((song) => song.id === "sample-008").youtubeVideoId, null);
-  assert.equal(songs.find((song) => song.id === "sample-009").youtubeVideoId, null);
+    assert.equal(songs.length, 171);
+  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 171);
+  assert.equal(songs.filter((song) => song.youtubeVideoId === null).length, 0);
+  assert.equal(new Set(songs.map((song) => song.id)).size, 171);
+  assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 171);
   assert.equal(songs.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });

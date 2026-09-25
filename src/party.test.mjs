@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { normalizeCatalog } from "./catalog.js";
-import { addPartySinger, addPartySinger as addSinger, assignPartySong, clearPartyAssignments, clearPartySession, createDefaultPartySession, getPartyStats, getRouletteCandidates, getNextPartySinger, normalizePartySession, recordPartyTurn, removePartySinger, renamePartySinger, selectRouletteSong } from "./party.js";
+import { addPartySinger, addPartySinger as addSinger, assignPartySong, clearPartyAssignments, clearPartySession, createDefaultPartySession, getPartyStats, getPartyQueueItems, getRouletteCandidates, getNextPartySinger, normalizePartySession, recordPartyTurn, reconcilePartyQueue, relaxRouletteConstraints, removePartySinger, renamePartySinger, selectRouletteSong } from "./party.js";
 import { getRecommendations } from "./recommendations.js";
 import { addSongToQueue, createAppState, createDefaultUserState, loadUserState, markSung, moveQueueItem, removeSongFromQueue, saveUserState, setCatalog } from "./state.js";
 
@@ -72,6 +72,46 @@ test("queue assignments stay attached to song IDs through reorder, removal, and 
   assert.deepEqual(session.assignments, {});
 });
 
+test("queue-before-singers and singers-before-queue both receive deterministic assignments", () => {
+  const queueFirst = createDefaultPartySession();
+  queueFirst.enabled = true;
+  const queuedIds = ["sample-001", "sample-002", "sample-003"];
+  const noSingersYet = reconcilePartyQueue(queueFirst, queuedIds);
+  assert.deepEqual(noSingersYet.assignments, {});
+  addPartySinger(noSingersYet, "A", { idFactory: () => "a" });
+  addPartySinger(noSingersYet, "B", { idFactory: () => "b" });
+  assert.deepEqual(reconcilePartyQueue(noSingersYet, queuedIds).assignments, { "sample-001": "a", "sample-002": "b", "sample-003": "a" });
+
+  const singersFirst = createDefaultPartySession();
+  singersFirst.enabled = true;
+  addPartySinger(singersFirst, "A", { idFactory: () => "a" });
+  addPartySinger(singersFirst, "B", { idFactory: () => "b" });
+  assert.deepEqual(reconcilePartyQueue(singersFirst, queuedIds).assignments, { "sample-001": "a", "sample-002": "b", "sample-003": "a" });
+});
+
+test("party queue keeps completed history stable while singer removal reassigns future queue turns", () => {
+  const session = createDefaultPartySession();
+  session.enabled = true;
+  addPartySinger(session, "A", { idFactory: () => "a" });
+  addPartySinger(session, "B", { idFactory: () => "b" });
+  session.assignments = reconcilePartyQueue(session, ["sample-001", "sample-002", "sample-003"]).assignments;
+  recordPartyTurn(session, "sample-001", "b", { completedAt: "2026-09-22T00:00:00.000Z" });
+  removePartySinger(session, "b");
+  const reconciled = reconcilePartyQueue(session, ["sample-001", "sample-002", "sample-003"]);
+  assert.equal(reconciled.turns[0].singerName, "B");
+  assert.ok(Object.values(reconciled.assignments).every((id) => id === "a"));
+});
+
+test("party queue display supplies every applicable singer without mutating persisted turns", () => {
+  const session = createDefaultPartySession();
+  session.enabled = true;
+  addPartySinger(session, "A", { idFactory: () => "a" });
+  addPartySinger(session, "B", { idFactory: () => "b" });
+  const items = getPartyQueueItems(catalog.slice(0, 4), session);
+  assert.deepEqual(items.map((item) => item.singer?.id), ["a", "b", "a", "b"]);
+  assert.deepEqual(session.turns, []);
+});
+
 test("rotation survives singer churn and manual assignment advances to the next singer", () => {
   const session = createDefaultPartySession();
   addPartySinger(session, "A", { idFactory: () => "a" });
@@ -129,6 +169,23 @@ test("party stats count completed actions once and preserve removed-singer histo
   assert.equal(getPartyStats(reloadedSession, catalog).songsBySinger[0].count, 2);
 });
 
+test("Sang It records the assigned singer and leaves the next party turn ready", () => {
+  const userState = createDefaultUserState();
+  const session = userState.partySession;
+  session.enabled = true;
+  addPartySinger(session, "A", { idFactory: () => "a" });
+  addPartySinger(session, "B", { idFactory: () => "b" });
+  addSongToQueue(userState, "sample-001");
+  addSongToQueue(userState, "sample-002");
+  userState.partySession = reconcilePartyQueue(session, userState.queue);
+  const activeSession = userState.partySession;
+  const result = markSung(userState, "sample-001", { now: Date.parse("2026-09-22T00:00:00.000Z") });
+  assert.equal(result.added, true);
+  assert.equal(recordPartyTurn(activeSession, result.entry.id, getAssignedSingerForTest(activeSession, "sample-001"), { completedAt: result.entry.sungAt }), true);
+  assert.equal(activeSession.turns[0].singerName, "A");
+  assert.equal(getPartyQueueItems(catalog.slice(0, 2), activeSession)[1].singer.name, "B");
+});
+
 test("roulette only selects eligible playable songs and honors constraints", () => {
   const userState = createDefaultUserState();
   userState.queue = ["sample-001"];
@@ -140,7 +197,7 @@ test("roulette only selects eligible playable songs and honors constraints", () 
 
   assert.ok(candidates.length > 0);
   assert.ok(candidates.every((song) => song.language === "English" && song.difficulty === "easy" && song.youtubeVideoId));
-  assert.ok(candidates.every((song) => !["sample-001", "sample-002", "sample-003", "sample-008"].includes(song.id)));
+  assert.ok(candidates.every((song) => !["sample-001", "sample-002", "sample-003"].includes(song.id)));
   assert.equal(selectRouletteSong(catalog, userState, { genre: "pop" }, { partySession: session, random: () => 0 })?.genre, "Pop");
 });
 
@@ -170,6 +227,27 @@ test("roulette stress preserves user state and handles zero and one-song pools",
   assert.equal(selectRouletteSong(oneSongFolkCatalog, userState, { genre: "folk" })?.id, "sample-016");
 });
 
+test("roulette relaxation preserves language when possible and never returns unavailable songs", () => {
+  const userState = createDefaultUserState();
+  const session = createDefaultPartySession();
+  const result = relaxRouletteConstraints(catalog, userState, { language: "english", genre: "folk", mood: "party", difficulty: "hard", era: "1990s" }, { partySession: session });
+  assert.ok(result.candidates.length > 0);
+  assert.equal(result.constraints.language, "english");
+  assert.ok(result.relaxed.length > 0);
+  assert.ok(result.candidates.every((song) => song.language === "English" && song.youtubeVideoId));
+});
+
+test("roulette becomes empty safely for impossible constraints and avoids repeated results while alternatives exist", () => {
+  const userState = createDefaultUserState();
+  const impossible = getRouletteCandidates(catalog, userState, { language: "klingon" });
+  assert.deepEqual(impossible, []);
+  const session = createDefaultPartySession();
+  const first = selectRouletteSong(catalog, userState, {}, { partySession: session, random: () => 0 });
+  const second = selectRouletteSong(catalog, userState, {}, { partySession: session, excludeSongIds: [first.id], random: () => 0 });
+  assert.ok(first && second && first.id !== second.id);
+  assert.ok(second.youtubeVideoId);
+});
+
 test("party state does not influence deterministic Sing Next recommendations", () => {
   const base = createDefaultUserState();
   const partyState = createDefaultUserState();
@@ -197,6 +275,25 @@ test("old state and malformed party state load safely, while catalog reconciliat
   appState.user.queue = ["sample-001"];
   setCatalog(appState, catalog, []);
   assert.deepEqual(appState.user.partySession.assignments, { "sample-001": "x" });
+});
+
+test("party singers, rotation, assignments, queue, and history survive a local-state reload", () => {
+  const userState = createDefaultUserState();
+  userState.partySession.enabled = true;
+  addPartySinger(userState.partySession, "A", { idFactory: () => "a" });
+  addPartySinger(userState.partySession, "B", { idFactory: () => "b" });
+  addSongToQueue(userState, "sample-001");
+  addSongToQueue(userState, "sample-002");
+  userState.partySession = { ...userState.partySession, ...reconcilePartyQueue(userState.partySession, userState.queue) };
+  recordPartyTurn(userState.partySession, "sample-001", "a", { completedAt: "2026-09-22T00:00:00.000Z" });
+  const storage = memoryStorage();
+  assert.equal(saveUserState(userState, { storage }), true);
+  const reloaded = createAppState(loadUserState({ storage }));
+  setCatalog(reloaded, catalog, []);
+  assert.deepEqual(reloaded.user.queue, ["sample-001", "sample-002"]);
+  assert.deepEqual(reloaded.user.partySession.assignments, { "sample-001": "a", "sample-002": "b" });
+  assert.equal(reloaded.user.partySession.turns[0].singerName, "A");
+  assert.equal(reloaded.user.partySession.rotationIndex, userState.partySession.rotationIndex);
 });
 
 test("clearing party session does not alter personal state", () => {
@@ -232,4 +329,8 @@ function memoryStorage(initial = {}) {
     setItem(key, value) { values.set(key, String(value)); },
     removeItem(key) { values.delete(key); }
   };
+}
+
+function getAssignedSingerForTest(session, songId) {
+  return session.assignments[songId] || null;
 }

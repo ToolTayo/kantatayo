@@ -24,7 +24,7 @@ test("preferences save and reload through the existing versioned storage key", (
     performanceTypes: ["duet"],
     eras: []
   });
-  assert.equal(JSON.parse(storage.getItem("kantatayo:user-state")).version, 1);
+  assert.equal(JSON.parse(storage.getItem("kantatayo:user-state")).version, 3);
 });
 
 test("multiple preference categories normalize safely", () => {
@@ -110,14 +110,11 @@ test("preferences do not filter local discovery results", async () => {
   assert.equal(withPreferencesStillAllSongs.length, allSongs.length);
 });
 
-test("promoted IDs and intentionally unassigned songs remain unchanged", async () => {
+test("promoted IDs and catalog playability remain unchanged", async () => {
   const raw = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
   const promoted = raw.filter((song) => song.youtubeVideoId !== null);
-  assert.equal(promoted.length, 151);
-  assert.equal(raw.find((song) => song.id === "sample-008").youtubeVideoId, null);
-  assert.equal(raw.find((song) => song.id === "sample-009").youtubeVideoId, null);
-  assert.equal(raw.find((song) => song.id === "sample-166").youtubeVideoId, null);
-  assert.equal(raw.find((song) => song.id === "sample-168").youtubeVideoId, null);
+  assert.equal(promoted.length, 171);
+  assert.equal(raw.filter((song) => song.youtubeVideoId === null).length, 0);
   assert.equal(raw.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });
 

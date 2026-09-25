@@ -11,9 +11,10 @@ const newSongs = rawCatalog.filter((song) => {
   return number >= 146 && number <= 170;
 });
 
-test("batch 2 adds exactly 25 unique demand-backed songs after sample-145", async () => {
-  assert.equal(newSongs.length, 25);
-  assert.deepEqual(newSongs.map((song) => song.id), Array.from({ length: 25 }, (_, index) => `sample-${String(index + 146).padStart(3, "0")}`));
+test("batch 2 retains 23 unique demand-backed playable songs after the first expansion wave", async () => {
+  const expectedIds = [...Array.from({ length: 20 }, (_, index) => `sample-${String(index + 146).padStart(3, "0")}`), "sample-167", "sample-169", "sample-170"];
+  assert.equal(newSongs.length, 23);
+  assert.deepEqual(newSongs.map((song) => song.id), expectedIds);
   assert.equal(new Set(rawCatalog.map((song) => song.id)).size, rawCatalog.length);
   const normalizedTitleArtists = rawCatalog.map((song) => `${song.title.toLowerCase().replace(/[^a-z0-9]+/g, "")}\u0000${song.artist.toLowerCase().replace(/[^a-z0-9]+/g, "")}`);
   assert.equal(new Set(normalizedTitleArtists).size, rawCatalog.length);
@@ -28,20 +29,22 @@ test("batch 2 adds exactly 25 unique demand-backed songs after sample-145", asyn
     assert.ok(signal.evidence.length > 0);
     assert.ok(signal.evidence.every((evidence) => sourceIds.has(evidence.sourceId) && Number.isInteger(evidence.rank)));
     assert.equal(song.demandTier, signal.demandTier);
-    if (["sample-166", "sample-168"].includes(song.id)) assert.equal(song.youtubeVideoId, null, song.id);
-    else assert.ok(song.youtubeVideoId, song.id);
+    assert.ok(song.youtubeVideoId, song.id);
   }
 });
 
 test("new batch songs remain recommendation-eligible only after a verified playable ID exists", () => {
   const normalized = normalizeCatalog(rawCatalog, { logger: { warn() {} } }).songs;
   const unresolved = newSongs.filter((song) => !song.youtubeVideoId);
-  assert.deepEqual(unresolved.map((song) => song.id), ["sample-166", "sample-168"]);
+  assert.deepEqual(unresolved, []);
   assert.equal(getRecommendations(unresolved, {}, { limit: 5 }).length, 0);
   const playable = newSongs.filter((song) => song.youtubeVideoId);
   assert.equal(playable.length, 23);
   assert.equal(getRecommendations(playable, {}, { limit: 5 }).length, 5);
-  assert.equal(normalized.filter((song) => song.id >= "sample-146").length, 25);
+  assert.equal(normalized.filter((song) => {
+    const number = Number(String(song.id).replace(/^sample-/, ""));
+    return number >= 146 && number <= 170;
+  }).length, 23);
 });
 
 test("the existing production ranking gates quality before popularity", () => {

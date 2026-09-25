@@ -33,8 +33,8 @@ test("playable-only discovery excludes every unavailable catalog record", () => 
 });
 
 test("all songs remains browseable when the playable pool is empty", () => {
-  const unavailableIndex = createSearchIndex(catalog.filter((song) => !song.youtubeVideoId));
-  assert.equal(getDiscoverySongs(unavailableIndex, {}).length, 19);
+  const unavailableIndex = createSearchIndex([{ ...catalog[0], id: "fixture-unavailable", youtubeVideoId: null }]);
+  assert.equal(getDiscoverySongs(unavailableIndex, {}).length, 1);
   assert.equal(getDiscoverySongs(unavailableIndex, { filters: { availability: "playable" } }).length, 0);
 });
 

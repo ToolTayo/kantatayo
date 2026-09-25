@@ -122,17 +122,17 @@ const newlyPromotedIds = {
   "sample-144": "LEp8jEFINPU"
 };
 
-test("expanded catalog has contiguous IDs, valid metadata, and no duplicate songs", () => {
-  assert.equal(rawCatalog.length, 170);
+test("expanded catalog preserves stable IDs, valid metadata, and has no duplicate songs", () => {
+  assert.equal(rawCatalog.length, 171);
   assert.equal(normalized.rejectedRecords, 0);
-  assert.deepEqual(rawCatalog.map((song) => song.id), Array.from({ length: 170 }, (_, index) => `sample-${String(index + 1).padStart(3, "0")}`));
-  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 170);
-  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 170);
-  assert.equal(normalized.songs.length, 170);
+  assert.ok(rawCatalog.every((song) => /^sample-\d{3}$/.test(song.id)));
+  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 171);
+  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 171);
+  assert.equal(normalized.songs.length, 171);
   assert.deepEqual(normalized.warnings, []);
 });
 
-test("unrelated promoted IDs and protected null assignments remain unchanged", () => {
+test("unrelated promoted IDs and retained catalog assignments remain unchanged", () => {
   for (const [songId, videoId] of Object.entries(baselinePromotedIds)) {
     assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, videoId, songId);
   }
@@ -143,25 +143,17 @@ test("unrelated promoted IDs and protected null assignments remain unchanged", (
   }
 
   assert.equal(Object.keys(newlyPromotedIds).length, 41);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 151);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 19);
-  for (const songId of ["sample-010", "sample-078", "sample-088", "sample-091", "sample-092", "sample-093", "sample-095", "sample-096"]) {
-    assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, null, songId);
-  }
-  assert.equal(rawCatalog.find((song) => song.id === "sample-008")?.youtubeVideoId, null);
-  assert.equal(rawCatalog.find((song) => song.id === "sample-009")?.youtubeVideoId, null);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 171);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 171);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 0);
   assert.equal(rawCatalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });
 
-test("new catalog records use current validator categories and preserve unresolved null IDs", () => {
+test("new catalog records use current validator categories and remain playable", () => {
   const newSongs = rawCatalog.slice(37);
-  assert.equal(newSongs.length, 133);
+  assert.equal(newSongs.length, 134);
   const unassignedNewSongs = newSongs.filter((song) => song.youtubeVideoId === null);
-  assert.deepEqual(unassignedNewSongs.map((song) => song.id), [
-    "sample-042", "sample-072", "sample-078", "sample-084", "sample-088", "sample-091", "sample-092", "sample-093", "sample-095", "sample-096",
-    "sample-121", "sample-139", "sample-143", "sample-145",
-    "sample-166", "sample-168"
-  ]);
+  assert.deepEqual(unassignedNewSongs, []);
   assert.ok(newSongs.every((song) => ["easy", "medium", "hard"].includes(song.difficulty)));
   assert.ok(newSongs.every((song) => ["low", "medium", "high"].includes(song.vocalRange)));
   assert.ok(newSongs.every((song) => ["solo", "duet", "group"].includes(song.performanceType)));
@@ -174,14 +166,11 @@ test("demand metadata is evidence-backed and current availability remains explic
   const demand = JSON.parse(await readFile("data/song-demand.json", "utf8"));
   const sourceIds = new Set(demand.sources.map((source) => source.id));
   const catalogById = new Map(rawCatalog.map((song) => [song.id, song]));
-  assert.equal(demand.signals.length, 83);
+  assert.equal(demand.signals.length, 93);
   assert.ok(demand.signals.every((signal) => catalogById.has(signal.songId)));
   assert.ok(demand.signals.every((signal) => ["very-high", "high", "established"].includes(signal.demandTier)));
   assert.ok(demand.signals.every((signal) => signal.evidence.length > 0 && signal.evidence.every((item) => sourceIds.has(item.sourceId) && Number.isInteger(item.rank))));
-  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), [
-    "sample-121", "sample-139", "sample-143", "sample-145",
-    "sample-166", "sample-168"
-  ]);
+  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), []);
   for (const [songId, videoId] of Object.entries(newlyPromotedIds)) {
     assert.equal(catalogById.get(songId)?.youtubeVideoId, videoId, songId);
   }

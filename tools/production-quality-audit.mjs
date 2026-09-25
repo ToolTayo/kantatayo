@@ -644,7 +644,7 @@ function printUsage() {
     "",
     "Options:",
     "  --from sample-101  First catalog ID number (default: 101)",
-    "  --to sample-145    Last catalog ID number (default: 145)",
+    "  --to sample-144    Last catalog ID number (default: 144)",
     "  --song-ids IDS     Comma-separated promoted IDs for a focused audit",
     "  --queries N        Query variants per song, 1-3 (default: 3)",
     "  --max-results N    Results per query, 1-5 (default: 5)",

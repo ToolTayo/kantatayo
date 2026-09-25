@@ -10,7 +10,7 @@
  * - youtubeVideoId is null until a real, verified YouTube ID is supplied.
  */
 
-export const DEFAULT_CATALOG_URL = "data/songs.sample.json";
+export const DEFAULT_CATALOG_URL = "data/songs.sample.json?v=1";
 
 const DIFFICULTIES = new Set(["easy", "medium", "hard"]);
 const VOCAL_RANGES = new Set(["low", "medium", "high"]);

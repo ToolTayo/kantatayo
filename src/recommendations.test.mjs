@@ -59,7 +59,7 @@ test("likes and favorites influence metadata-similar songs", () => {
     nowMs: NOW
   };
   const similar = scoreRecommendationCandidate(song("sample-017"), context);
-  const unrelated = scoreRecommendationCandidate(song("sample-010"), context);
+  const unrelated = scoreRecommendationCandidate(song("fixture-unrelated"), context);
 
   assert.ok(metadataSimilarity(song("sample-017"), song("sample-011")) > 0);
   assert.ok(similar.score > unrelated.score);
@@ -144,10 +144,9 @@ test("recommendation reasons expose real signals without raw scoring", () => {
 
 test("catalog playability and protected IDs remain unchanged", () => {
   const promoted = catalog.filter((song) => song.youtubeVideoId !== null);
-  assert.equal(catalog.length, 170);
-  assert.equal(promoted.length, 151);
-  assert.equal(song("sample-008").youtubeVideoId, null);
-  assert.equal(song("sample-009").youtubeVideoId, null);
+  assert.equal(catalog.length, 171);
+  assert.equal(promoted.length, 171);
+  assert.equal(catalog.filter((item) => item.youtubeVideoId === null).length, 0);
   assert.equal(song("sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });
 

@@ -73,8 +73,8 @@ test("production startup asset graph serves executable modules and a usable cata
   assert.ok(visited.size >= 10, "the startup graph should include the application modules");
 
   const catalog = await loadCatalog(`${baseUrl}/data/songs.sample.json`, { logger: silentLogger });
-  assert.equal(catalog.songs.length, 170);
-  assert.equal(catalog.songs.filter((song) => song.youtubeVideoId).length, 151);
+  assert.equal(catalog.songs.length, 171);
+  assert.equal(catalog.songs.filter((song) => song.youtubeVideoId).length, 171);
 });
 
 function getRelativeImports(source) {

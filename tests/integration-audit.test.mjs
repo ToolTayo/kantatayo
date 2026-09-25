@@ -18,9 +18,9 @@ import {
 } from "../src/state.js";
 
 test("catalog reconciliation removes newly unavailable songs from persisted queue without deleting catalog identity", () => {
-  const appState = createAppState({ ...createDefaultUserState(), queue: ["sample-010", "sample-011"], currentSongId: "sample-010" });
+  const appState = createAppState({ ...createDefaultUserState(), queue: ["fixture-010", "sample-011"], currentSongId: "fixture-010" });
   setCatalog(appState, [
-    { id: "sample-010", title: "No Scrubs", artist: "TLC", youtubeVideoId: null },
+    { id: "fixture-010", title: "No Scrubs", artist: "TLC", youtubeVideoId: null },
     { id: "sample-011", title: "Kahit Kailan", artist: "South Border", youtubeVideoId: "aaaaaaaaaaa" }
   ], []);
   assert.deepEqual(appState.user.queue, ["sample-011"]);
@@ -147,8 +147,8 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=15/);
-  assert.match(html, /app\.js\?v=15/);
+  assert.match(html, /main\.css\?v=20/);
+  assert.match(html, /app\.js\?v=24/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);

@@ -1,22 +1,44 @@
 import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
-import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js";
+import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=4";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
-import { getNextPartySinger, getPartyStats } from "./party.js";
+import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getRecentlyAddedSongs, getTrendingSongs } from "./engagement.js?v=1";
+import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 
-const homeSectionOrder = ["recommended", "madeForYou", "favorites", "popular", "opm", "international", "easy", "duets", "recent"];
+const homeSectionOrder = ["recommended", "continue", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
 
-export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1) {
+export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1, selectedCollectionId = "") {
   updateViewPanels(view);
   const allSongs = searchIndex.map((entry) => entry.song);
   const favoriteIds = new Set((userState.favorites || []).map((id) => id.toLowerCase()));
   const likedIds = new Set((userState.likedSongs || []).map((id) => id.toLowerCase()));
   const dislikedIds = new Set((userState.dislikedSongs || []).map((id) => id.toLowerCase()));
 
+  renderHomeEngagement(allSongs, userState);
   renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds });
+  renderLocalCollections(allSongs, userState, { favoriteIds, likedIds, dislikedIds }, selectedCollectionId);
   if (view === "discover") renderCatalogView(searchIndex, query, filter, sortBy, userState, { favoriteIds, likedIds, dislikedIds }, discoveryFilters, discoveryPage);
   if (view === "favorites") renderCollectionView("favorites", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
   if (view === "recent") renderCollectionView("recent", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
+}
+
+function renderLocalCollections(allSongs, userState, interactionState, selectedCollectionId = "") {
+  const target = document.querySelector("[data-collection-grid]");
+  const tabs = document.querySelector("[data-collection-tabs]");
+  if (!target || !tabs) return;
+  const activeId = getCollectionDefinition(selectedCollectionId || getFeaturedCollectionId()).id;
+  const definition = getCollectionDefinition(activeId);
+  tabs.innerHTML = LOCAL_COLLECTIONS.map((collection) => `<button class="chip${collection.id === activeId ? " is-active" : ""}" type="button" data-action="select-collection" data-collection-id="${escapeHtml(collection.id)}" aria-pressed="${collection.id === activeId}">${escapeHtml(collection.title)}</button>`).join("");
+  const title = document.querySelector("[data-collection-title]");
+  const description = document.querySelector("[data-collection-description]");
+  if (title) title.textContent = definition.title;
+  if (description) description.textContent = definition.description;
+  const songs = getCollectionSongs(activeId, allSongs, 4);
+  target.innerHTML = songs.map((song) => renderSongCard(song, interactionState, { reason: "Curated locally" })).join("");
+  target.hidden = songs.length === 0;
+  const empty = document.querySelector("[data-collection-empty]");
+  if (empty) empty.hidden = songs.length > 0;
 }
 
 function updateViewPanels(view) {
@@ -47,6 +69,9 @@ function legacyView(link) {
 
 function renderHomeSections(allSongs, userState, recommendations, interactionState) {
   const sections = getHomeShelves(allSongs, recommendations, userState);
+  sections.continue = getContinueSingingSongs(allSongs, userState);
+  sections.recentlyAdded = getRecentlyAddedSongs(allSongs);
+  sections.trending = getTrendingSongs(allSongs, userState);
   const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
   const personalized = hasMeaningfulUserSignals(userState);
   const homeCopy = {
@@ -54,8 +79,11 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
       ? { title: "Sing now", lede: "Your strongest next-song picks, tuned to your taste." }
       : { title: "Sing now", lede: "Popular, playable picks to get your night moving." },
     madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
+    continue: { title: "Continue singing", lede: "Pick up a song you were already enjoying." },
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
     popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
+    recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
+    trending: { title: "Trending in KantaTayo", lede: "Based only on activity saved on this device." },
     opm: { title: "Popular OPM", lede: "Filipino favorites for the next round." },
     international: { title: "International hits", lede: "Familiar English songs made for a sing-along." },
     easy: { title: "Easy wins", lede: "Comfortable picks when you want a confident chorus." },
@@ -87,6 +115,46 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   if (homeCount) homeCount.textContent = `${sections.recommended.length} ready-to-sing pick${sections.recommended.length === 1 ? "" : "s"}`;
   const resultsNote = document.querySelector("[data-results-note]");
   if (resultsNote) resultsNote.textContent = personalized ? "Fresh ideas based on what you like and sing." : "Popular playable picks to get your night moving.";
+}
+
+function renderHomeEngagement(allSongs, userState) {
+  const challenge = getDailyChallenge(allSongs, userState);
+  const card = document.querySelector("[data-daily-challenge]");
+  if (card) {
+    card.hidden = !challenge.song;
+    if (challenge.song) {
+      const title = card.querySelector("[data-daily-title]");
+      const artist = card.querySelector("[data-daily-artist]");
+      const date = card.querySelector("[data-daily-date]");
+      const status = card.querySelector("[data-daily-status]");
+      const streak = card.querySelector("[data-daily-streak]");
+      const button = card.querySelector('[data-action="daily-challenge-play"]');
+      if (title) title.textContent = challenge.song.title;
+      if (artist) artist.textContent = challenge.song.artist;
+      if (date) date.textContent = challenge.completed ? "Today · completed" : "Today’s featured song";
+      if (status) status.textContent = challenge.completed ? "Challenge complete — keep the streak alive tomorrow." : "One playable song, picked fresh for today.";
+      if (streak) streak.textContent = String(challenge.currentStreak);
+      if (button) {
+        button.dataset.songId = challenge.song.id;
+        button.setAttribute("aria-label", `Play daily challenge: ${challenge.song.title} by ${challenge.song.artist}`);
+      }
+      card.classList.toggle("is-complete", challenge.completed);
+    }
+  }
+
+  const stats = getLocalStats(allSongs, userState);
+  const statsCard = document.querySelector("[data-local-stats]");
+  if (!statsCard) return;
+  const set = (name, value) => {
+    const target = statsCard.querySelector(`[data-stat="${name}"]`);
+    if (target) target.textContent = value;
+  };
+  set("songs", String(stats.songsSung));
+  set("favorites", String(stats.favorites));
+  set("streak", `${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"}`);
+  set("longest", `${stats.longestStreak} day${stats.longestStreak === 1 ? "" : "s"}`);
+  set("split", `${stats.opm} OPM · ${stats.international} Intl`);
+  set("artists", stats.topArtists.length ? stats.topArtists.map((item) => `${item.artist} (${item.count})`).join(" · ") : "No artists yet");
 }
 
 function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState, discoveryFilters, discoveryPage) {
@@ -192,7 +260,16 @@ export function isPartyPanelVisible(currentView, enabled) {
   return currentView === "party" && Boolean(enabled);
 }
 
-export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteResult = null, rouletteConstraints = {}, statusMessage = "Party details stay on this device.", currentView = "party") {
+export function renderSongRequests(userState = {}) {
+  const list = document.querySelector("[data-song-request-list]");
+  if (!list) return;
+  const requests = Array.isArray(userState.songRequests) ? userState.songRequests : [];
+  list.innerHTML = requests.length
+    ? requests.slice(0, 3).map((request) => `<li><strong>${escapeHtml(request.title)}</strong><span>${escapeHtml(request.artist)}</span></li>`).join("")
+    : `<li class="request-empty">No requests yet. Your ideas stay on this device.</li>`;
+}
+
+export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteResult = null, rouletteConstraints = {}, statusMessage = "Party details stay on this device.", currentView = "party", rouletteRecovery = {}) {
   const panel = document.querySelector("[data-party-panel]");
   if (!panel) return;
   const enabled = Boolean(partySession?.enabled);
@@ -209,12 +286,12 @@ export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteRes
   const items = queueSnapshot?.partyItems || [];
   const current = queueSnapshot?.currentIndex >= 0 ? items[queueSnapshot.currentIndex] : null;
   const now = document.querySelector("[data-party-now]");
-  if (now) now.innerHTML = current ? `<p class="party-label">Now singing</p><strong>${escapeHtml(current.singer?.name || "Unassigned singer")}</strong><span>${escapeHtml(current.song.title)}</span><small>${escapeHtml(current.song.artist)}</small>` : `<p class="party-ready"><strong>Party-ready</strong><span>${items.length ? "Choose a queued song to start." : "Add songs to begin the rotation."}</span></p>`;
+  if (now) now.innerHTML = current ? `<p class="party-label">NOW SINGING</p><strong>${escapeHtml(current.singer?.name || "Next singer")}</strong><span>${escapeHtml(current.song.title)}</span><small>${escapeHtml(current.song.artist)}</small>` : `<p class="party-ready"><strong>${items.length ? "UP NEXT" : "PARTY READY"}</strong><span>${items.length ? "Choose a queued song to start." : "Add songs to begin the rotation."}</span></p>`;
   const next = document.querySelector("[data-party-up-next]");
   if (next) {
     const start = queueSnapshot?.currentIndex >= 0 ? queueSnapshot.currentIndex + 1 : 0;
-    const upcoming = items.slice(start, start + 5);
-    next.innerHTML = upcoming.length ? upcoming.map((item) => `<li><span>${escapeHtml(item.singer?.name || "Unassigned")}</span><strong>${escapeHtml(item.song.title)}</strong></li>`).join("") : `<li class="party-empty">Nothing up next yet.</li>`;
+    const upcoming = items.slice(start, start + 3);
+    next.innerHTML = `<li class="party-next-heading"><span>UP NEXT</span></li>${upcoming.length ? upcoming.map((item) => `<li><span>${escapeHtml(item.singer?.name || "Next singer")}</span><strong>${escapeHtml(item.song.title)}</strong><small>${escapeHtml(item.song.artist)}</small></li>`).join("") : `<li class="party-empty">Nothing up next yet.</li>`}`;
   }
 
   const rouletteFilters = document.querySelector("[data-roulette-filters]");
@@ -223,14 +300,18 @@ export function renderPartyPanel(songs, partySession, queueSnapshot, rouletteRes
   const empty = document.querySelector("[data-roulette-empty]");
   if (result) {
     result.hidden = !rouletteResult?.song;
-    if (rouletteResult?.song) result.innerHTML = `<p class="party-label">🎲 Your song</p><h4>${escapeHtml(rouletteResult.song.title)}</h4><p>${escapeHtml(rouletteResult.song.artist)}</p><label for="roulette-singer">Suggested singer</label><select id="roulette-singer" data-roulette-singer>${renderSingerOptions(partySession, rouletteResult.singerId)}</select><div class="roulette-actions"><button class="add-button" type="button" data-action="roulette-add">Add to Queue</button><button class="text-button" type="button" data-action="roll-roulette">Roll again</button></div>`;
+    if (rouletteResult?.song) result.innerHTML = `<p class="party-label">🎲 PROPOSED SONG</p><h4>${escapeHtml(rouletteResult.song.title)}</h4><p>${escapeHtml(rouletteResult.song.artist)}</p><p class="roulette-meta">${escapeHtml(formatSongMeta(rouletteResult.song).join(" · "))}</p><label for="roulette-singer">Suggested singer</label><select id="roulette-singer" data-roulette-singer>${renderSingerOptions(partySession, rouletteResult.singerId)}</select><div class="roulette-actions"><button class="add-button" type="button" data-action="roulette-add">Add to party</button><button class="text-button" type="button" data-action="roulette-view">View song</button><button class="text-button" type="button" data-action="roll-roulette">Roll again</button></div>`;
   }
-  if (empty) empty.hidden = Boolean(rouletteResult?.song);
+  if (empty) {
+    empty.hidden = Boolean(rouletteResult?.song);
+    empty.innerHTML = `${escapeHtml(rouletteRecovery.message || "Add singers or roll for a surprise song.")} ${rouletteRecovery.available ? '<span class="roulette-recovery-actions"><button class="text-button" type="button" data-action="relax-roulette">Relax filters</button><button class="text-button" type="button" data-action="clear-roulette-filters">Clear filters</button></span>' : ""}`;
+  }
 
   const stats = document.querySelector("[data-party-stats]");
   if (stats) {
     const summary = getPartyStats(partySession, songs);
-    stats.innerHTML = `<div class="party-stat-grid"><span><strong>${summary.songsCompleted}</strong>songs completed</span><span><strong>${summary.mostActiveSinger ? escapeHtml(summary.mostActiveSinger.name) : "—"}</strong>most active</span></div><p class="party-stat-note">${summary.genresSung.length ? `Genres sung: ${summary.genresSung.map((item) => `${escapeHtml(item.genre)} (${item.count})`).join(", ")}` : "Stats appear after a party song is marked Sang it."}</p>`;
+    const singerCounts = summary.songsBySinger.map((item) => `${escapeHtml(item.singer.name)} (${item.count})`).join(" · ");
+    stats.innerHTML = `<div class="party-stat-grid"><span><strong>${summary.songsCompleted}</strong>songs completed</span><span><strong>${summary.mostActiveSinger ? escapeHtml(summary.mostActiveSinger.name) : "—"}</strong>most active</span></div><p class="party-stat-note">${singerCounts ? `By singer: ${singerCounts}` : "Stats appear after a party song is marked Sang it."}</p>`;
   }
   const status = document.querySelector("[data-party-status]");
   if (status) status.textContent = statusMessage;
@@ -332,9 +413,14 @@ export function showPlayer(song, metadata = {}) {
   panel.querySelector("[data-player-title]").textContent = song.title;
   panel.querySelector("[data-player-artist]").textContent = song.artist;
   panel.querySelector("[data-player-position]").textContent = metadata.position && metadata.total ? `Song ${metadata.position} of ${metadata.total}` : "Current karaoke song";
+  panel.querySelector("[data-player-meta]").textContent = formatSongMeta(song).join(" · ");
   panel.querySelector("[data-player-status]").textContent = "Ready when you are.";
   panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
   updateMiniPlayer(song);
+  updatePlayerActions(song, { favorites: metadata.isFavorite ? [song.id] : [], sungHistory: metadata.isSung ? [{ id: song.id }] : [] });
+  updatePlayerNext(metadata.nextSong, metadata.nextType);
+  setPlayerCompletion(false);
+  setPlayerFeedback(false);
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = metadata.hasPrevious === false;
   panel.querySelector('[data-action="player-next"]').disabled = metadata.hasNext === false;
@@ -403,6 +489,7 @@ export function showQueueFinished(total) {
   panel.querySelector("[data-player-title]").textContent = "Queue finished";
   panel.querySelector("[data-player-artist]").textContent = "That's the end of your queue.";
   panel.querySelector("[data-player-position]").textContent = `${total} song${total === 1 ? "" : "s"} completed`;
+  panel.querySelector("[data-player-meta]").textContent = "";
   panel.querySelector("[data-player-status]").textContent = "Choose another song from the queue or return to discovery.";
   panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
   panel.classList.add("is-expanded");
@@ -411,6 +498,76 @@ export function showQueueFinished(total) {
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = total === 0;
   panel.querySelector('[data-action="player-next"]').disabled = true;
+  setPlayerCompletion(true, "Queue finished", "Choose another song from discovery or add a new song to your queue.");
+  setPlayerFeedback(false);
+  updatePlayerNext(null);
+}
+
+export function showPlayerFinished({ nextSong = null, nextType = "recommended" } = {}) {
+  const panel = document.querySelector("[data-player-panel]");
+  if (!panel) return;
+  panel.querySelector("[data-player-status]").textContent = "Song complete. Your next choice is ready.";
+  panel.querySelector("[data-player-note]").textContent = "KantaTayo waits for your explicit choice before starting another video.";
+  updateMiniPlayerStatus("Song complete");
+  updatePlayerNext(nextSong, nextType);
+  setPlayerCompletion(true, "Nice one", nextSong ? "Mark it as sung, then keep the queue moving." : "Mark it as sung or choose another song from discovery.");
+  setPlayerFeedback(true);
+  setPlayerEmbedVisible(panel, true);
+}
+
+export function showPlayerSangIt() {
+  const panel = document.querySelector("[data-player-panel]");
+  if (!panel) return;
+  panel.querySelector("[data-player-status]").textContent = "Sang it ✓ Saved to your history.";
+  panel.querySelector("[data-player-note]").textContent = "Your queue, favorites, and preferences are still intact.";
+  updateMiniPlayerStatus("Sang it ✓");
+  setPlayerCompletion(true, "Sang it ✓", "Your performance is saved. What’s next?");
+  setPlayerFeedback(true);
+  document.querySelector("[data-player-completion]")?.classList.add("is-celebration");
+}
+
+export function updatePlayerActions(song, userState = {}) {
+  const panel = document.querySelector("[data-player-panel]");
+  if (!panel || !song) return;
+  const songId = song.id.toLowerCase();
+  const isFavorite = (userState.favorites || []).some((id) => id.toLowerCase() === songId);
+  const isSung = (userState.sungHistory || []).some((entry) => entry.id?.toLowerCase() === songId);
+  const favorite = panel.querySelectorAll("[data-player-favorite], [data-player-completion-favorite]");
+  const sang = panel.querySelector("[data-player-sang]");
+  favorite.forEach((button) => {
+    button.dataset.songId = song.id;
+    button.setAttribute("aria-pressed", String(isFavorite));
+    button.textContent = isFavorite ? "♥ Favorite" : "♡ Favorite";
+    button.setAttribute("aria-label", isFavorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`);
+  });
+  if (sang) {
+    sang.dataset.songId = song.id;
+    sang.textContent = isSung ? "Sang it ✓" : "Sang it";
+    sang.setAttribute("aria-label", isSung ? `${song.title} is already in sung history` : `Mark ${song.title} as sung`);
+  }
+}
+
+export function setPlayerFeedback(visible) {
+  const feedback = document.querySelector("[data-player-feedback]");
+  if (!feedback) return;
+  feedback.hidden = !visible;
+  if (!visible) togglePlayerFeedbackReasons(false);
+}
+
+export function togglePlayerFeedbackReasons(visible) {
+  const panel = document.querySelector("[data-feedback-reasons]");
+  const button = document.querySelector('[data-action="feedback-problem"]');
+  if (panel) panel.hidden = !visible;
+  if (button) {
+    button.setAttribute("aria-expanded", String(Boolean(visible)));
+    button.textContent = visible ? "Hide problem types" : "👎 Problem with video";
+  }
+}
+
+export function setPlayerFeedbackStatus(message) {
+  const status = document.querySelector("[data-feedback-status]");
+  if (status) status.textContent = message;
+  togglePlayerFeedbackReasons(false);
 }
 
 export function hidePlayer() {
@@ -464,6 +621,32 @@ export function setPlayerExpanded(panel, expanded) {
     toggle.setAttribute("title", isExpanded ? "Collapse player" : "Expand player");
     toggle.textContent = isExpanded ? "↙" : "↗";
   }
+}
+
+function updatePlayerNext(song, type = "recommended") {
+  const target = document.querySelector("[data-player-up-next]");
+  if (!target) return;
+  if (!song) {
+    target.hidden = true;
+    return;
+  }
+  target.hidden = false;
+  target.querySelector("[data-player-next-label]").textContent = type === "queued" ? "Queued next" : "Recommended next";
+  target.querySelector("[data-player-next-title]").textContent = song.title;
+  target.querySelector("[data-player-next-artist]").textContent = song.artist;
+  target.querySelector("[data-player-next-note]").textContent = `${formatSongMeta(song).join(" · ")} · ${type === "queued" ? "Already in your queue" : "Not added until you choose Sing next"}`;
+  target.querySelector('[data-action="player-next"]').setAttribute("aria-label", `Sing next: ${song.title} by ${song.artist}`);
+}
+
+function setPlayerCompletion(visible, title = "Song complete", copy = "") {
+  const completion = document.querySelector("[data-player-completion]");
+  if (!completion) return;
+  completion.hidden = !visible;
+  if (!visible) completion.classList.remove("is-celebration");
+  const heading = completion.querySelector("[data-player-completion-title]");
+  const message = completion.querySelector("[data-player-completion-copy]");
+  if (heading) heading.textContent = title;
+  if (message) message.textContent = copy;
 }
 
 export function setPlayerEmbedVisible(panel, visible) {

@@ -44,11 +44,7 @@ export const QUALITY_UNASSIGNMENT_PROVENANCE = "user-product-quality-decision";
 export const PARTY_TYME_CHANNEL_PATTERN = /\bparty\s+tyme\s+karaoke(?:\s+channel)?\b/i;
 export const PARTY_TYME_UNASSIGNMENT_REASON = "user quality decision — Party Tyme presentation does not meet the desired KantaTayo visual experience standard";
 export const QUALITY_KARAOKE_PROVIDER_PATTERN = /\b(?:atomic karaoke|karaokeytv|zoom karaoke|karaoke media|sing king|my all time karaoke|easy karaoke|cc karaoke)\b/i;
-const BUILTIN_REVIEW_FLAGS = new Map([
-  ["sample-008", { status: "unresolved", reason: "No acceptable standard duet candidate is currently selected." }],
-  ["sample-009", { status: "unresolved", reason: "No acceptable standard duet candidate is currently selected." }],
-  ["sample-042", { status: "review-required", reason: "Catalog metadata needs human review: search results associate Mr. Suave with a different artist." }]
-]);
+const BUILTIN_REVIEW_FLAGS = new Map();
 const SEARCH_POSITIVE_TERMS = ["karaoke", "instrumental", "backing track", "minus one", "sing along"];
 const SEARCH_HARD_NEGATIVES = [
   { pattern: /\bofficial(?:\s+(?:music\s+)?)?video\b|\bmusic video\b/i, label: "official/music video" },

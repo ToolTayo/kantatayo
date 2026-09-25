@@ -8,8 +8,8 @@
     <meta name="description" content="Discover your next karaoke song with KantaTayo." />
     <title>KantaTayo — Your next song is waiting</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=15" />
-    <script type="module" src="src/app.js?v=15"></script>
+    <link rel="stylesheet" href="styles/main.css?v=20" />
+    <script type="module" src="src/app.js?v=24"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -87,7 +87,7 @@
               <p class="party-help">Pick a playable song without changing the queue until you confirm.</p>
               <div class="roulette-filters" data-roulette-filters></div>
               <div class="roulette-result" data-roulette-result role="status" aria-live="polite" hidden></div>
-              <p class="party-empty" data-roulette-empty>Add singers or roll for a surprise song.</p>
+              <div class="party-empty" data-roulette-empty>Add singers or roll for a surprise song.</div>
             </section>
             <section class="party-card party-stats-card" aria-labelledby="party-stats-title">
               <p class="eyebrow">Local session</p><h3 id="party-stats-title">Party stats</h3><div data-party-stats></div><button class="text-button" type="button" data-action="clear-party-session">Clear party session</button>
@@ -108,12 +108,45 @@
             </div>
           </div>
 
+          <div class="home-utility-grid" aria-label="Your karaoke progress">
+            <section class="daily-challenge-card" data-daily-challenge aria-labelledby="daily-challenge-title" hidden>
+              <div class="utility-card-heading"><div><p class="eyebrow">Daily karaoke challenge</p><h3 id="daily-challenge-title" data-daily-title>Today’s featured song</h3><p class="utility-card-artist" data-daily-artist></p></div><span class="streak-badge" aria-label="Current challenge streak"><span aria-hidden="true">🔥</span> <span data-daily-streak>0</span></span></div>
+              <p class="utility-card-date" data-daily-date>Today’s featured song</p>
+              <p class="utility-card-status" data-daily-status>One playable song, picked fresh for today.</p>
+              <button class="play-button" type="button" data-action="daily-challenge-play" data-song-id="">Play today’s challenge</button>
+            </section>
+            <section class="local-stats-card" data-local-stats aria-labelledby="local-stats-title">
+              <div class="utility-card-heading"><div><p class="eyebrow">On this device</p><h3 id="local-stats-title">Your karaoke stats</h3></div><a class="section-link" href="#recent-title" data-view="recent">History <span aria-hidden="true">→</span></a></div>
+              <div class="local-stats-grid"><div><strong data-stat="songs">0</strong><span>Songs sung</span></div><div><strong data-stat="favorites">0</strong><span>Favorites</span></div><div><strong data-stat="streak">0 days</strong><span>Current streak</span></div><div><strong data-stat="longest">0 days</strong><span>Best streak</span></div></div>
+              <p class="local-stats-foot" data-stat="split">0 OPM · 0 Intl</p><p class="local-stats-artists" data-stat="artists">No artists yet</p>
+            </section>
+          </div>
+
+          <div class="home-secondary-grid">
+            <section class="collections-card" aria-labelledby="collections-title">
+              <div class="utility-card-heading"><div><p class="eyebrow">Curated locally</p><h3 id="collections-title">Tonight’s collections</h3><p class="utility-card-status" data-collection-description>Fresh picks for the room.</p></div><button class="play-button" type="button" data-action="surprise-me">Surprise me</button></div>
+              <div class="collection-tabs" data-collection-tabs role="tablist" aria-label="Karaoke collections"></div>
+              <h4 class="collection-title" data-collection-title>Friday Night Karaoke</h4>
+              <div class="song-grid compact-grid" data-collection-grid></div>
+              <p class="empty-state section-empty" data-collection-empty hidden>No playable songs in this collection yet.</p>
+            </section>
+            <section class="request-card" aria-labelledby="request-title">
+              <p class="eyebrow">Help shape the catalog</p><h3 id="request-title">Request a song</h3><p class="utility-card-status">Save a title and artist locally. No account or submission service yet.</p>
+              <form class="request-form" data-song-request-form><label for="request-song-title">Song title</label><input id="request-song-title" name="request-title" maxlength="120" required placeholder="e.g. Your favorite song" /><label for="request-song-artist">Artist</label><input id="request-song-artist" name="request-artist" maxlength="120" required placeholder="Artist name" /><button class="add-button" type="submit">Save request</button></form>
+              <p class="form-status" data-song-request-status role="status" aria-live="polite"></p><ul class="song-request-list" data-song-request-list></ul>
+            </section>
+          </div>
+
           <div class="catalog-loading empty-state" data-catalog-loading role="status" aria-live="polite"><span class="empty-icon" aria-hidden="true">♫</span><div><strong>Loading your karaoke picks…</strong><p>The catalog will be ready in a moment.</p></div></div>
           <div class="song-sections" data-song-sections>
             <section class="song-section featured-section" data-section="recommended" aria-labelledby="recommended-title">
               <div class="section-heading home-section-heading"><div><h3 id="recommended-title" data-home-title>Sing now</h3><p class="section-lede" data-home-lede>Popular, playable picks to get your night moving.</p></div><span class="section-rule"></span></div>
               <div class="song-grid" data-grid="recommended"></div>
               <div class="empty-state section-empty" data-section-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No playable recommendations yet</strong><p>Try adding a preference or exploring the catalog.</p></div></div>
+            </section>
+            <section class="song-section engagement-section" data-section="continue" aria-labelledby="continue-title" hidden>
+              <div class="section-heading home-section-heading"><div><h3 id="continue-title" data-home-title>Continue singing</h3><p class="section-lede" data-home-lede>Pick up a song you were already enjoying.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>
+              <div class="song-grid" data-grid="continue"></div>
             </section>
             <section class="song-section made-for-you-section" data-section="madeForYou" aria-labelledby="made-for-you-title" hidden>
               <div class="section-heading home-section-heading"><div><h3 id="made-for-you-title" data-home-title>Made for you</h3><p class="section-lede" data-home-lede>A few more picks shaped by your preferences and history.</p></div><a class="section-link" href="#preferences-panel" data-view="preferences">Tune your taste <span aria-hidden="true">→</span></a></div>
@@ -126,6 +159,14 @@
             <section class="song-section" data-section="popular" aria-labelledby="popular-title" hidden>
               <div class="section-heading home-section-heading"><div><h3 id="popular-title" data-home-title>Crowd favorites</h3><p class="section-lede" data-home-lede>Established karaoke picks with real demand evidence.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="playable">Explore playable <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="popular"></div>
+            </section>
+            <section class="song-section engagement-section" data-section="recentlyAdded" aria-labelledby="recently-added-title" hidden>
+              <div class="section-heading home-section-heading"><div><h3 id="recently-added-title" data-home-title>Recently added</h3><p class="section-lede" data-home-lede>Fresh catalog additions, ready for a first spin.</p></div><a class="section-link" href="#discover" data-view="discover">Browse all <span aria-hidden="true">→</span></a></div>
+              <div class="song-grid" data-grid="recentlyAdded"></div>
+            </section>
+            <section class="song-section engagement-section" data-section="trending" aria-labelledby="trending-title" hidden>
+              <div class="section-heading home-section-heading"><div><h3 id="trending-title" data-home-title>Trending in KantaTayo</h3><p class="section-lede" data-home-lede>Based only on activity saved on this device.</p></div><span class="local-only-label">Local activity</span></div>
+              <div class="song-grid" data-grid="trending"></div>
             </section>
             <section class="song-section" data-section="opm" aria-labelledby="opm-title">
               <div class="section-heading home-section-heading"><div><h3 id="opm-title" data-home-title>Popular OPM</h3><p class="section-lede" data-home-lede>Filipino favorites for the next round.</p></div><a class="section-link" href="#discover" data-view="discover" data-home-filter="filipino">Explore OPM <span aria-hidden="true">→</span></a></div>
@@ -203,14 +244,18 @@
       <div class="drawer-backdrop" data-action="toggle-queue" aria-hidden="true"></div>
 
       <div class="player-panel" data-player-panel hidden role="region" aria-label="Now singing">
-        <div class="player-header"><div><p class="eyebrow">Now singing</p><h2 id="player-title" data-player-title>Select a song to begin</h2><p data-player-artist class="muted">Select a queued song to begin.</p><p data-player-position class="player-position"></p></div><div class="player-header-actions"><button class="icon-button" type="button" data-action="expand-player" aria-label="Expand player" title="Expand player" aria-expanded="false">↗</button><button class="icon-button" type="button" data-action="close-player" aria-label="Close player" title="Close player">×</button></div></div>
+        <div class="player-header"><div class="player-heading"><p class="eyebrow">Now singing</p><h2 id="player-title" data-player-title>Select a song to begin</h2><p data-player-artist class="muted">Select a queued song to begin.</p><p data-player-position class="player-position"></p><p data-player-meta class="player-meta"></p></div><div class="player-header-actions"><button class="icon-button" type="button" data-action="expand-player" aria-label="Expand player" title="Expand player" aria-expanded="false">↗</button><button class="icon-button" type="button" data-action="fullscreen-player" aria-label="Full screen player" title="Full screen player">⛶</button><button class="icon-button" type="button" data-action="close-player" aria-label="Close player" title="Close player">×</button></div></div>
         <div class="player-media" aria-label="YouTube karaoke player">
           <div class="youtube-player-shell" data-youtube-shell>
             <div class="youtube-player-container" data-youtube-mount hidden></div>
             <div class="player-placeholder" data-player-placeholder><span class="mic-orb" aria-hidden="true">♫</span><p data-player-status role="status" aria-live="polite">Ready when you are.</p><small data-player-note>Playback is provided by YouTube when a verified video is available.</small></div>
           </div>
         </div>
-        <div class="player-controls"><button class="add-button" type="button" data-action="player-prev" aria-label="Select previous queued song">Previous</button><button class="play-button" type="button" data-action="player-next" aria-label="Select next queued song">Next</button></div>
+        <div class="player-actions" aria-label="Current song actions"><button class="add-button" type="button" data-action="toggle-favorite" data-player-favorite data-song-id="" aria-pressed="false">♡ Favorite</button><button class="add-button" type="button" data-action="mark-sung" data-player-sang data-song-id="">Sang it</button><span class="player-queue-status" data-player-queue-status>In your queue</span></div>
+        <div class="player-up-next" data-player-up-next hidden aria-live="polite"><div><p class="eyebrow" data-player-next-label>Queued next</p><strong data-player-next-title></strong><span data-player-next-artist></span><small data-player-next-note></small></div><button class="play-button" type="button" data-action="player-next" aria-label="Sing next">Sing next</button></div>
+        <div class="player-completion" data-player-completion hidden role="status" aria-live="polite"><strong data-player-completion-title>Song complete</strong><span data-player-completion-copy>Mark it as sung, then keep the queue moving.</span><div class="player-completion-actions"><button class="play-button" type="button" data-action="sang-again">Sing again</button><button class="add-button" type="button" data-action="player-next" aria-label="Sing next queued song">Next song</button><button class="add-button" type="button" data-action="toggle-favorite" data-player-completion-favorite data-song-id="" aria-pressed="false">♡ Favorite</button></div></div>
+        <div class="player-feedback" data-player-feedback hidden aria-label="Playback feedback"><div><strong>How was this karaoke video?</strong><span class="feedback-help">Your note stays on this device.</span></div><div class="player-feedback-actions"><button class="feedback-button" type="button" data-action="feedback-good">👍 Good karaoke</button><button class="feedback-button" type="button" data-action="feedback-problem" aria-expanded="false">👎 Problem with video</button></div><div class="feedback-reasons" data-feedback-reasons hidden><span>What went wrong?</span><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="wrong-song">Wrong song</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="poor-quality">Poor quality</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="guide-vocals">Guide vocals</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="lyrics-timing">Lyrics / timing</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="video-unavailable">Video unavailable</button></div><p class="form-status" data-feedback-status role="status" aria-live="polite"></p></div>
+        <div class="player-controls"><button class="add-button" type="button" data-action="player-prev" aria-label="Select previous queued song">Previous</button><button class="play-button" type="button" data-action="player-next" aria-label="Sing next queued song">Sing next</button></div>
       </div>
       <div class="mini-player" data-mini-player hidden>
         <button class="mini-player-main" type="button" data-action="open-player" aria-label="Open now singing player"><span class="mini-player-art" aria-hidden="true">♫</span><span class="mini-player-copy"><small>Now singing</small><strong data-mini-player-title></strong><span data-mini-player-artist></span><span data-mini-player-status>Current karaoke song</span></span><span class="mini-player-open" aria-hidden="true">↑</span></button>

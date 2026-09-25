@@ -1,9 +1,13 @@
 import { readStoredJson, writeStoredJson } from "./storage.js";
-import { createDefaultPartySession, getPartyQueueItems, normalizePartySession, reconcilePartyState } from "./party.js";
+import { createDefaultPartySession, getPartyQueueItems, normalizePartySession, reconcilePartyState } from "./party.js?v=1";
 
-export const USER_STATE_VERSION = 1;
+export const USER_STATE_VERSION = 3;
 export const MAX_SUNG_HISTORY = 50;
+export const MAX_RECENTLY_PLAYED = 8;
 export const MAX_RECENT_RECOMMENDATIONS = 20;
+export const MAX_DAILY_COMPLETIONS = 120;
+export const MAX_SONG_REQUESTS = 40;
+export const MAX_PLAYBACK_FEEDBACK = 100;
 export const SUNG_DUPLICATE_WINDOW_MS = 2000;
 
 export const PREFERENCE_KEYS = [
@@ -20,6 +24,9 @@ export const PREFERENCE_KEYS = [
  * Persistent state decisions:
  * - Collections contain stable song IDs, never full catalog records.
  * - sungHistory contains { id, sungAt } entries for future recency views.
+ * - recentlyPlayed contains { id, playedAt } entries for the lightweight
+ *   Continue Singing shelf without copying catalog records.
+ * - dailyChallenge contains completed local date keys for streaks.
  * - preferences are normalized arrays so a future UI can add one or many values.
  * - currentSongId and queueFinished persist so refreshes preserve the session position.
  *   Removing the current song selects the next item at that position, or the previous
@@ -28,6 +35,9 @@ export const PREFERENCE_KEYS = [
  * - partySession is a separate nested local session under the same namespaced
  *   state record. Queue entries remain stable song IDs; singer assignments are
  *   a separate song-ID-to-singer-ID map so old queues need no migration.
+ * - songRequests and playbackFeedback are bounded local records. Requests keep
+ *   title/artist text because they are not catalog songs; feedback keeps only a
+ *   stable song ID, rating, optional controlled reason, and timestamp.
  */
 export function createDefaultUserState() {
   return {
@@ -36,12 +46,16 @@ export function createDefaultUserState() {
     likedSongs: [],
     dislikedSongs: [],
     sungHistory: [],
+    recentlyPlayed: [],
     preferences: createDefaultPreferences(),
     queue: [],
     currentSongId: null,
     queueFinished: false,
     recentRecommendations: [],
-    partySession: createDefaultPartySession()
+    dailyChallenge: { completedDates: [] },
+    partySession: createDefaultPartySession(),
+    songRequests: [],
+    playbackFeedback: []
   };
 }
 
@@ -247,6 +261,28 @@ export function markSung(userState, songId, options = {}) {
   return { added: true, entry };
 }
 
+export function recordSongPlayed(userState, songId, options = {}) {
+  const id = normalizeId(songId);
+  if (!id) return { added: false, reason: "invalid-id" };
+  const now = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  if (Number.isNaN(now.getTime())) return { added: false, reason: "invalid-time" };
+  const entry = { id, playedAt: now.toISOString() };
+  const previous = userState.recentlyPlayed.find((item) => item.id.toLowerCase() === id.toLowerCase());
+  userState.recentlyPlayed = [entry, ...userState.recentlyPlayed.filter((item) => item.id.toLowerCase() !== id.toLowerCase())]
+    .slice(0, options.maxRecentlyPlayed ?? MAX_RECENTLY_PLAYED);
+  return { added: !previous || previous.playedAt !== entry.playedAt, entry };
+}
+
+export function completeDailyChallenge(userState, dateKey) {
+  if (typeof dateKey !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return false;
+  const dates = userState.dailyChallenge?.completedDates || [];
+  if (dates.includes(dateKey)) return false;
+  userState.dailyChallenge = {
+    completedDates: [dateKey, ...dates].slice(0, MAX_DAILY_COMPLETIONS)
+  };
+  return true;
+}
+
 export function setPreferenceValues(userState, key, values) {
   if (!PREFERENCE_KEYS.includes(key)) return false;
   const nextValues = normalizeValueList(values);
@@ -260,6 +296,32 @@ export function clearPreferences(userState) {
   const hadPreferences = PREFERENCE_KEYS.some((key) => (userState.preferences[key] || []).length > 0);
   userState.preferences = createDefaultPreferences();
   return hadPreferences;
+}
+
+export function addSongRequest(userState, title, artist, options = {}) {
+  const normalizedTitle = normalizeText(title, 120);
+  const normalizedArtist = normalizeText(artist, 120);
+  if (!normalizedTitle || !normalizedArtist) return { added: false, reason: "missing-title-or-artist" };
+  const duplicate = userState.songRequests.some((request) => request.title.toLowerCase() === normalizedTitle.toLowerCase() && request.artist.toLowerCase() === normalizedArtist.toLowerCase());
+  if (duplicate) return { added: false, reason: "duplicate" };
+  const requestedAt = new Date(options.now || Date.now());
+  if (Number.isNaN(requestedAt.getTime())) return { added: false, reason: "invalid-time" };
+  const request = { id: `request-${requestedAt.getTime().toString(36)}-${userState.songRequests.length}`, title: normalizedTitle, artist: normalizedArtist, requestedAt: requestedAt.toISOString(), status: "new" };
+  userState.songRequests = [request, ...userState.songRequests].slice(0, MAX_SONG_REQUESTS);
+  return { added: true, request };
+}
+
+export function recordPlaybackFeedback(userState, songId, rating, reason = null, options = {}) {
+  const id = normalizeId(songId);
+  const normalizedRating = rating === "good" || rating === "problem" ? rating : "";
+  const allowedReasons = ["wrong-song", "poor-quality", "guide-vocals", "lyrics-timing", "video-unavailable"];
+  const normalizedReason = allowedReasons.includes(reason) ? reason : null;
+  if (!id || !normalizedRating || (normalizedRating === "problem" && !normalizedReason)) return { recorded: false, reason: "invalid-feedback" };
+  const createdAt = new Date(options.now || Date.now());
+  if (Number.isNaN(createdAt.getTime())) return { recorded: false, reason: "invalid-time" };
+  const record = { songId: id, rating: normalizedRating, reason: normalizedReason, createdAt: createdAt.toISOString() };
+  userState.playbackFeedback = [record, ...userState.playbackFeedback.filter((item) => item.songId.toLowerCase() !== id.toLowerCase())].slice(0, MAX_PLAYBACK_FEEDBACK);
+  return { recorded: true, record };
 }
 
 export function setRecentRecommendations(userState, songIds) {
@@ -292,12 +354,16 @@ export function validateUserState(value) {
     likedSongs,
     dislikedSongs,
     sungHistory: normalizeHistory(value.sungHistory),
+    recentlyPlayed: normalizeRecentlyPlayed(value.recentlyPlayed),
     preferences: normalizePreferences(value.preferences),
     queue,
     currentSongId,
     queueFinished: Boolean(value.queueFinished && queue.length > 0 && !currentSongId),
     recentRecommendations: normalizeIdList(value.recentRecommendations).slice(0, MAX_RECENT_RECOMMENDATIONS),
-    partySession: normalizePartySession(value.partySession)
+    dailyChallenge: normalizeDailyChallenge(value.dailyChallenge),
+    partySession: normalizePartySession(value.partySession),
+    songRequests: normalizeSongRequests(value.songRequests),
+    playbackFeedback: normalizePlaybackFeedback(value.playbackFeedback)
   };
 }
 
@@ -307,8 +373,16 @@ function migrateUserState(value) {
 
   // Version 0 represents the pre-persistence shape. Keeping this branch makes
   // future migrations explicit instead of silently accepting unknown versions.
-  if (value.version === undefined || value.version === 0) {
-    return { ...createDefaultUserState(), ...value, version: USER_STATE_VERSION };
+  if (value.version === undefined || value.version === 0 || value.version === 1 || value.version === 2) {
+    return {
+      ...createDefaultUserState(),
+      ...value,
+      recentlyPlayed: value.recentlyPlayed ?? [],
+      dailyChallenge: value.dailyChallenge ?? { completedDates: [] },
+      songRequests: value.songRequests ?? [],
+      playbackFeedback: value.playbackFeedback ?? [],
+      version: USER_STATE_VERSION
+    };
   }
 
   throw new Error(`Unsupported stored KantaTayo user-state version: ${value.version}`);
@@ -342,6 +416,56 @@ function normalizeHistory(value) {
   }, []);
 }
 
+function normalizeRecentlyPlayed(value) {
+  if (!Array.isArray(value)) return [];
+  return value.reduce((history, entry) => {
+    const id = normalizeId(typeof entry === "string" ? entry : entry?.id);
+    if (!id || history.length >= MAX_RECENTLY_PLAYED) return history;
+    const playedAt = typeof entry === "object" && entry !== null && typeof entry.playedAt === "string" && !Number.isNaN(Date.parse(entry.playedAt)) ? entry.playedAt : null;
+    if (!playedAt || history.some((item) => item.id.toLowerCase() === id.toLowerCase())) return history;
+    history.push({ id, playedAt });
+    return history;
+  }, []);
+}
+
+function normalizeDailyChallenge(value) {
+  const dates = Array.isArray(value?.completedDates) ? value.completedDates : [];
+  return {
+    completedDates: dates.reduce((result, dateKey) => {
+      if (typeof dateKey !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey) || result.includes(dateKey)) return result;
+      if (result.length < MAX_DAILY_COMPLETIONS) result.push(dateKey);
+      return result;
+    }, [])
+  };
+}
+
+function normalizeSongRequests(value) {
+  if (!Array.isArray(value)) return [];
+  return value.reduce((requests, item) => {
+    const title = normalizeText(item?.title, 120);
+    const artist = normalizeText(item?.artist, 120);
+    const requestedAt = typeof item?.requestedAt === "string" && !Number.isNaN(Date.parse(item.requestedAt)) ? new Date(item.requestedAt).toISOString() : null;
+    if (!title || !artist || !requestedAt || requests.length >= MAX_SONG_REQUESTS) return requests;
+    if (requests.some((request) => request.title.toLowerCase() === title.toLowerCase() && request.artist.toLowerCase() === artist.toLowerCase())) return requests;
+    requests.push({ id: normalizeText(item.id, 80) || `request-${requests.length}`, title, artist, requestedAt, status: "new" });
+    return requests;
+  }, []);
+}
+
+function normalizePlaybackFeedback(value) {
+  if (!Array.isArray(value)) return [];
+  return value.reduce((records, item) => {
+    const songId = normalizeId(item?.songId);
+    const rating = item?.rating === "good" || item?.rating === "problem" ? item.rating : "";
+    const reason = ["wrong-song", "poor-quality", "guide-vocals", "lyrics-timing", "video-unavailable"].includes(item?.reason) ? item.reason : null;
+    const createdAt = typeof item?.createdAt === "string" && !Number.isNaN(Date.parse(item.createdAt)) ? new Date(item.createdAt).toISOString() : null;
+    if (!songId || !rating || (rating === "problem" && !reason) || !createdAt || records.length >= MAX_PLAYBACK_FEEDBACK) return records;
+    if (records.some((record) => record.songId.toLowerCase() === songId.toLowerCase())) return records;
+    records.push({ songId, rating, reason, createdAt });
+    return records;
+  }, []);
+}
+
 function normalizeIdList(value) {
   return normalizeValueList(value, true);
 }
@@ -363,6 +487,10 @@ function normalizeValueList(value, preserveCase = false) {
 
 function normalizeId(value) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeText(value, maxLength) {
+  return typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, maxLength) : "";
 }
 
 function toggleIdInList(userState, field, songId) {
@@ -399,12 +527,27 @@ function reconcileUserState(userState, songs) {
     likedSongs: resolveList(userState.likedSongs),
     dislikedSongs: resolveList(userState.dislikedSongs),
     sungHistory: resolveHistory(userState.sungHistory),
+    recentlyPlayed: resolveHistoryEntries(userState.recentlyPlayed, "playedAt", resolve),
     queue,
     currentSongId: resolvePlayableQueue(userState.currentSongId ? [userState.currentSongId] : [])[0] || null,
     queueFinished: Boolean(userState.queueFinished && queue.length > 0 && !userState.currentSongId),
     recentRecommendations: resolveList(userState.recentRecommendations).slice(0, MAX_RECENT_RECOMMENDATIONS),
+    dailyChallenge: normalizeDailyChallenge(userState.dailyChallenge),
+    songRequests: normalizeSongRequests(userState.songRequests),
+    playbackFeedback: resolveFeedback(userState.playbackFeedback, resolve),
     partySession: reconcilePartyState(userState.partySession, songs, queue)
   };
+}
+
+function resolveFeedback(records, resolve) {
+  return normalizePlaybackFeedback(records).map((record) => ({ ...record, songId: resolve(record.songId) })).filter((record) => record.songId);
+}
+
+function resolveHistoryEntries(entries, timestampKey, resolve) {
+  return (Array.isArray(entries) ? entries : []).map((entry) => ({
+    ...entry,
+    id: typeof entry?.id === "string" ? resolve(entry.id) : ""
+  })).filter((entry) => entry.id && typeof entry[timestampKey] === "string" && !Number.isNaN(Date.parse(entry[timestampKey])));
 }
 
 function isPlainObject(value) {

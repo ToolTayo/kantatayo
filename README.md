@@ -49,8 +49,8 @@ node tools/verify-youtube.mjs search-candidates --song-id sample-013
 For duet or other specialized searches, pass an exact custom query. The text is sent to YouTube unchanged and is allowed only with `--song-id`:
 
 ```text
-node tools/verify-youtube.mjs search-candidates --song-id sample-008 --query "Lucky Jason Mraz Colbie Caillat full duet karaoke" --max-results 5
-node tools/verify-youtube.mjs search-candidates --song-id sample-009 --query "Endless Love Lionel Richie Diana Ross full duet karaoke" --max-results 5
+node tools/verify-youtube.mjs search-candidates --song-id sample-011 --query "Lucky Jason Mraz Colbie Caillat full duet karaoke" --max-results 5
+node tools/verify-youtube.mjs search-candidates --song-id sample-012 --query "Endless Love Lionel Richie Diana Ross full duet karaoke" --max-results 5
 ```
 
 `--query` cannot be combined with `--all`. Without it, the tool continues to generate a query from the catalog title, artist, and `karaoke`.
@@ -140,7 +140,7 @@ The batch promotion command skips unknown songs, incomplete or stale verificatio
 
 ## Low-command batch workflow
 
-The ignored local review file `tools/youtube-review.json` records unresolved or review-required songs. `sample-008`, `sample-009`, and the metadata-sensitive `sample-042` are flagged by default and are skipped by automation. Edit review flags only after human review; the public catalog is never changed by these flags.
+The ignored local review file `tools/youtube-review.json` records unresolved or review-required songs. Review flags are local development metadata and are skipped by automation when present. Edit review flags only after human review; the public catalog is never changed by these flags.
 
 Run a controlled discovery and technical-verification batch:
 
@@ -197,7 +197,7 @@ The audit reads the catalog and ignored verification store without making networ
 For a read-only audit of the promoted high-demand expansion, run:
 
 ```text
-node tools/production-quality-audit.mjs --from sample-101 --to sample-145
+node tools/production-quality-audit.mjs --from sample-101 --to sample-144
 ```
 
 The command searches three karaoke-oriented query variants per promoted song, then uses `videos.list` metadata for technical checks and bounded popularity signals. Candidate selection applies hard correctness and safety gates first: exact song/artist identity, karaoke suitability, standard-version wording, embeddability, Made-for-Kids policy, and quality/provider exclusions. Only qualified candidates are compared for HD, provider experience, and age-aware view popularity; when a qualified HD alternative exists, a qualified SD candidate is not treated as the preferred replacement. View counts are the ranking popularity signal, while like counts are retained as supplementary evidence when available. Popularity cannot rescue a wrong, unsafe, or technically invalid result, while modestly popular niche songs remain eligible. `contentDetails.definition=hd` means YouTube reported HD; it does not prove exact 1080p, audio quality, key, guide-vocal absence, completeness, or visual presentation.
@@ -205,7 +205,7 @@ The command searches three karaoke-oriented query variants per promoted song, th
 For a focused audit of selected assignments, use `--song-ids`:
 
 ```text
-node tools/production-quality-audit.mjs --song-ids sample-130,sample-139,sample-142
+node tools/production-quality-audit.mjs --song-ids sample-110,sample-130,sample-142
 ```
 
 Persisted evidence can be re-ranked without network access, and current-video statistics can be refreshed with one batched request:

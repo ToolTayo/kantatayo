@@ -223,17 +223,12 @@ test("the production catalog audits all historical assignments exactly once and 
   const verification = JSON.parse(readFileSync("tools/youtube-verification.json", "utf8"));
   const report = auditPromotedAssignments(catalog, verification, { generatedAt: "2026-01-01T00:00:00.000Z" });
   const catalogIds = report.assignments.map((row) => row.catalogId);
-  assert.equal(catalog.length, 170);
-  assert.equal(report.auditedCount, 160);
-  assert.equal(new Set(catalogIds).size, 160);
-  assert.equal(report.qualityUnassignmentCount, 8);
-  const expectedNullIds = [
-    "sample-008", "sample-009", "sample-010", "sample-042", "sample-072", "sample-078", "sample-084", "sample-088", "sample-091", "sample-092", "sample-093", "sample-095", "sample-096",
-    "sample-121", "sample-139", "sample-143", "sample-145",
-    "sample-166", "sample-168"
-  ];
-  assert.deepEqual(catalog.filter((song) => song.youtubeVideoId === null).map((song) => song.id), expectedNullIds);
-  assert.equal(report.unassignedCatalogSongIds.length, 19);
+  assert.equal(catalog.length, 171);
+  assert.equal(report.auditedCount, 151);
+  assert.equal(new Set(catalogIds).size, 151);
+  assert.equal(report.qualityUnassignmentCount, 0);
+  assert.deepEqual(catalog.filter((song) => song.youtubeVideoId === null).map((song) => song.id), []);
+  assert.equal(report.unassignedCatalogSongIds.length, 0);
   assert.equal(report.duplicateVideoIds.length, 0);
 });
 
