@@ -42,7 +42,7 @@ test("version 2 state migrates without losing queue, preferences, or new local f
     "kantatayo:user-state": JSON.stringify({ version: 2, queue: ["sample-001"], favorites: ["sample-002"], preferences: { languages: ["filipino"] }, songRequests: [{ title: "Song", artist: "Artist", requestedAt: "2026-09-25T12:00:00Z" }] })
   });
   const loaded = loadUserState({ storage });
-  assert.equal(loaded.version, 3);
+  assert.equal(loaded.version, 4);
   assert.deepEqual(loaded.queue, ["sample-001"]);
   assert.deepEqual(loaded.preferences.languages, ["filipino"]);
   assert.equal(loaded.songRequests.length, 1);

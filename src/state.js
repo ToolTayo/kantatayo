@@ -1,7 +1,8 @@
 import { readStoredJson, writeStoredJson } from "./storage.js";
 import { createDefaultPartySession, getPartyQueueItems, normalizePartySession, reconcilePartyState } from "./party.js?v=1";
+import { getLocalDateKey, isValidDateKey } from "./daily-challenge.js?v=2";
 
-export const USER_STATE_VERSION = 3;
+export const USER_STATE_VERSION = 4;
 export const MAX_SUNG_HISTORY = 50;
 export const MAX_RECENTLY_PLAYED = 8;
 export const MAX_RECENT_RECOMMENDATIONS = 20;
@@ -52,7 +53,7 @@ export function createDefaultUserState() {
     currentSongId: null,
     queueFinished: false,
     recentRecommendations: [],
-    dailyChallenge: { completedDates: [] },
+    dailyChallenge: { completedDates: [], lastCompletedDate: null, lastCompletedSongId: null },
     partySession: createDefaultPartySession(),
     songRequests: [],
     playbackFeedback: []
@@ -273,12 +274,20 @@ export function recordSongPlayed(userState, songId, options = {}) {
   return { added: !previous || previous.playedAt !== entry.playedAt, entry };
 }
 
-export function completeDailyChallenge(userState, dateKey) {
-  if (typeof dateKey !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return false;
-  const dates = userState.dailyChallenge?.completedDates || [];
+export function completeDailyChallenge(userState, dateKey, songId, options = {}) {
+  const now = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  const currentDateKey = getLocalDateKey(now);
+  const id = normalizeId(songId);
+  const expectedSongId = normalizeId(options.expectedSongId);
+  if (!isValidDateKey(dateKey) || !currentDateKey || dateKey !== currentDateKey || !id || !expectedSongId) return false;
+  if (expectedSongId.toLowerCase() !== id.toLowerCase()) return false;
+  const dailyChallenge = normalizeDailyChallenge(userState.dailyChallenge);
+  const dates = dailyChallenge.completedDates;
   if (dates.includes(dateKey)) return false;
   userState.dailyChallenge = {
-    completedDates: [dateKey, ...dates].slice(0, MAX_DAILY_COMPLETIONS)
+    completedDates: [dateKey, ...dates].slice(0, MAX_DAILY_COMPLETIONS),
+    lastCompletedDate: dateKey,
+    lastCompletedSongId: id
   };
   return true;
 }
@@ -373,12 +382,12 @@ function migrateUserState(value) {
 
   // Version 0 represents the pre-persistence shape. Keeping this branch makes
   // future migrations explicit instead of silently accepting unknown versions.
-  if (value.version === undefined || value.version === 0 || value.version === 1 || value.version === 2) {
+  if (value.version === undefined || value.version === 0 || value.version === 1 || value.version === 2 || value.version === 3) {
     return {
       ...createDefaultUserState(),
       ...value,
       recentlyPlayed: value.recentlyPlayed ?? [],
-      dailyChallenge: value.dailyChallenge ?? { completedDates: [] },
+      dailyChallenge: value.dailyChallenge ?? { completedDates: [], lastCompletedDate: null, lastCompletedSongId: null },
       songRequests: value.songRequests ?? [],
       playbackFeedback: value.playbackFeedback ?? [],
       version: USER_STATE_VERSION
@@ -418,24 +427,34 @@ function normalizeHistory(value) {
 
 function normalizeRecentlyPlayed(value) {
   if (!Array.isArray(value)) return [];
-  return value.reduce((history, entry) => {
+  const validEntries = value.reduce((history, entry) => {
     const id = normalizeId(typeof entry === "string" ? entry : entry?.id);
-    if (!id || history.length >= MAX_RECENTLY_PLAYED) return history;
     const playedAt = typeof entry === "object" && entry !== null && typeof entry.playedAt === "string" && !Number.isNaN(Date.parse(entry.playedAt)) ? entry.playedAt : null;
-    if (!playedAt || history.some((item) => item.id.toLowerCase() === id.toLowerCase())) return history;
-    history.push({ id, playedAt });
+    if (id && playedAt) history.push({ id, playedAt });
     return history;
   }, []);
+  return validEntries
+    .sort((left, right) => Date.parse(right.playedAt) - Date.parse(left.playedAt))
+    .reduce((history, entry) => {
+      if (history.length >= MAX_RECENTLY_PLAYED || history.some((item) => item.id.toLowerCase() === entry.id.toLowerCase())) return history;
+      history.push(entry);
+      return history;
+    }, []);
 }
 
 function normalizeDailyChallenge(value) {
-  const dates = Array.isArray(value?.completedDates) ? value.completedDates : [];
+  const source = isPlainObject(value) ? value : {};
+  const dates = Array.isArray(source.completedDates) ? source.completedDates : [];
+  const lastCompletedDate = isValidDateKey(source.lastCompletedDate) ? source.lastCompletedDate : null;
+  const lastCompletedSongId = lastCompletedDate ? normalizeId(source.lastCompletedSongId) || null : null;
   return {
     completedDates: dates.reduce((result, dateKey) => {
-      if (typeof dateKey !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey) || result.includes(dateKey)) return result;
+      if (!isValidDateKey(dateKey) || result.includes(dateKey)) return result;
       if (result.length < MAX_DAILY_COMPLETIONS) result.push(dateKey);
       return result;
-    }, [])
+    }, []),
+    lastCompletedDate,
+    lastCompletedSongId
   };
 }
 

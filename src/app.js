@@ -1,13 +1,13 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=19";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=21";
 import { loadCatalog } from "./catalog.js?v=1";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
-import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=4";
+import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
 import { addPartySinger, assignPartySong, clearPartyAssignments, clearPartySession, getAssignedSinger, getNextPartySinger, recordPartyTurn, reconcilePartyQueue, relaxRouletteConstraints, removePartySinger, renamePartySinger, selectRouletteSong, unassignPartySong } from "./party.js?v=1";
 import { normalizeView, viewFromHash, viewHash } from "./view.js";
 import { containFocus } from "./focus.js";
-import { getDailyChallenge } from "./engagement.js?v=1";
+import { getDailyChallenge } from "./engagement.js?v=3";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
 
 const state = createAppState();
@@ -415,8 +415,8 @@ function handleSongAction(action, song, { fromPlayer = false } = {}) {
     if (result.added) {
       const challenge = getDailyChallenge(state.songs, state.user);
       if (challenge.song?.id?.toLowerCase() === song.id.toLowerCase()) {
-        completeDailyChallenge(state.user, challenge.dateKey);
-        message = "Marked as sung · daily challenge complete";
+        const completed = completeDailyChallenge(state.user, challenge.dateKey, song.id, { expectedSongId: challenge.song.id });
+        if (completed) message = "Marked as sung · daily challenge complete";
       }
     }
     if (result.added && state.user.partySession.enabled) {

@@ -930,7 +930,7 @@ body { line-height: 1.45; }
 .home-utility-grid {
   display: grid;
   gap: .8rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   margin: 1rem 0 1.35rem;
 }
 
@@ -948,8 +948,49 @@ body { line-height: 1.45; }
   border-color: rgba(163, 242, 99, .22);
 }
 
+.daily-challenge-layout {
+  align-items: center;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+}
+
+.daily-challenge-thumbnail {
+  min-width: 0;
+  width: min(100%, 16rem);
+}
+
+.daily-challenge-thumbnail .song-thumbnail {
+  border-radius: var(--radius-sm);
+  max-width: 16rem;
+}
+
+.daily-challenge-copy {
+  min-width: 0;
+}
+
+.daily-challenge-meta {
+  color: var(--text-muted);
+  font-size: .68rem;
+  line-height: 1.4;
+  margin: .65rem 0 0;
+}
+
 .daily-challenge-card.is-complete {
   background: linear-gradient(145deg, rgba(38, 57, 42, .96), rgba(16, 27, 27, .98));
+}
+
+.daily-challenge-card.is-complete .utility-card-date {
+  color: var(--brand-lime);
+}
+
+.daily-challenge-card .play-button:disabled {
+  background: rgba(163, 242, 99, .12);
+  border-color: rgba(163, 242, 99, .25);
+  color: var(--brand-lime);
+  cursor: default;
+  opacity: 1;
+  transform: none;
 }
 
 .utility-card-heading {
@@ -1105,13 +1146,21 @@ body { line-height: 1.45; }
 .feedback-reasons > span { color: var(--text-secondary); flex-basis: 100%; font-size: .66rem; font-weight: 700; }
 
 @media (min-width: 760px) {
+  .home-utility-grid { grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr); }
   .home-secondary-grid { grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr); }
   .compact-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (max-width: 619px) {
-  .home-utility-grid {
+  .daily-challenge-layout {
+    align-items: stretch;
     grid-template-columns: 1fr;
+  }
+
+  .daily-challenge-thumbnail,
+  .daily-challenge-thumbnail .song-thumbnail {
+    max-width: none;
+    width: 100%;
   }
 
   .local-stats-grid {

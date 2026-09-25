@@ -24,7 +24,7 @@ test("preferences save and reload through the existing versioned storage key", (
     performanceTypes: ["duet"],
     eras: []
   });
-  assert.equal(JSON.parse(storage.getItem("kantatayo:user-state")).version, 3);
+  assert.equal(JSON.parse(storage.getItem("kantatayo:user-state")).version, 4);
 });
 
 test("multiple preference categories normalize safely", () => {

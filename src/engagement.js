@@ -1,26 +1,15 @@
 import { isPlayableSong } from "./discovery.js?v=4";
+import { getDailyChallengeSelection, getLocalDateKey as getChallengeDateKey, isValidDateKey } from "./daily-challenge.js?v=2";
 
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+export const getLocalDateKey = getChallengeDateKey;
 
 /**
  * Local-only engagement helpers. These signals are deliberately transparent:
  * they use only the catalog and the user's persisted device state.
  */
-export function getLocalDateKey(value = new Date()) {
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
 
 export function getDailyChallenge(songs = [], userState = {}, options = {}) {
-  const dateKey = getLocalDateKey(options.now || new Date());
-  const playable = (Array.isArray(songs) ? songs : [])
-    .filter(isPlayableSong)
-    .sort((left, right) => left.id.localeCompare(right.id));
-  const song = playable.length ? playable[stableHash(dateKey) % playable.length] : null;
+  const { dateKey, song } = getDailyChallengeSelection(songs, options);
   const completedDates = Array.isArray(userState.dailyChallenge?.completedDates)
     ? userState.dailyChallenge.completedDates
     : [];
@@ -28,14 +17,27 @@ export function getDailyChallenge(songs = [], userState = {}, options = {}) {
   return {
     dateKey,
     song,
-    completed: Boolean(dateKey && completedDates.includes(dateKey)),
+    completed: isDailyChallengeComplete(userState, dateKey, song?.id),
     currentStreak: streak.currentStreak,
     longestStreak: streak.longestStreak
   };
 }
 
+export function isDailyChallengeComplete(userState = {}, dateKey, songId = "") {
+  const dailyChallenge = userState?.dailyChallenge;
+  if (!isValidDateKey(dateKey) || !Array.isArray(dailyChallenge?.completedDates) || !dailyChallenge.completedDates.includes(dateKey)) return false;
+  if (dailyChallenge.lastCompletedDate === dateKey && dailyChallenge.lastCompletedSongId) {
+    return normalizeId(dailyChallenge.lastCompletedSongId) === normalizeId(songId);
+  }
+  // Older Step 1 state recorded completed dates but did not retain the song ID.
+  // Preserve that completion rather than invalidating existing local streaks.
+  return true;
+}
+
 export function getStreakStats(completedDates = [], todayKey = getLocalDateKey()) {
-  const dates = [...new Set((Array.isArray(completedDates) ? completedDates : []).filter((value) => DATE_PATTERN.test(value)))]
+  const safeToday = isValidDateKey(todayKey) ? todayKey : getLocalDateKey();
+  const dates = [...new Set((Array.isArray(completedDates) ? completedDates : [])
+    .filter((value) => isValidDateKey(value) && value <= safeToday))]
     .sort();
   const dateSet = new Set(dates);
   let longestStreak = 0;
@@ -49,9 +51,9 @@ export function getStreakStats(completedDates = [], todayKey = getLocalDateKey()
   }
 
   let currentStreak = 0;
-  if (dateSet.has(todayKey)) {
+  let cursor = dateSet.has(safeToday) ? safeToday : addDays(safeToday, -1);
+  if (dateSet.has(cursor)) {
     currentStreak = 1;
-    let cursor = todayKey;
     while (dateSet.has(addDays(cursor, -1))) {
       currentStreak += 1;
       cursor = addDays(cursor, -1);
@@ -60,22 +62,33 @@ export function getStreakStats(completedDates = [], todayKey = getLocalDateKey()
   return { currentStreak, longestStreak };
 }
 
+function normalizeId(value) {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
 export function getContinueSingingSongs(songs = [], userState = {}, limit = 4) {
-  const byId = new Map((Array.isArray(songs) ? songs : []).map((song) => [song.id.toLowerCase(), song]));
-  const seen = new Set();
-  const entries = [
-    ...(Array.isArray(userState.recentlyPlayed) ? userState.recentlyPlayed : []),
-    ...(Array.isArray(userState.sungHistory) ? userState.sungHistory : [])
-  ];
-  return entries.reduce((result, entry) => {
-    const id = typeof entry === "string" ? entry : entry?.id;
-    const key = typeof id === "string" ? id.toLowerCase() : "";
-    const song = byId.get(key);
-    if (!song || seen.has(key) || !isPlayableSong(song)) return result;
-    seen.add(key);
-    result.push(song);
-    return result;
-  }, []).slice(0, Math.max(0, Number(limit) || 4));
+  const byId = new Map((Array.isArray(songs) ? songs : [])
+    .filter((song) => typeof song?.id === "string")
+    .map((song) => [song.id.toLowerCase(), song]));
+  const latestSungAt = new Map();
+  (Array.isArray(userState.sungHistory) ? userState.sungHistory : []).forEach((entry) => {
+    const key = typeof entry?.id === "string" ? entry.id.trim().toLowerCase() : "";
+    const sungAt = typeof entry?.sungAt === "string" ? Date.parse(entry.sungAt) : NaN;
+    if (!key || Number.isNaN(sungAt) || sungAt < (latestSungAt.get(key) ?? -Infinity)) return;
+    latestSungAt.set(key, sungAt);
+  });
+
+  return (Array.isArray(userState.recentlyPlayed) ? userState.recentlyPlayed : [])
+    .map((entry, index) => {
+      const key = typeof entry?.id === "string" ? entry.id.trim().toLowerCase() : "";
+      const playedAt = typeof entry?.playedAt === "string" ? Date.parse(entry.playedAt) : NaN;
+      return { entry, index, key, playedAt };
+    })
+    .filter(({ key, playedAt }) => key && !Number.isNaN(playedAt) && byId.has(key) && isPlayableSong(byId.get(key)) && playedAt > (latestSungAt.get(key) ?? -Infinity))
+    .sort((left, right) => right.playedAt - left.playedAt || left.index - right.index)
+    .map(({ key }) => byId.get(key))
+    .filter((song, index, result) => result.findIndex((item) => item.id.toLowerCase() === song.id.toLowerCase()) === index)
+    .slice(0, Math.max(0, Number(limit) || 4));
 }
 
 export function getRecentlyAddedSongs(songs = [], limit = 4) {
@@ -143,15 +156,6 @@ function catalogPosition(song) {
   return match ? Number(match[1]) : 0;
 }
 
-function stableHash(value) {
-  let hash = 2166136261;
-  for (const character of String(value)) {
-    hash ^= character.charCodeAt(0);
-    hash = Math.imul(hash, 16777619);
-  }
-  return Math.abs(hash >>> 0);
-}
-
 function addDays(dateKey, amount) {
   const [year, month, day] = dateKey.split("-").map(Number);
   const date = new Date(year, month - 1, day + amount);
@@ -159,7 +163,7 @@ function addDays(dateKey, amount) {
 }
 
 function differenceInDays(leftKey, rightKey) {
-  const left = new Date(`${leftKey}T00:00:00`);
-  const right = new Date(`${rightKey}T00:00:00`);
-  return Math.round((right - left) / 86400000);
+  const [leftYear, leftMonth, leftDay] = leftKey.split("-").map(Number);
+  const [rightYear, rightMonth, rightDay] = rightKey.split("-").map(Number);
+  return Math.round((Date.UTC(rightYear, rightMonth - 1, rightDay) - Date.UTC(leftYear, leftMonth - 1, leftDay)) / 86400000);
 }

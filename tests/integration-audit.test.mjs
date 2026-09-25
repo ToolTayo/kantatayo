@@ -147,8 +147,8 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=20/);
-  assert.match(html, /app\.js\?v=24/);
+  assert.match(html, /main\.css\?v=21/);
+  assert.match(html, /app\.js\?v=28/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);

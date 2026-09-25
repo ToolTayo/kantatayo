@@ -33,7 +33,9 @@ test("continue singing combines recent plays and sung history without duplicate 
   recordSongPlayed(state, playable[0].id, { now: "2026-09-25T01:00:00Z" });
   recordSongPlayed(state, playable[1].id, { now: "2026-09-25T02:00:00Z" });
   state.sungHistory = [{ id: playable[1].id, sungAt: "2026-09-24T02:00:00Z" }, { id: playable[2].id, sungAt: "2026-09-23T02:00:00Z" }];
-  assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[1].id, playable[0].id, playable[2].id]);
+  assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[1].id, playable[0].id]);
+  state.sungHistory.unshift({ id: playable[1].id, sungAt: "2026-09-25T03:00:00Z" });
+  assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[0].id]);
 });
 
 test("recently added shelf follows appended catalog order and trending waits for real local activity", () => {
@@ -52,7 +54,8 @@ test("local stats remain derived from history and survive state persistence", ()
     { id: songs.find((song) => song.language.toLowerCase() === "filipino" && song.youtubeVideoId)?.id, sungAt: "2026-09-25T01:00:00Z" },
     { id: songs.find((song) => song.language.toLowerCase() === "english" && song.youtubeVideoId)?.id, sungAt: "2026-09-24T01:00:00Z" }
   ];
-  completeDailyChallenge(state, "2026-09-25");
+  const challengeSong = songs.find((song) => song.youtubeVideoId);
+  completeDailyChallenge(state, "2026-09-25", challengeSong.id, { now: new Date(2026, 8, 25), expectedSongId: challengeSong.id });
   const stats = getLocalStats(songs, state, { now: new Date(2026, 8, 25) });
   assert.equal(stats.songsSung, 2);
   assert.equal(stats.opm, 1);
@@ -71,7 +74,7 @@ test("malformed engagement fields degrade safely during migration", () => {
   const storage = new Map([["kantatayo:user-state", JSON.stringify({ version: 1, favorites: ["sample-001"], recentlyPlayed: "bad", dailyChallenge: { completedDates: ["not-a-date", 4] } })]]);
   const adapter = { getItem: (key) => storage.get(key) || null, setItem: (key, value) => storage.set(key, value), removeItem: (key) => storage.delete(key) };
   const state = loadUserState({ storage: adapter });
-  assert.equal(state.version, 3);
+  assert.equal(state.version, 4);
   assert.deepEqual(state.recentlyPlayed, []);
   assert.deepEqual(state.dailyChallenge.completedDates, []);
   assert.deepEqual(state.favorites, ["sample-001"]);

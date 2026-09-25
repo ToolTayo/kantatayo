@@ -3,10 +3,10 @@ import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryP
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getRecentlyAddedSongs, getTrendingSongs } from "./engagement.js?v=1";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getRecentlyAddedSongs, getTrendingSongs } from "./engagement.js?v=3";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 
-const homeSectionOrder = ["recommended", "continue", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
+const homeSectionOrder = ["continue", "recommended", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
 
 export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1, selectedCollectionId = "") {
   updateViewPanels(view);
@@ -79,7 +79,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
       ? { title: "Sing now", lede: "Your strongest next-song picks, tuned to your taste." }
       : { title: "Sing now", lede: "Popular, playable picks to get your night moving." },
     madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
-    continue: { title: "Continue singing", lede: "Pick up a song you were already enjoying." },
+    continue: { title: "Continue singing", lede: "Unfinished songs you opened recently." },
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
     popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
     recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
@@ -125,20 +125,39 @@ function renderHomeEngagement(allSongs, userState) {
     if (challenge.song) {
       const title = card.querySelector("[data-daily-title]");
       const artist = card.querySelector("[data-daily-artist]");
+      const meta = card.querySelector("[data-daily-meta]");
+      const thumbnail = card.querySelector("[data-daily-thumbnail]");
       const date = card.querySelector("[data-daily-date]");
       const status = card.querySelector("[data-daily-status]");
       const streak = card.querySelector("[data-daily-streak]");
       const button = card.querySelector('[data-action="daily-challenge-play"]');
       if (title) title.textContent = challenge.song.title;
       if (artist) artist.textContent = challenge.song.artist;
-      if (date) date.textContent = challenge.completed ? "Today · completed" : "Today’s featured song";
-      if (status) status.textContent = challenge.completed ? "Challenge complete — keep the streak alive tomorrow." : "One playable song, picked fresh for today.";
-      if (streak) streak.textContent = String(challenge.currentStreak);
+      if (meta) meta.textContent = formatSongMeta(challenge.song).join(" · ");
+      if (thumbnail) thumbnail.innerHTML = renderSongThumbnail(challenge.song, { dailyChallenge: true });
+      if (date) date.textContent = challenge.completed ? "✓ Completed today" : "Today’s featured song";
+      if (status) {
+        status.textContent = challenge.completed
+          ? `Challenge complete · ${formatDayCount(challenge.currentStreak)} · best ${formatDayCount(challenge.longestStreak)}`
+          : challenge.currentStreak > 0
+            ? `Sing today to keep your ${formatDayCount(challenge.currentStreak)} streak going.`
+            : "Sing this song to start your streak.";
+      }
+      if (streak) {
+        streak.textContent = challenge.currentStreak > 0 ? formatDayCount(challenge.currentStreak) : "";
+        streak.parentElement.hidden = challenge.currentStreak <= 0;
+        streak.parentElement.setAttribute("aria-label", challenge.currentStreak > 0 ? `Current challenge streak: ${challenge.currentStreak} day${challenge.currentStreak === 1 ? "" : "s"}` : "");
+      }
       if (button) {
         button.dataset.songId = challenge.song.id;
-        button.setAttribute("aria-label", `Play daily challenge: ${challenge.song.title} by ${challenge.song.artist}`);
+        button.disabled = challenge.completed;
+        button.textContent = challenge.completed ? "Completed Today ✓" : "Sing Today’s Challenge";
+        button.setAttribute("aria-label", challenge.completed ? `Daily challenge completed: ${challenge.song.title} by ${challenge.song.artist}` : `Play daily challenge: ${challenge.song.title} by ${challenge.song.artist}`);
       }
       card.classList.toggle("is-complete", challenge.completed);
+    } else {
+      const thumbnail = card.querySelector("[data-daily-thumbnail]");
+      if (thumbnail) thumbnail.replaceChildren();
     }
   }
 
@@ -151,10 +170,15 @@ function renderHomeEngagement(allSongs, userState) {
   };
   set("songs", String(stats.songsSung));
   set("favorites", String(stats.favorites));
-  set("streak", `${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"}`);
-  set("longest", `${stats.longestStreak} day${stats.longestStreak === 1 ? "" : "s"}`);
+  set("streak", stats.currentStreak > 0 ? formatDayCount(stats.currentStreak) : "No streak yet");
+  set("longest", stats.longestStreak > 0 ? formatDayCount(stats.longestStreak) : "No streak yet");
   set("split", `${stats.opm} OPM · ${stats.international} Intl`);
   set("artists", stats.topArtists.length ? stats.topArtists.map((item) => `${item.artist} (${item.count})`).join(" · ") : "No artists yet");
+}
+
+function formatDayCount(value) {
+  const count = Math.max(0, Number(value) || 0);
+  return `${count} day${count === 1 ? "" : "s"}`;
 }
 
 function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState, discoveryFilters, discoveryPage) {
@@ -371,7 +395,7 @@ export function renderSongCard(song, interactionState, options = {}) {
   </article>`;
 }
 
-function renderSongThumbnail(song, options = {}) {
+export function renderSongThumbnail(song, options = {}) {
   const songId = escapeHtml(song.id);
   const title = escapeHtml(song.title);
   const artist = escapeHtml(song.artist);

@@ -8,8 +8,8 @@
     <meta name="description" content="Discover your next karaoke song with KantaTayo." />
     <title>KantaTayo — Your next song is waiting</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=20" />
-    <script type="module" src="src/app.js?v=24"></script>
+    <link rel="stylesheet" href="styles/main.css?v=21" />
+    <script type="module" src="src/app.js?v=28"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -110,43 +110,34 @@
 
           <div class="home-utility-grid" aria-label="Your karaoke progress">
             <section class="daily-challenge-card" data-daily-challenge aria-labelledby="daily-challenge-title" hidden>
-              <div class="utility-card-heading"><div><p class="eyebrow">Daily karaoke challenge</p><h3 id="daily-challenge-title" data-daily-title>Today’s featured song</h3><p class="utility-card-artist" data-daily-artist></p></div><span class="streak-badge" aria-label="Current challenge streak"><span aria-hidden="true">🔥</span> <span data-daily-streak>0</span></span></div>
-              <p class="utility-card-date" data-daily-date>Today’s featured song</p>
-              <p class="utility-card-status" data-daily-status>One playable song, picked fresh for today.</p>
-              <button class="play-button" type="button" data-action="daily-challenge-play" data-song-id="">Play today’s challenge</button>
+              <div class="daily-challenge-layout">
+                <div class="daily-challenge-thumbnail" data-daily-thumbnail></div>
+                <div class="daily-challenge-copy">
+                  <div class="utility-card-heading"><div><p class="eyebrow">Today’s karaoke challenge</p><h3 id="daily-challenge-title" data-daily-title>Today’s featured song</h3><p class="utility-card-artist" data-daily-artist></p></div><span class="streak-badge" aria-label="Current challenge streak" hidden><span aria-hidden="true">🔥</span> <span data-daily-streak>0 days</span></span></div>
+                  <p class="daily-challenge-meta" data-daily-meta></p>
+                  <p class="utility-card-date" data-daily-date>Today’s featured song</p>
+                  <p class="utility-card-status" data-daily-status role="status" aria-live="polite">One playable song, picked fresh for today.</p>
+                  <button class="play-button" type="button" data-action="daily-challenge-play" data-song-id="">Sing Today’s Challenge</button>
+                </div>
+              </div>
             </section>
             <section class="local-stats-card" data-local-stats aria-labelledby="local-stats-title">
               <div class="utility-card-heading"><div><p class="eyebrow">On this device</p><h3 id="local-stats-title">Your karaoke stats</h3></div><a class="section-link" href="#recent-title" data-view="recent">History <span aria-hidden="true">→</span></a></div>
-              <div class="local-stats-grid"><div><strong data-stat="songs">0</strong><span>Songs sung</span></div><div><strong data-stat="favorites">0</strong><span>Favorites</span></div><div><strong data-stat="streak">0 days</strong><span>Current streak</span></div><div><strong data-stat="longest">0 days</strong><span>Best streak</span></div></div>
+              <div class="local-stats-grid"><div><strong data-stat="songs">0</strong><span>Songs sung</span></div><div><strong data-stat="favorites">0</strong><span>Favorites</span></div><div><strong data-stat="streak">No streak yet</strong><span>Current streak</span></div><div><strong data-stat="longest">No streak yet</strong><span>Best streak</span></div></div>
               <p class="local-stats-foot" data-stat="split">0 OPM · 0 Intl</p><p class="local-stats-artists" data-stat="artists">No artists yet</p>
-            </section>
-          </div>
-
-          <div class="home-secondary-grid">
-            <section class="collections-card" aria-labelledby="collections-title">
-              <div class="utility-card-heading"><div><p class="eyebrow">Curated locally</p><h3 id="collections-title">Tonight’s collections</h3><p class="utility-card-status" data-collection-description>Fresh picks for the room.</p></div><button class="play-button" type="button" data-action="surprise-me">Surprise me</button></div>
-              <div class="collection-tabs" data-collection-tabs role="tablist" aria-label="Karaoke collections"></div>
-              <h4 class="collection-title" data-collection-title>Friday Night Karaoke</h4>
-              <div class="song-grid compact-grid" data-collection-grid></div>
-              <p class="empty-state section-empty" data-collection-empty hidden>No playable songs in this collection yet.</p>
-            </section>
-            <section class="request-card" aria-labelledby="request-title">
-              <p class="eyebrow">Help shape the catalog</p><h3 id="request-title">Request a song</h3><p class="utility-card-status">Save a title and artist locally. No account or submission service yet.</p>
-              <form class="request-form" data-song-request-form><label for="request-song-title">Song title</label><input id="request-song-title" name="request-title" maxlength="120" required placeholder="e.g. Your favorite song" /><label for="request-song-artist">Artist</label><input id="request-song-artist" name="request-artist" maxlength="120" required placeholder="Artist name" /><button class="add-button" type="submit">Save request</button></form>
-              <p class="form-status" data-song-request-status role="status" aria-live="polite"></p><ul class="song-request-list" data-song-request-list></ul>
             </section>
           </div>
 
           <div class="catalog-loading empty-state" data-catalog-loading role="status" aria-live="polite"><span class="empty-icon" aria-hidden="true">♫</span><div><strong>Loading your karaoke picks…</strong><p>The catalog will be ready in a moment.</p></div></div>
           <div class="song-sections" data-song-sections>
+            <section class="song-section engagement-section" data-section="continue" aria-labelledby="continue-title" hidden>
+              <div class="section-heading home-section-heading"><div><h3 id="continue-title" data-home-title>Continue singing</h3><p class="section-lede" data-home-lede>Unfinished songs you opened recently.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>
+              <div class="song-grid" data-grid="continue"></div>
+            </section>
             <section class="song-section featured-section" data-section="recommended" aria-labelledby="recommended-title">
               <div class="section-heading home-section-heading"><div><h3 id="recommended-title" data-home-title>Sing now</h3><p class="section-lede" data-home-lede>Popular, playable picks to get your night moving.</p></div><span class="section-rule"></span></div>
               <div class="song-grid" data-grid="recommended"></div>
               <div class="empty-state section-empty" data-section-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No playable recommendations yet</strong><p>Try adding a preference or exploring the catalog.</p></div></div>
-            </section>
-            <section class="song-section engagement-section" data-section="continue" aria-labelledby="continue-title" hidden>
-              <div class="section-heading home-section-heading"><div><h3 id="continue-title" data-home-title>Continue singing</h3><p class="section-lede" data-home-lede>Pick up a song you were already enjoying.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>
-              <div class="song-grid" data-grid="continue"></div>
             </section>
             <section class="song-section made-for-you-section" data-section="madeForYou" aria-labelledby="made-for-you-title" hidden>
               <div class="section-heading home-section-heading"><div><h3 id="made-for-you-title" data-home-title>Made for you</h3><p class="section-lede" data-home-lede>A few more picks shaped by your preferences and history.</p></div><a class="section-link" href="#preferences-panel" data-view="preferences">Tune your taste <span aria-hidden="true">→</span></a></div>
@@ -188,6 +179,20 @@
               <div class="section-heading home-section-heading"><div><h3 id="recent-title" data-home-title>Recently sung</h3><p class="section-lede" data-home-lede>Keep exploring from where you left off.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>
               <div class="song-grid" data-grid="recent"></div>
               <div class="empty-state" data-recent-empty><span class="empty-icon" aria-hidden="true">↺</span><div><strong>Your encore starts here</strong><p>Songs you mark as sung will show up in this spot later.</p></div></div>
+            </section>
+          </div>
+          <div class="home-secondary-grid">
+            <section class="collections-card" aria-labelledby="collections-title">
+              <div class="utility-card-heading"><div><p class="eyebrow">Curated locally</p><h3 id="collections-title">Tonight’s collections</h3><p class="utility-card-status" data-collection-description>Fresh picks for the room.</p></div><button class="play-button" type="button" data-action="surprise-me">Surprise me</button></div>
+              <div class="collection-tabs" data-collection-tabs role="tablist" aria-label="Karaoke collections"></div>
+              <h4 class="collection-title" data-collection-title>Friday Night Karaoke</h4>
+              <div class="song-grid compact-grid" data-collection-grid></div>
+              <p class="empty-state section-empty" data-collection-empty hidden>No playable songs in this collection yet.</p>
+            </section>
+            <section class="request-card" aria-labelledby="request-title">
+              <p class="eyebrow">Help shape the catalog</p><h3 id="request-title">Request a song</h3><p class="utility-card-status">Save a title and artist locally. No account or submission service yet.</p>
+              <form class="request-form" data-song-request-form><label for="request-song-title">Song title</label><input id="request-song-title" name="request-title" maxlength="120" required placeholder="e.g. Your favorite song" /><label for="request-song-artist">Artist</label><input id="request-song-artist" name="request-artist" maxlength="120" required placeholder="Artist name" /><button class="add-button" type="submit">Save request</button></form>
+              <p class="form-status" data-song-request-status role="status" aria-live="polite"></p><ul class="song-request-list" data-song-request-list></ul>
             </section>
           </div>
           <a class="discover-cta" href="#discover" data-view="discover">Browse all songs <span aria-hidden="true">→</span></a>

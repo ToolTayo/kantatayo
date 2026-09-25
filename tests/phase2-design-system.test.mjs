@@ -40,7 +40,7 @@ test("sparse shelves keep bounded card tracks and shared 16:9 media sizing", () 
 });
 
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=20/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=20"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v32"/);
+  assert.match(index, /styles\/main\.css\?v=21/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=21"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v37"/);
 });
