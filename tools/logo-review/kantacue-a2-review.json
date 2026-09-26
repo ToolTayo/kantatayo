@@ -1,0 +1,15 @@
+{
+  "concept": "A2 Interlock Notch",
+  "originalProject": "KantaCue",
+  "generatedDate": "2026-09-26",
+  "construction": "A compact KC monogram built from a strong vertical K, rounded open C, and a small open hook used as a custom cue notch. The primary mark uses the refined A2 geometry; a related optical variant is reserved for 16–24px contexts.",
+  "files": [
+    "assets/brand/kantacue-mark.svg",
+    "assets/brand/kantacue-mark-small.svg",
+    "assets/brand/kantacue-logo.svg",
+    "tools/logo-review/kantacue-a2-review-512.png",
+    "tools/logo-review/kantacue-a2-white-512.png",
+    "tools/logo-review/kantacue-a2-black-512.png"
+  ],
+  "reviewNote": "Prepared for external visual-similarity and trademark review. This package does not claim trademark clearance, legal safety, or worldwide uniqueness."
+}

@@ -6,39 +6,39 @@ import { createSongShareUrl, parseSongShareId, shareSong } from "../src/share.js
 
 const song = { id: "sample-029", title: "Sa Aking Puso", artist: "Kaye Cal" };
 
-test("share URLs use a stable KantaTayo song ID and never expose the video ID", () => {
-  const url = createSongShareUrl(song.id, { href: "https://kantatayo.example/#top" });
-  assert.equal(url, "https://kantatayo.example/?song=sample-029#top");
+test("share URLs use a stable KantaCue song ID and never expose the video ID", () => {
+  const url = createSongShareUrl(song.id, { href: "https://kantacue.example/#top" });
+  assert.equal(url, "https://kantacue.example/?song=sample-029#top");
   assert.equal(parseSongShareId({ href: url }), song.id);
   assert.doesNotMatch(url, /QBb9wO3Bj0k/);
 });
 
 test("malformed deep-link values are ignored while unknown IDs remain safely identifiable", () => {
-  assert.equal(parseSongShareId({ href: "https://kantatayo.example/?song=not%20safe#top" }), "");
-  assert.equal(parseSongShareId({ href: "https://kantatayo.example/?song=missing-id#top" }), "missing-id");
+  assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=not%20safe#top" }), "");
+  assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=missing-id#top" }), "missing-id");
 });
 
 test("native share is used when available and cancellation is quiet", async () => {
   const calls = [];
   const navigatorRef = { share: async (data) => calls.push(data) };
-  const shared = await shareSong(song, { navigatorRef, locationRef: { href: "https://kantatayo.example/#top" } });
+  const shared = await shareSong(song, { navigatorRef, locationRef: { href: "https://kantacue.example/#top" } });
   assert.equal(shared.status, "shared");
-  assert.equal(calls[0].url, "https://kantatayo.example/?song=sample-029#top");
+  assert.equal(calls[0].url, "https://kantacue.example/?song=sample-029#top");
 
   const cancelled = await shareSong(song, {
     navigatorRef: { share: async () => { const error = new Error("cancelled"); error.name = "AbortError"; throw error; } },
-    locationRef: { href: "https://kantatayo.example/#top" }
+    locationRef: { href: "https://kantacue.example/#top" }
   });
   assert.equal(cancelled.status, "cancelled");
 });
 
 test("clipboard is the fallback for unsupported or failed native share", async () => {
   let copied = "";
-  const result = await shareSong(song, { navigatorRef: { clipboard: { writeText: async (value) => { copied = value; } } }, locationRef: { href: "https://kantatayo.example/#top" } });
+  const result = await shareSong(song, { navigatorRef: { clipboard: { writeText: async (value) => { copied = value; } } }, locationRef: { href: "https://kantacue.example/#top" } });
   assert.equal(result.status, "copied");
   assert.equal(copied, result.url);
 
-  const failed = await shareSong(song, { navigatorRef: { clipboard: { writeText: async () => { throw new Error("blocked"); } } }, locationRef: { href: "https://kantatayo.example/#top" } });
+  const failed = await shareSong(song, { navigatorRef: { clipboard: { writeText: async () => { throw new Error("blocked"); } } }, locationRef: { href: "https://kantacue.example/#top" } });
   assert.equal(failed.status, "failed");
 });
 
@@ -86,7 +86,7 @@ test("install action is hidden in standalone mode and dismissed choices stay loc
 test("deep-link parsing is separate from playback engagement recording", async () => {
   const app = await readFile(new URL("../src/app.js", import.meta.url), "utf8");
   const handler = app.match(/function handleIncomingSongLink\(\)[\s\S]*?\n}\n\nfunction removeSongShareParam/)[0];
-  assert.equal(parseSongShareId({ href: "https://kantatayo.example/?song=sample-029#discover" }), "sample-029");
+  assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=sample-029#discover" }), "sample-029");
   assert.match(handler, /if \(!song\)/);
   assert.doesNotMatch(handler, /recordSongPlayed/);
 });

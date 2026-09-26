@@ -34,11 +34,13 @@ test("player preserves the official 16:9 embed and has real expanded/fullscreen 
   assert.match(app, /Full screen is not available here/);
 });
 
-test("video completion waits for an explicit next choice instead of auto-advancing", () => {
+test("video completion automatically advances queued songs but keeps recommendations explicit", () => {
   assert.match(app, /function handleVideoEnded\(videoId\)/);
+  assert.match(app, /const queuedNext = snapshot\.currentIndex >= 0/);
+  assert.match(app, /if \(queuedNext\) \{[\s\S]*?advanceToNext\(\{ automatic: true \}\);/);
+  assert.match(app, /const nextSong = getRecommendedNext\(snapshot\);/);
   assert.match(app, /showPlayerFinished\(\{ nextSong, nextType \}\)/);
-  assert.doesNotMatch(app, /function handleVideoEnded[\s\S]*?\n\s*advanceToNext\(\);/);
-  assert.match(ui, /KantaTayo waits for your explicit choice/);
+  assert.match(ui, /KantaCue waits for your explicit choice/);
 });
 
 test("Sang It uses durable history and the existing duplicate guard", () => {
@@ -77,8 +79,8 @@ test("fallback recommendation candidates are playable and excluded from the acti
 });
 
 test("player interactions do not alter catalog assignments or protected songs", () => {
-  assert.equal(songs.length, 171);
-  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 171);
+  assert.equal(songs.length, 361);
+  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 361);
   assert.equal(songs.filter((song) => song.youtubeVideoId === null).length, 0);
   assert.equal(songs.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
   assert.doesNotMatch(app, /YOUTUBE_API_KEY|youtubeDataApi|apiKey/i);

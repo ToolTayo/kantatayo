@@ -21,7 +21,7 @@ export function readStoredJson({
   try {
     rawValue = target.getItem(key);
   } catch (error) {
-    logger.warn?.("[KantaTayo storage] localStorage could not be read.", error);
+    logger.warn?.("[KantaCue storage] localStorage could not be read.", error);
     return safeFallback;
   }
 
@@ -32,7 +32,7 @@ export function readStoredJson({
     const migrated = migrate ? migrate(parsed) : parsed;
     return validate ? validate(migrated) : migrated;
   } catch (error) {
-    logger.warn?.("[KantaTayo storage] Stored user state was invalid; defaults were used.", error);
+    logger.warn?.("[KantaCue storage] Stored user state was invalid; defaults were used.", error);
     return safeFallback;
   }
 }
@@ -45,7 +45,7 @@ export function writeStoredJson(value, { key = STORAGE_KEY, storage, logger = co
     target.setItem(key, JSON.stringify(value));
     return true;
   } catch (error) {
-    logger.warn?.("[KantaTayo storage] User state could not be saved.", error);
+    logger.warn?.("[KantaCue storage] User state could not be saved.", error);
     return false;
   }
 }

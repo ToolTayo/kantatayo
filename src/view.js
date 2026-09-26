@@ -1,4 +1,4 @@
-export const VIEW_NAMES = new Set(["home", "discover", "favorites", "recent", "party", "preferences", "exclusive"]);
+export const VIEW_NAMES = new Set(["home", "discover", "favorites", "recent", "party", "preferences"]);
 
 export function normalizeView(value) {
   const candidate = String(value || "").replace(/^#/, "").toLowerCase();

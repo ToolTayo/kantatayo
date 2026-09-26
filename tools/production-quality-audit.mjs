@@ -542,7 +542,7 @@ function summarize(assignments, searchErrors, videoErrors) {
 
 function renderMarkdown(report) {
   const lines = [
-    "# KantaTayo production YouTube quality audit",
+    "# KantaCue production YouTube quality audit",
     "",
     `Generated: ${report.generatedAt}`,
     `Scope: sample-${report.scope.firstId} through sample-${report.scope.lastId}; audited promoted songs: ${report.scope.auditedCount}`,
@@ -635,7 +635,7 @@ function requireValue(args, option) {
 }
 function printUsage() {
   console.log([
-    "KantaTayo production YouTube quality audit",
+    "KantaCue production YouTube quality audit",
     "",
     "  node tools/production-quality-audit.mjs [options]",
     "",

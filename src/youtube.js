@@ -48,7 +48,7 @@ export function loadYouTubeIframeApi({ windowRef = globalThis.window, documentRe
       else finish(reject, new Error("YouTube IFrame API loaded without a player constructor."));
     };
 
-    const existingScript = documentRef.querySelector('script[data-kantatayo-youtube-api]');
+    const existingScript = documentRef.querySelector('script[data-kantacue-youtube-api]');
     if (existingScript) {
       existingScript.addEventListener?.("error", () => finish(reject, new Error("YouTube IFrame API failed to load.")), { once: true });
       return;
@@ -57,11 +57,11 @@ export function loadYouTubeIframeApi({ windowRef = globalThis.window, documentRe
     const script = documentRef.createElement("script");
     script.src = YOUTUBE_API_URL;
     script.async = true;
-    script.dataset.kantatayoYoutubeApi = "true";
+    script.dataset.kantacueYoutubeApi = "true";
     script.addEventListener("error", () => finish(reject, new Error("YouTube IFrame API failed to load.")), { once: true });
     documentRef.head.appendChild(script);
   }).catch((error) => {
-    logger.warn?.("[KantaTayo YouTube] API unavailable.", error);
+      logger.warn?.("[KantaCue YouTube] API unavailable.", error);
     apiPromise = null;
     apiWindow = null;
     throw error;
@@ -142,7 +142,7 @@ export function createYouTubePlayerController({
       }
       return { ok: true };
     } catch (error) {
-      logger.warn?.("[KantaTayo YouTube] Player initialization failed.", error);
+      logger.warn?.("[KantaCue YouTube] Player initialization failed.", error);
       onError({ code: "initialization-failed", videoId: normalizedId, error });
       return { ok: false, reason: "initialization-failed" };
     }
@@ -163,7 +163,7 @@ export function createYouTubePlayerController({
     try {
       player?.playVideo?.();
     } catch (error) {
-      logger.info?.("[KantaTayo YouTube] Browser blocked playback start.", error);
+      logger.info?.("[KantaCue YouTube] Browser blocked playback start.", error);
     }
   }
 
@@ -172,7 +172,7 @@ export function createYouTubePlayerController({
     currentVideoId = null;
     lastEndedVideoId = null;
     pendingLoad = null;
-    try { player?.stopVideo?.(); } catch (error) { logger.info?.("[KantaTayo YouTube] Player stop was unavailable.", error); }
+    try { player?.stopVideo?.(); } catch (error) { logger.info?.("[KantaCue YouTube] Player stop was unavailable.", error); }
   }
 
   function destroy() {
@@ -183,7 +183,7 @@ export function createYouTubePlayerController({
     playerReady = false;
     iframeObserver?.disconnect?.();
     iframeObserver = null;
-    try { player?.destroy?.(); } catch (error) { logger.info?.("[KantaTayo YouTube] Player destroy was unavailable.", error); }
+    try { player?.destroy?.(); } catch (error) { logger.info?.("[KantaCue YouTube] Player destroy was unavailable.", error); }
     player = null;
   }
 

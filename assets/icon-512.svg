@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 192 192" role="img" aria-labelledby="title">
-  <title id="title">KantaTayo</title>
-  <rect width="192" height="192" rx="42" fill="#0b0f1a"/>
-  <circle cx="96" cy="96" r="68" fill="#172640" stroke="#a6f36f" stroke-width="5"/>
-  <path d="M82 119V70c0-7 5-12 12-12h12v11H96c-1 0-2 1-2 2v48h-12Z" fill="#78d9ff"/>
-  <path d="M106 58h13v51c7 2 12 8 12 15 0 9-8 16-17 16s-17-7-17-16c0-8 6-14 13-16V58Z" fill="#a6f36f"/>
-  <circle cx="114" cy="124" r="7" fill="#0b0f1a"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">KantaCue</title>
+  <rect width="512" height="512" rx="112" fill="#0b0f1a"/>
+  <g transform="translate(96 96) scale(5)" fill="none" stroke="#a6f36f" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.5">
+    <path d="M11 10v44M11 32 29.5 13M11 32l18.5 19" />
+    <path d="M53 16a22 22 0 1 0 0 32" />
+    <path stroke-width="4.5" d="M37 28v8h6" />
+  </g>
 </svg>

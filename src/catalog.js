@@ -10,8 +10,7 @@
  * - youtubeVideoId is null until a real, verified YouTube ID is supplied.
  */
 
-export const DEFAULT_CATALOG_URL = "data/songs.sample.json?v=1";
-export const EXCLUSIVE_CATALOG_URL = "data/songs.exclusive.json?v=1";
+export const DEFAULT_CATALOG_URL = "data/songs.sample.json?v=4";
 
 const DIFFICULTIES = new Set(["easy", "medium", "hard"]);
 const VOCAL_RANGES = new Set(["low", "medium", "high"]);
@@ -34,12 +33,12 @@ export async function loadCatalog(url = DEFAULT_CATALOG_URL, options = {}) {
   try {
     response = await fetch(url);
   } catch (error) {
-    logger.error?.("KantaTayo catalog request failed.", error);
+    logger.error?.("KantaCue catalog request failed.", error);
     throw new CatalogLoadError("The song catalog could not be reached.", "catalog-request-failed");
   }
 
   if (!response.ok) {
-    logger.error?.(`KantaTayo catalog request returned ${response.status}.`);
+    logger.error?.(`KantaCue catalog request returned ${response.status}.`);
     throw new CatalogLoadError("The song catalog could not be loaded.", "catalog-http-failed");
   }
 
@@ -47,12 +46,12 @@ export async function loadCatalog(url = DEFAULT_CATALOG_URL, options = {}) {
   try {
     rawCatalog = await response.json();
   } catch (error) {
-    logger.error?.("KantaTayo catalog JSON is invalid.", error);
+    logger.error?.("KantaCue catalog JSON is invalid.", error);
     throw new CatalogLoadError("The song catalog is unavailable right now.", "catalog-json-invalid");
   }
 
   if (!Array.isArray(rawCatalog)) {
-    logger.error?.("KantaTayo catalog must be a top-level array of song records.");
+    logger.error?.("KantaCue catalog must be a top-level array of song records.");
     throw new CatalogLoadError("The song catalog has an unsupported structure.", "catalog-shape-invalid");
   }
 
@@ -196,5 +195,5 @@ function isPlainObject(value) {
 
 function warn(logger, warnings, message) {
   warnings.push(message);
-  logger.warn?.(`[KantaTayo catalog] ${message}`);
+  logger.warn?.(`[KantaCue catalog] ${message}`);
 }

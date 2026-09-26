@@ -27,7 +27,7 @@ export function createInstallController({ windowRef = globalThis.window, buttons
     installed = true;
     deferredPrompt = null;
     sync();
-    onStatus("KantaTayo is installed on this device.");
+    onStatus("KantaCue is installed on this device.");
   };
 
   const handleClick = async () => {
@@ -38,11 +38,11 @@ export function createInstallController({ windowRef = globalThis.window, buttons
     try {
       await promptEvent.prompt();
       const choice = await promptEvent.userChoice;
-      if (choice?.outcome === "accepted") onStatus("KantaTayo was added to your apps.");
-      else onStatus("Install dismissed. You can install KantaTayo later.");
+      if (choice?.outcome === "accepted") onStatus("KantaCue was added to your apps.");
+      else onStatus("Install dismissed. You can install KantaCue later.");
       return { status: choice?.outcome === "accepted" ? "accepted" : "dismissed" };
     } catch (error) {
-      logger.info?.("[KantaTayo] Install prompt was unavailable.", error);
+      logger.info?.("[KantaCue] Install prompt was unavailable.", error);
       onStatus("Install is not available right now.");
       return { status: "failed" };
     }

@@ -501,7 +501,7 @@ function tableValue(value) {
 
 export function renderMarkdownReport(report) {
   const lines = [
-    "# KantaTayo YouTube Quality Audit",
+    "# KantaCue YouTube Quality Audit",
     "",
     `Generated: ${report.generatedAt}`,
     `Audited assignments: ${report.auditedCount}`,
@@ -607,7 +607,7 @@ export async function runAudit(options) {
 
 function printUsage() {
   console.log([
-    "KantaTayo local YouTube quality audit",
+    "KantaCue local YouTube quality audit",
     "",
     "Usage:",
     "  node tools/audit-youtube.mjs",

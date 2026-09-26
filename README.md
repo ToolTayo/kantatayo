@@ -1,20 +1,18 @@
-# kantatayo
+# KantaCue
 
-KantaTayo uses YouTube's official embedded IFrame Player API for playback. KantaTayo does not host, download, proxy, extract, or separately play YouTube videos or audio.
+KantaCue uses YouTube's official embedded IFrame Player API for playback. KantaCue does not host, download, proxy, extract, or separately play YouTube videos or audio.
 
 YouTube IDs must be verified separately before they are added to the production catalog. A syntactically valid ID may still be unavailable, restricted, or non-embeddable. Made-for-Kids status must not be guessed and is part of that future catalog-verification process.
 
-The sample catalog intentionally uses null YouTube IDs, so the app shows a friendly unavailable-video state during normal development. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
-
-## Exclusive collection
-
-The optional [data/songs.exclusive.json](data/songs.exclusive.json) collection is kept separate from the 171-song production catalog. It contains a small set of manually inspected public karaoke pages from Sing King Karaoke and is shown on the dedicated `#exclusive` page using the same validated song-card, queue, and official YouTube player flow. The collection does not use the YouTube Data API, store media, or change the production catalog count.
+The production sample catalog contains only promoted playable IDs; defensive null-ID handling remains in place for future catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
 
 ## Sharing, installation, and local popularity
 
-The player’s Share song action creates a same-origin KantaTayo deep link such as `?song=sample-029#top`. It uses the browser Web Share API when available and copies the link to the clipboard otherwise. Shared links contain only the stable internal song ID, never a YouTube video ID. A valid link surfaces the song without counting it as played until the user explicitly opens it.
+The player’s Share song action creates a same-origin KantaCue deep link such as `?song=sample-029#top`. It uses the browser Web Share API when available and copies the link to the clipboard otherwise. Shared links contain only the stable internal song ID, never a YouTube video ID. A valid link surfaces the song without counting it as played until the user explicitly opens it.
 
-KantaTayo captures `beforeinstallprompt` only when the browser exposes an actionable install flow. The Install app action stays hidden in browsers that cannot install the PWA and in standalone mode; installation is never triggered automatically. iOS-specific instructions are intentionally omitted because browser detection is not reliable enough to present them truthfully.
+KantaCue captures `beforeinstallprompt` only when the browser exposes an actionable install flow. The Install app action stays hidden in browsers that cannot install the PWA and in standalone mode; installation is never triggered automatically. iOS-specific instructions are intentionally omitted because browser detection is not reliable enough to present them truthfully.
+
+The public brand is KantaCue, but the existing `kantatayo:user-state` localStorage key is intentionally retained for backward compatibility. Existing user queues, favorites, history, preferences, party sessions, and other local data must remain readable after the rebrand. The service worker now uses a KantaCue cache namespace and removes prior KantaTayo app-shell caches during activation; the repository directory and the stage-background asset filename remain unchanged for compatibility.
 
 The Home shelf is named **Most sung on this device**. It appears only after local `Sang it` history exists and ranks songs by actual local completion count, with deterministic favorite/like/title tie-breakers. It is not global popularity. **Crowd favorites** remains the separate catalog-demand shelf and does not use device history as a substitute for demand evidence.
 
@@ -22,7 +20,7 @@ The Home shelf is named **Most sung on this device**. It appears only after loca
 
 The catalog includes a small, transparent `demandTier` signal for songs supported by current karaoke-play evidence. The runtime uses only the tier (`very-high`, `high`, or `established`); source URLs, ranking positions, and methodology are kept separately in [data/song-demand.json](data/song-demand.json). Demand is a weak cold-start prior, not proof that a song has a suitable YouTube karaoke video. It never bypasses catalog validation, technical verification, Party Tyme exclusion, or the existing personalization and repetition rules.
 
-The current expansion adds 45 evidence-backed song records with `youtubeVideoId: null`. They are searchable and visible, but remain unavailable for playback until an individual karaoke candidate passes the existing identity, suitability, API, and quality workflow. No candidate IDs were guessed or promoted as part of the expansion.
+The catalog also includes a 40-song CoversPH Popular expansion sourced from the persisted public-channel report. Those records use the exact reported video IDs; the report is provenance for the catalog addition, not a substitute for runtime playback handling or future quality review.
 
 Run the app from a local HTTP/HTTPS server during development. Direct `file://` opening is not supported for reliable module, fetch, origin, or YouTube IFrame API behavior.
 
@@ -30,7 +28,7 @@ Run the app from a local HTTP/HTTPS server during development. Direct `file://` 
 
 The public song catalog should receive a YouTube ID only after a separate catalog-maintenance check marks that video as `verified`. A syntactically valid 11-character ID is not enough for production playback eligibility. The smallest useful internal verification record is kept separate from public song metadata and should identify the song, candidate video ID, one of `unassigned`, `candidate`, `verified`, `rejected`, or `unavailable`, whether embedding was checked, whether Made for Kids status was checked and what it reported, whether the video/song match was manually confirmed, and the verification timestamp. Only a record with `verified` status and complete evidence should promote the ID into the public catalog. Runtime playback still handles videos that later become unavailable or restricted.
 
-That verification artifact is an admin/development workflow input, not a user-facing catalog feature and should not be shipped with credentials or unnecessary notes. No verification metadata or real video IDs are included in the sample catalog yet.
+That verification artifact is an admin/development workflow input, not a user-facing catalog feature and should not be shipped with credentials or unnecessary notes. Verification metadata is kept outside the public catalog; promoted IDs appear there only after the applicable catalog decision is complete.
 
 ## Future video verification workflow
 

@@ -153,8 +153,8 @@ test("production Party Tyme removals are catalog-only unassignments with preserv
     assert.match(record?.unassignmentReason || "", /Party Tyme presentation/);
     assert.equal(candidates.candidates.some((item) => item.songId === songId), false, songId);
   }
-  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 171);
-  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 171);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 361);
+  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 361);
 });
 
 test("unassigns only currently promoted Party Tyme records and preserves historical evidence", async () => {
@@ -191,7 +191,7 @@ test("unassigns only currently promoted Party Tyme records and preserves histori
     assert.deepEqual(nextReview.flags[0], {
       songId: "fixture-party",
       status: "quality-excluded",
-      reason: "user quality decision — Party Tyme presentation does not meet the desired KantaTayo visual experience standard",
+      reason: "user quality decision — Party Tyme presentation does not meet the desired KantaCue visual experience standard",
       updatedAt: "2026-09-22T00:00:00.000Z",
       candidateVideoId: "bUIvrsvm9z8"
     });
@@ -214,7 +214,7 @@ test("quality-excluded songs are skipped by auto-complete without API requests o
     await writeFile(catalogPath, JSON.stringify([song], null, 2));
     await writeFile(verificationPath, JSON.stringify({ version: 1, records: [record] }, null, 2));
     await writeFile(candidatesPath, JSON.stringify({ version: 1, candidates: [{ songId: "fixture-quality", candidateVideoId: "bUIvrsvm9z8" }] }, null, 2));
-    await writeFile(reviewPath, JSON.stringify({ version: 1, flags: [{ songId: "fixture-quality", status: "quality-excluded", reason: "user quality decision — Party Tyme presentation does not meet the desired KantaTayo visual experience standard", candidateVideoId: "bUIvrsvm9z8" }] }, null, 2));
+    await writeFile(reviewPath, JSON.stringify({ version: 1, flags: [{ songId: "fixture-quality", status: "quality-excluded", reason: "user quality decision — Party Tyme presentation does not meet the desired KantaCue visual experience standard", candidateVideoId: "bUIvrsvm9z8" }] }, null, 2));
     let calls = 0;
     const result = await autoComplete({ catalog: catalogPath, file: verificationPath, candidates: candidatesPath, review: reviewPath, dryRun: false }, { fetchImplementation: async () => { calls += 1; throw new Error("quality-excluded song should not call the API"); } });
     assert.equal(calls, 0);

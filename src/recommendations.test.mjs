@@ -144,8 +144,8 @@ test("recommendation reasons expose real signals without raw scoring", () => {
 
 test("catalog playability and protected IDs remain unchanged", () => {
   const promoted = catalog.filter((song) => song.youtubeVideoId !== null);
-  assert.equal(catalog.length, 171);
-  assert.equal(promoted.length, 171);
+  assert.equal(catalog.length, 361);
+  assert.equal(promoted.length, 361);
   assert.equal(catalog.filter((item) => item.youtubeVideoId === null).length, 0);
   assert.equal(song("sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });

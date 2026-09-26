@@ -123,12 +123,12 @@ const newlyPromotedIds = {
 };
 
 test("expanded catalog preserves stable IDs, valid metadata, and has no duplicate songs", () => {
-  assert.equal(rawCatalog.length, 171);
+  assert.equal(rawCatalog.length, 361);
   assert.equal(normalized.rejectedRecords, 0);
   assert.ok(rawCatalog.every((song) => /^sample-\d{3}$/.test(song.id)));
-  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 171);
-  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 171);
-  assert.equal(normalized.songs.length, 171);
+  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 361);
+  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 361);
+  assert.equal(normalized.songs.length, 361);
   assert.deepEqual(normalized.warnings, []);
 });
 
@@ -143,15 +143,15 @@ test("unrelated promoted IDs and retained catalog assignments remain unchanged",
   }
 
   assert.equal(Object.keys(newlyPromotedIds).length, 41);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 171);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 171);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 361);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 361);
   assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 0);
   assert.equal(rawCatalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });
 
 test("new catalog records use current validator categories and remain playable", () => {
   const newSongs = rawCatalog.slice(37);
-  assert.equal(newSongs.length, 134);
+  assert.equal(newSongs.length, 324);
   const unassignedNewSongs = newSongs.filter((song) => song.youtubeVideoId === null);
   assert.deepEqual(unassignedNewSongs, []);
   assert.ok(newSongs.every((song) => ["easy", "medium", "hard"].includes(song.difficulty)));
@@ -174,7 +174,7 @@ test("demand metadata is evidence-backed and current availability remains explic
   for (const [songId, videoId] of Object.entries(newlyPromotedIds)) {
     assert.equal(catalogById.get(songId)?.youtubeVideoId, videoId, songId);
   }
-  assert.ok(rawCatalog.slice(100).every((song) => demand.signals.some((signal) => signal.songId === song.id)));
+  assert.ok(rawCatalog.filter((song) => song.demandTier).every((song) => demand.signals.some((signal) => signal.songId === song.id && signal.demandTier === song.demandTier)));
 });
 
 test("newly playable songs flow through local discovery and recommendations", () => {

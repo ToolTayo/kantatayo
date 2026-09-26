@@ -1,5 +1,5 @@
-import { focusSongAction, hidePlayer, renderExclusiveView, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=23";
-import { EXCLUSIVE_CATALOG_URL, loadCatalog } from "./catalog.js?v=2";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=25";
+import { loadCatalog } from "./catalog.js?v=2";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
 import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
 import { getRecommendations } from "./recommendations.js";
@@ -25,7 +25,6 @@ let partyStatusMessage = "Party details stay on this device.";
 let currentView = viewFromHash(window.location.hash);
 let playerFinishedSongId = null;
 let selectedCollectionId = getFeaturedCollectionId();
-let exclusiveSongs = [];
 let installController = null;
 
 async function startApp() {
@@ -36,16 +35,7 @@ async function startApp() {
       onStatus: showToast
     });
     const catalog = await loadCatalog();
-    let exclusiveCatalog = { songs: [] };
-    try {
-      exclusiveCatalog = await loadCatalog(EXCLUSIVE_CATALOG_URL);
-    } catch (error) {
-      console.warn("[KantaTayo] Exclusive collection could not be loaded.", error);
-    }
-    const primaryIds = new Set(catalog.songs.map((song) => song.id.toLowerCase()));
-    exclusiveSongs = exclusiveCatalog.songs.filter((song) => !primaryIds.has(song.id.toLowerCase()));
-    const allSongs = [...catalog.songs, ...exclusiveSongs];
-    setCatalog(state, allSongs, createSearchIndex(catalog.songs));
+    setCatalog(state, catalog.songs, createSearchIndex(catalog.songs));
     if (currentView === "party" && !state.user.partySession.enabled) state.user.partySession.enabled = true;
     refreshRecommendationsSnapshot();
     youtubeController = createYouTubePlayerController({
@@ -74,7 +64,6 @@ function render({ refreshRecommendations = false } = {}) {
   if (loading) loading.hidden = true;
   renderPreferences(state.songs, state.user.preferences);
   renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId);
-  renderExclusiveView(exclusiveSongs, state.user);
   renderSongRequests(state.user);
   const searchInput = document.querySelector("#song-search");
   if (searchInput && searchInput.value !== state.query) searchInput.value = state.query;
@@ -426,8 +415,7 @@ function handleIncomingSongLink() {
   const sharedId = parseSongShareId(window.location);
   if (!sharedId) return;
   const song = state.songs.find((item) => item.id.toLowerCase() === sharedId.toLowerCase());
-  const isExclusive = song && exclusiveSongs.some((item) => item.id.toLowerCase() === song.id.toLowerCase());
-  const targetView = isExclusive ? "exclusive" : "discover";
+  const targetView = "discover";
   if (!song) {
     removeSongShareParam(currentView);
     showToast("That shared song is no longer available.");
@@ -437,7 +425,7 @@ function handleIncomingSongLink() {
   state.filter = "all";
   state.discoveryFilters = createDefaultDiscoveryFilters();
   state.discoveryPage = 1;
-  state.query = isExclusive ? "" : `${song.title} ${song.artist}`;
+  state.query = `${song.title} ${song.artist}`;
   removeSongShareParam(targetView);
   render();
   window.requestAnimationFrame?.(() => focusSongAction(song.id, "play"));
@@ -459,7 +447,7 @@ async function shareCurrentSong(song, button) {
   button.disabled = false;
   button.focus();
   if (result.status === "shared") showToast("Share sheet opened");
-  else if (result.status === "copied") showToast("KantaTayo song link copied");
+  else if (result.status === "copied") showToast("KantaCue song link copied");
   else if (result.status === "cancelled") showToast("Share cancelled");
   else if (result.status === "unavailable") showToast("Sharing is not available on this browser");
   else if (result.status === "failed") showToast("Could not copy the song link");
@@ -758,7 +746,7 @@ function clearQueueFromUi() {
   showToast("Queue cleared");
 }
 
-function advanceToNext() {
+function advanceToNext({ automatic = false } = {}) {
   const snapshot = getQueueSnapshot(state);
   const queuedNext = snapshot.currentIndex >= 0 ? snapshot.songs[snapshot.currentIndex + 1] : null;
   const recommendedNext = queuedNext ? null : getRecommendedNext(snapshot);
@@ -777,7 +765,7 @@ function advanceToNext() {
   if (result.currentSongId) syncPlayer(getQueueSnapshot(state));
   else if (result.status === "finished") { youtubeController?.stop(); showQueueFinished(getQueueSnapshot(state).total); }
   else { closePlayer(); }
-  showToast(result.status === "recommended" ? `${result.song.title} is next` : result.status === "finished" ? "Queue finished" : result.status === "empty" ? "Your queue is empty" : "Moved to the next song");
+  showToast(result.status === "recommended" ? `${result.song.title} is next` : result.status === "finished" ? "Queue finished" : result.status === "empty" ? "Your queue is empty" : automatic ? "Next queued song is playing" : "Moved to the next song");
 }
 
 function selectPrevious() {
@@ -851,7 +839,7 @@ function updateConnectionStatus() {
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
   navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch((error) => {
-    console.warn("[KantaTayo] Offline app shell could not be registered.", error);
+  console.warn("[KantaCue] Offline app shell could not be registered.", error);
   });
 }
 
@@ -872,14 +860,21 @@ function handleYouTubeStateChange(event) {
 function handleVideoEnded(videoId) {
   const snapshot = getQueueSnapshot(state);
   if (!snapshot.currentSong || snapshot.currentSong.youtubeVideoId !== videoId) return;
+  const queuedNext = snapshot.currentIndex >= 0 ? snapshot.songs[snapshot.currentIndex + 1] : null;
+  if (queuedNext) {
+    advanceToNext({ automatic: true });
+    return;
+  }
   playerFinishedSongId = snapshot.currentSong.id;
-  const nextSong = snapshot.currentIndex >= 0 ? snapshot.songs[snapshot.currentIndex + 1] || getRecommendedNext(snapshot) : getRecommendedNext(snapshot);
+  const nextSong = getRecommendedNext(snapshot);
   const nextType = snapshot.currentIndex >= 0 && snapshot.songs[snapshot.currentIndex + 1] ? "queued" : "recommended";
   showPlayerFinished({ nextSong, nextType });
 }
 
 function handleYouTubeError(details) {
-  console.warn("[KantaTayo YouTube] Playback error", details.code, details.videoId);
+  console.warn("[KantaCue YouTube] Playback error", details.code, details.videoId);
+  const currentSong = getQueueSnapshot(state).currentSong;
+  if (!currentSong || currentSong.youtubeVideoId !== details.videoId) return;
   showPlayerError({ code: details.code, development: isDevelopmentOrigin() });
 }
 
@@ -898,7 +893,7 @@ async function togglePlayerFullscreen() {
     else if (panel.webkitRequestFullscreen) panel.webkitRequestFullscreen();
     else { showToast("Full screen is not available here"); return; }
   } catch (error) {
-    console.info("[KantaTayo] Full screen was unavailable.", error);
+    console.info("[KantaCue] Full screen was unavailable.", error);
     showToast("Full screen was unavailable");
   }
   syncFullscreenButton();

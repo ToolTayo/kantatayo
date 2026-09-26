@@ -42,7 +42,7 @@ const VALID_REVIEW_STATUSES = new Set(["unresolved", "review-required", "quality
 export const QUALITY_EXCLUSION_STATUS = "quality-excluded";
 export const QUALITY_UNASSIGNMENT_PROVENANCE = "user-product-quality-decision";
 export const PARTY_TYME_CHANNEL_PATTERN = /\bparty\s+tyme\s+karaoke(?:\s+channel)?\b/i;
-export const PARTY_TYME_UNASSIGNMENT_REASON = "user quality decision — Party Tyme presentation does not meet the desired KantaTayo visual experience standard";
+export const PARTY_TYME_UNASSIGNMENT_REASON = "user quality decision — Party Tyme presentation does not meet the desired KantaCue visual experience standard";
 export const QUALITY_KARAOKE_PROVIDER_PATTERN = /\b(?:atomic karaoke|karaokeytv|zoom karaoke|karaoke media|sing king|my all time karaoke|easy karaoke|cc karaoke)\b/i;
 const BUILTIN_REVIEW_FLAGS = new Map();
 const SEARCH_POSITIVE_TERMS = ["karaoke", "instrumental", "backing track", "minus one", "sing along"];
@@ -2482,7 +2482,7 @@ function printUsage() {
 
 function printUsageWithQuery() {
   console.log([
-    "KantaTayo YouTube verification tool",
+    "KantaCue YouTube verification tool",
     "",
     "Commands:",
     "  node tools/verify-youtube.mjs VIDEO_ID [VIDEO_ID...]",

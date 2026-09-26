@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>KantaCue YouTube Candidate Tester</title>
+    <link rel="stylesheet" href="styles/candidate-tester.css?v=1" />
+    <script type="module" src="src/candidate-tester.js?v=1"></script>
+  </head>
+  <body>
+    <main class="tester-shell" data-tester-app hidden>
+      <header class="tester-header">
+        <div>
+          <p class="eyebrow">Local development tool</p>
+          <h1>Sing King embed candidate tester</h1>
+          <p>Uses KantaCue’s real YouTube controller. A technical PASS requires onReady, PLAYING, and 15 seconds of sustained playback.</p>
+        </div>
+        <span class="dev-badge">No catalog changes</span>
+      </header>
+
+      <section class="tester-player" aria-labelledby="tester-player-title">
+        <div class="tester-player-copy">
+          <p class="eyebrow">Current candidate</p>
+          <h2 id="tester-player-title" data-current-title>Choose a candidate</h2>
+          <p data-current-meta></p>
+          <p class="tester-status" data-status role="status" aria-live="polite">Select Test in player to begin.</p>
+          <p class="tester-quality" data-quality>Manual quality: not reviewed</p>
+          <div class="tester-actions">
+            <button type="button" data-action="next" class="primary-button">Next candidate</button>
+            <button type="button" data-action="quality" data-quality-value="good">Quality good</button>
+            <button type="button" data-action="quality" data-quality-value="poor">Poor quality</button>
+            <button type="button" data-action="quality" data-quality-value="guide-vocals">Guide vocals</button>
+            <button type="button" data-action="quality" data-quality-value="wrong-version">Wrong version</button>
+            <button type="button" data-action="quality" data-quality-value="other-problem">Other problem</button>
+          </div>
+        </div>
+        <div class="tester-player-frame" data-youtube-mount aria-label="Official YouTube candidate player"></div>
+      </section>
+
+      <section class="candidate-list-section" aria-labelledby="candidate-list-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Persisted playlist report</p>
+            <h2 id="candidate-list-title">35 new candidates</h2>
+          </div>
+          <p class="progress" data-progress>0 tested</p>
+        </div>
+        <p class="tester-help">Technical results and manual quality labels stay in this browser only. They are not approvals or promotions.</p>
+        <div class="candidate-table-wrap">
+          <table class="candidate-table">
+            <caption class="sr-only">Sing King candidate embed testing results</caption>
+            <thead><tr><th scope="col">Pos.</th><th scope="col">Song</th><th scope="col">Artist</th><th scope="col">Video ID</th><th scope="col">Views</th><th scope="col">Result</th><th scope="col">Action</th></tr></thead>
+            <tbody data-candidate-rows></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <main class="blocked-state" data-blocked-state hidden>
+      <p class="eyebrow">Development tool unavailable</p>
+      <h1>Open this tester on localhost.</h1>
+      <p>This page is intentionally limited to localhost, 127.0.0.1, or an explicit <code>?dev=1</code> development flag.</p>
+    </main>
+    <div class="tester-toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

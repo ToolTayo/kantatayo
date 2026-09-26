@@ -1,4 +1,4 @@
-# KantaTayo YouTube Quality Audit
+# KantaCue YouTube Quality Audit
 
 Generated: 2026-09-25T09:24:41.349Z
 Audited assignments: 151
@@ -224,4 +224,3 @@ Limitation: This audit did not listen to YouTube playback, inspect representativ
 - Alternatives considered:
   - `Feeva5IaB8U` — Spoliarium (Eraserheads) — KARAOKE MUSIC LOUNGE. NOT SELECTED — external karaoke reference only; not locally API-verified and no playback comparison.
   - `ak4nBfqG6Fk` — Spolarium - Eraserheads — YenJohn HD Karaoke. NOT SELECTED — external karaoke reference uses the same spelling variant; not locally API-verified and no playback comparison.
-

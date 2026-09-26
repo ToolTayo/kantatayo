@@ -55,6 +55,7 @@ a { color: inherit; text-decoration: none; }
 .brand { align-items: center; display: inline-flex; font-size: 1.1rem; font-weight: 800; letter-spacing: -.04em; gap: .65rem; }
 .brand > span:last-child span { color: var(--accent); }
 .brand-mark { align-items: center; background: var(--accent); border-radius: 10px; color: #101a11; display: inline-flex; font-size: .72rem; height: 2rem; justify-content: center; letter-spacing: -.08em; transform: rotate(-7deg); width: 2rem; }
+.brand-mark-svg { padding: .34rem; stroke: #101a11; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.3; }
 .queue-button { align-items: center; background: transparent; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); display: inline-flex; font-size: .78rem; font-weight: 750; gap: .45rem; padding: .55rem .75rem; }
 .queue-button:hover { background: var(--surface); border-color: rgba(166,243,111,.5); }
 .queue-count { align-items: center; background: var(--accent); border-radius: 50%; color: #121914; display: inline-flex; font-size: .68rem; height: 1.25rem; justify-content: center; min-width: 1.25rem; }

@@ -30,8 +30,8 @@ export async function shareSong(song, { navigatorRef = globalThis.navigator, loc
   const url = createSongShareUrl(song?.id, locationRef);
   if (!url || !song) return { status: "invalid", url: "" };
   const shareData = {
-    title: `${song.title} · KantaTayo`,
-    text: `Sing ${song.title} by ${song.artist} on KantaTayo.`,
+    title: `${song.title} · KantaCue`,
+    text: `Sing ${song.title} by ${song.artist} on KantaCue.`,
     url
   };
 
@@ -41,7 +41,7 @@ export async function shareSong(song, { navigatorRef = globalThis.navigator, loc
       return { status: "shared", url };
     } catch (error) {
       if (error?.name === "AbortError") return { status: "cancelled", url };
-      logger.info?.("[KantaTayo] Native share was unavailable; trying clipboard.", error);
+      logger.info?.("[KantaCue] Native share was unavailable; trying clipboard.", error);
     }
   }
 
@@ -50,7 +50,7 @@ export async function shareSong(song, { navigatorRef = globalThis.navigator, loc
     await navigatorRef.clipboard.writeText(url);
     return { status: "copied", url };
   } catch (error) {
-    logger.info?.("[KantaTayo] Clipboard share was unavailable.", error);
+    logger.info?.("[KantaCue] Clipboard share was unavailable.", error);
     return { status: "failed", url };
   }
 }

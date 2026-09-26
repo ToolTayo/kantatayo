@@ -79,7 +79,7 @@ test("a YouTube API replacement preserves the app-owned shell marker and display
       return null;
     }
   };
-  const panel = { querySelector(selector) { return selector === "[data-youtube-shell]" ? shell : placeholder; } };
+  const panel = { querySelector(selector) { return selector === "[data-youtube-shell]" ? shell : selector === "[data-player-placeholder]" ? placeholder : null; } };
 
   setPlayerEmbedVisible(panel, false);
   assert.equal(shell.hidden, false);

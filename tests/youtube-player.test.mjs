@@ -73,8 +73,8 @@ test("controller forwards the official player error code without changing the vi
 
 test("known YouTube embed errors stay distinct without exposing codes in production", () => {
   assert.match(uiSource, /100: \["This karaoke video is no longer available\./);
-  assert.match(uiSource, /101: \["This video cannot play inside KantaTayo\./);
-  assert.match(uiSource, /150: \["This video cannot play inside KantaTayo\./);
+  assert.match(uiSource, /101: \["This video cannot play inside KantaCue\./);
+  assert.match(uiSource, /150: \["This video cannot play inside KantaCue\./);
   assert.match(uiSource, /153: \["YouTube could not identify this playback request\./);
   assert.match(appSource, /showPlayerError\(\{ code: details\.code, development: isDevelopmentOrigin\(\) \}\)/);
   assert.match(uiSource, /development \? "Development detail: Error 153/);

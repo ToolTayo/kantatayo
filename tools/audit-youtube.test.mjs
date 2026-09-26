@@ -223,7 +223,7 @@ test("the production catalog audits all historical assignments exactly once and 
   const verification = JSON.parse(readFileSync("tools/youtube-verification.json", "utf8"));
   const report = auditPromotedAssignments(catalog, verification, { generatedAt: "2026-01-01T00:00:00.000Z" });
   const catalogIds = report.assignments.map((row) => row.catalogId);
-  assert.equal(catalog.length, 171);
+  assert.equal(catalog.length, 361);
   assert.equal(report.auditedCount, 151);
   assert.equal(new Set(catalogIds).size, 151);
   assert.equal(report.qualityUnassignmentCount, 0);

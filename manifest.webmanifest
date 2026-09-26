@@ -1,6 +1,6 @@
 {
-  "name": "KantaTayo",
-  "short_name": "KantaTayo",
+  "name": "KantaCue",
+  "short_name": "KantaCue",
   "description": "Discover your next karaoke song and keep your queue moving.",
   "start_url": "./",
   "scope": "./",

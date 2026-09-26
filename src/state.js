@@ -347,7 +347,7 @@ export function persistAppState(appState, options = {}) {
 
 export function validateUserState(value) {
   if (!isPlainObject(value) || value.version !== USER_STATE_VERSION) {
-    throw new Error("Unsupported KantaTayo user-state version.");
+    throw new Error("Unsupported KantaCue user-state version.");
   }
 
   const likedSongs = normalizeIdList(value.likedSongs);
@@ -377,7 +377,7 @@ export function validateUserState(value) {
 }
 
 function migrateUserState(value) {
-  if (!isPlainObject(value)) throw new Error("Stored KantaTayo user state is not an object.");
+  if (!isPlainObject(value)) throw new Error("Stored KantaCue user state is not an object.");
   if (value.version === USER_STATE_VERSION) return value;
 
   // Version 0 represents the pre-persistence shape. Keeping this branch makes
@@ -394,7 +394,7 @@ function migrateUserState(value) {
     };
   }
 
-  throw new Error(`Unsupported stored KantaTayo user-state version: ${value.version}`);
+  throw new Error(`Unsupported stored KantaCue user-state version: ${value.version}`);
 }
 
 function createDefaultPreferences() {

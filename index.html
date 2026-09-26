@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b0f1a" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="description" content="Discover your next karaoke song with KantaTayo." />
-    <title>KantaTayo — Your next song is waiting</title>
+    <meta name="description" content="Discover your next karaoke song with KantaCue." />
+    <title>KantaCue — Your next song is waiting</title>
+    <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=23" />
-    <script type="module" src="src/app.js?v=30"></script>
+    <link rel="stylesheet" href="styles/main.css?v=24" />
+    <script type="module" src="src/app.js?v=32"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
     <div class="app-shell">
       <header class="site-header">
         <div class="header-identity">
-          <a class="brand" href="#top" data-view="home" aria-label="KantaTayo home">
-            <span class="brand-mark" aria-hidden="true">KT</span>
-            <span>Kanta<span>Tayo</span></span>
+          <a class="brand" href="#top" data-view="home" aria-label="KantaCue home">
+            <svg class="brand-mark brand-mark-svg" aria-hidden="true" viewBox="0 0 64 64" focusable="false"><use href="assets/brand/kantacue-mark.svg#kantacue-mark"></use></svg>
+            <span>Kanta<span>Cue</span></span>
           </a>
           <span class="header-context">Your local karaoke companion</span>
         </div>
@@ -42,15 +44,15 @@
 
       <aside class="app-sidebar" aria-label="Primary navigation">
         <div class="sidebar-inner">
-          <a class="sidebar-brand" href="#top" data-view="home" aria-label="KantaTayo home">
-            <span class="brand-mark" aria-hidden="true">KT</span>
-            <span>Kanta<span>Tayo</span></span>
+          <a class="sidebar-brand" href="#top" data-view="home" aria-label="KantaCue home">
+            <svg class="brand-mark brand-mark-svg" aria-hidden="true" viewBox="0 0 64 64" focusable="false"><use href="assets/brand/kantacue-mark.svg#kantacue-mark"></use></svg>
+            <span>Kanta<span>Cue</span></span>
           </a>
           <p class="sidebar-label">Your night</p>
           <nav class="primary-nav">
             <a class="nav-link is-active" href="#top" data-filter="all" aria-pressed="true" aria-current="page"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3.5 10.5 8.5-7 8.5 7"></path><path d="M5.5 9.5v10h13v-10M9.5 19.5v-5h5v5"></path></svg><span>Home</span></a>
             <a class="nav-link" href="#discovery" data-filter="all" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="10.5" cy="10.5" r="6"></circle><path d="m15 15 5 5"></path></svg><span>Discover</span></a>
-            <a class="nav-link" href="#exclusive" data-view="exclusive" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"></path><path d="m18.5 16 .7 2.2 2.3.8-2.3.7-.7 2.3-.8-2.3-2.2-.7 2.2-.8.8-2.2Z"></path></svg><span>Exclusive</span></a>
+
             <a class="nav-link" href="#discovery" data-filter="favorites" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M12 19.5S4.5 15.2 4.5 9.3A3.8 3.8 0 0 1 12 7.4a3.8 3.8 0 0 1 7.5 1.9c0 5.9-7.5 10.2-7.5 10.2Z"></path></svg><span>Favorites</span></a>
             <a class="nav-link" href="#recent-title"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M5 7.5A8 8 0 1 1 4 14"></path><path d="M5 4v3.5h3.5M12 8v4l2.8 1.7"></path></svg><span>Recently sung</span></a>
             <button class="nav-link" type="button" data-action="toggle-party-mode"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"></path><path d="m18.5 16 .7 2.2 2.3.8-2.3.7-.7 2.3-.8-2.3-2.2-.7 2.2-.8.8-2.2Z"></path></svg><span>Party Mode</span></button>
@@ -205,7 +207,7 @@
 
         <section class="view-panel discover-view" data-view-panel="discover" hidden>
           <section class="content-area" id="discover" aria-labelledby="discover-title">
-            <div class="section-heading view-heading"><div><p class="eyebrow">Browse the catalog</p><h2 id="discover-title">Discover</h2><p class="section-lede">Browse the KantaTayo catalog. Use the quick filters to narrow the list without leaving this page.</p></div><p class="view-count" data-discover-count>0 songs</p></div>
+            <div class="section-heading view-heading"><div><p class="eyebrow">Browse the catalog</p><h2 id="discover-title">Discover</h2><p class="section-lede">Browse the KantaCue catalog. Use the quick filters to narrow the list without leaving this page.</p></div><p class="view-count" data-discover-count>0 songs</p></div>
             <div class="discover-controls">
               <div class="discovery-filters quick-filters" aria-label="Quick catalog filters" aria-describedby="discover-filter-guide">
                 <span class="filter-label">Quick filters</span><button type="button" class="chip is-active" data-filter="all" aria-pressed="true" title="Show all songs">All songs</button><button type="button" class="chip" data-filter="playable" aria-pressed="false" title="Show songs with a playable karaoke video">Playable now</button><button type="button" class="chip" data-filter="filipino" aria-pressed="false" title="Show Filipino and OPM songs">OPM</button><button type="button" class="chip" data-filter="english" aria-pressed="false" title="Show international and English songs">International</button><button type="button" class="chip" data-filter="easy" aria-pressed="false" title="Show easy songs">Easy</button><button type="button" class="chip" data-filter="medium" aria-pressed="false" title="Show medium-difficulty songs">Medium</button><button type="button" class="chip" data-filter="hard" aria-pressed="false" title="Show hard songs">Hard</button><button type="button" class="chip" data-filter="solo" aria-pressed="false" title="Show solo songs">Solo</button><button type="button" class="chip" data-filter="duet" aria-pressed="false" title="Show duet songs">Duet</button><button type="button" class="chip" data-filter="group" aria-pressed="false" title="Show group songs">Group</button>
@@ -243,16 +245,6 @@
         <section class="view-panel collection-view" data-view-panel="preferences" hidden>
           <section class="content-area" id="preferences" aria-labelledby="preferences-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Make it yours</p><h2 id="preferences-view-title">Preferences</h2><p class="section-lede">Optional signals for future song suggestions.</p></div></div><details class="preferences-panel preferences-section" data-preferences-panel open><summary><span class="preferences-title">Your preferences</span><span class="preferences-summary" data-preferences-summary>No preferences yet</span></summary><div class="preferences-body" data-preferences-content></div></details></section>
         </section>
-        <section class="view-panel collection-view exclusive-view" data-view-panel="exclusive" hidden>
-          <section class="content-area" id="exclusive" aria-labelledby="exclusive-view-title">
-            <div class="section-heading view-heading">
-              <div><p class="eyebrow">A special set for tonight</p><h2 id="exclusive-view-title">Exclusive</h2><p class="section-lede">A small hand-picked collection of public karaoke videos from Sing King Karaoke.</p></div>
-              <p class="view-count" data-exclusive-count>0 songs</p>
-            </div>
-            <div class="song-grid catalog-grid" data-grid="exclusive"></div>
-            <div class="empty-state" data-exclusive-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>Exclusive songs are unavailable right now</strong><p>Refresh the page to try loading this collection again.</p></div></div>
-          </section>
-        </section>
       </main>
 
       <aside class="queue-drawer" id="queue-drawer" data-queue-drawer role="dialog" aria-modal="true" aria-label="Karaoke queue" aria-hidden="true">
@@ -281,8 +273,7 @@
         <button class="mini-player-close" type="button" data-action="close-player" aria-label="Close now singing player">×</button>
       </div>
       <nav class="mobile-more-menu" id="mobile-more-menu" data-mobile-more hidden aria-label="More destinations">
-        <a href="#exclusive" data-view="exclusive"><span aria-hidden="true">✦</span><span>Exclusive</span></a>
-        <button type="button" data-action="install-app" class="mobile-install-action" hidden>Install KantaTayo</button>
+        <button type="button" data-action="install-app" class="mobile-install-action" hidden>Install KantaCue</button>
         <a href="#discovery" data-view="favorites"><span aria-hidden="true">♡</span><span>Favorites</span></a>
         <a href="#recent-title" data-view="recent"><span aria-hidden="true">↺</span><span>Recently sung</span></a>
         <a href="#preferences-panel" data-view="preferences"><span aria-hidden="true">☷</span><span>Preferences</span></a>

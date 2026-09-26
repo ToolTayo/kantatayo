@@ -41,23 +41,6 @@ function renderLocalCollections(allSongs, userState, interactionState, selectedC
   if (empty) empty.hidden = songs.length > 0;
 }
 
-export function renderExclusiveView(songs = [], userState = {}) {
-  const target = document.querySelector('[data-grid="exclusive"]');
-  const empty = document.querySelector("[data-exclusive-empty]");
-  const count = document.querySelector("[data-exclusive-count]");
-  if (!target) return;
-  const interactionState = {
-    favoriteIds: new Set((userState.favorites || []).map((id) => String(id).toLowerCase())),
-    likedIds: new Set((userState.likedSongs || []).map((id) => String(id).toLowerCase())),
-    dislikedIds: new Set((userState.dislikedSongs || []).map((id) => String(id).toLowerCase()))
-  };
-  const playableSongs = (Array.isArray(songs) ? songs : []).filter((song) => isValidYouTubeVideoId(song?.youtubeVideoId));
-  target.innerHTML = playableSongs.map((song) => renderSongCard(song, interactionState, { reason: "Exclusive · Sing King Karaoke" })).join("");
-  target.hidden = playableSongs.length === 0;
-  if (empty) empty.hidden = playableSongs.length > 0;
-  if (count) count.textContent = `${playableSongs.length} song${playableSongs.length === 1 ? "" : "s"}`;
-}
-
 function updateViewPanels(view) {
   document.body.dataset.view = view;
   document.querySelectorAll("[data-view-panel]").forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== view; });
@@ -522,9 +505,9 @@ export function showPlayerError({ code = null, development = false } = {}) {
   const numericCode = Number(code);
   const messages = {
     100: ["This karaoke video is no longer available.", "Try another queued song or choose a different karaoke pick."],
-    101: ["This video cannot play inside KantaTayo.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
-    150: ["This video cannot play inside KantaTayo.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
-    153: ["YouTube could not identify this playback request.", development ? "Development detail: Error 153. Serve KantaTayo from HTTP/HTTPS with its normal referrer policy, then retry." : "Refresh the page or try another karaoke pick."]
+    101: ["This video cannot play inside KantaCue.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
+    150: ["This video cannot play inside KantaCue.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
+    153: ["YouTube could not identify this playback request.", development ? "Development detail: Error 153. Serve KantaCue from HTTP/HTTPS with its normal referrer policy, then retry." : "Refresh the page or try another karaoke pick."]
   };
   const [message, detail] = messages[numericCode] || ["This karaoke video could not be played.", "You can try the next song, choose another queued song, or close the player."];
   if (status) status.textContent = message;
@@ -558,7 +541,7 @@ export function showPlayerFinished({ nextSong = null, nextType = "recommended" }
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
   panel.querySelector("[data-player-status]").textContent = "Song complete. Your next choice is ready.";
-  panel.querySelector("[data-player-note]").textContent = "KantaTayo waits for your explicit choice before starting another video.";
+  panel.querySelector("[data-player-note]").textContent = "KantaCue waits for your explicit choice before starting another video.";
   updateMiniPlayerStatus("Song complete");
   updatePlayerNext(nextSong, nextType);
   setPlayerCompletion(true, "Nice one", nextSong ? "Mark it as sung, then keep the queue moving." : "Mark it as sung or choose another song from discovery.");
@@ -599,7 +582,7 @@ export function updatePlayerActions(song, userState = {}) {
   }
   share.forEach((button) => {
     button.dataset.songId = song.id;
-    button.setAttribute("aria-label", `Share ${song.title} by ${song.artist} on KantaTayo`);
+    button.setAttribute("aria-label", `Share ${song.title} by ${song.artist} on KantaCue`);
   });
 }
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" role="img" aria-labelledby="kantacue-logo-title">
+  <title id="kantacue-logo-title">KantaCue</title>
+  <defs>
+    <symbol id="kantacue-mark" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.5">
+        <path d="M11 10v44M11 32 29.5 13M11 32l18.5 19" />
+        <path d="M53 16a22 22 0 1 0 0 32" />
+        <path stroke-width="4.5" d="M37 28v8h6" />
+      </g>
+    </symbol>
+  </defs>
+  <use href="#kantacue-mark" width="64" height="64" />
+  <text x="76" y="41" fill="currentColor" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="28" font-weight="750" letter-spacing="-1.4">Kanta<tspan fill="#a6f36f">Cue</tspan></text>
+</svg>

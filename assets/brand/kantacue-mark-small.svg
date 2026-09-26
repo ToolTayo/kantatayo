@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="kantacue-mark-small-title">
+  <title id="kantacue-mark-small-title">KantaCue mark</title>
+  <g id="kantacue-mark-small" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.75">
+    <path d="M11 10v44M11 32 29.5 13M11 32l18.5 19" />
+    <path d="M53 16a22 22 0 1 0 0 32" />
+    <path stroke-width="5.25" d="M35 25v14h8" />
+  </g>
+</svg>
