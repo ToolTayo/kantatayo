@@ -147,8 +147,10 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=21/);
-  assert.match(html, /app\.js\?v=28/);
+  assert.match(html, /main\.css\?v=23/);
+  assert.match(html, /app\.js\?v=30/);
+  assert.match(html, /data-view-panel="exclusive"/);
+  assert.match(html, /data-grid="exclusive"/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);
@@ -159,6 +161,11 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(ui, /data-mini-player/);
   assert.match(app, /action === "clear-search"/);
   assert.match(app, /action === "open-player"/);
+  assert.match(app, /EXCLUSIVE_CATALOG_URL/);
+  assert.match(app, /shareCurrentSong/);
+  assert.match(app, /handleIncomingSongLink/);
+  assert.match(ui, /renderExclusiveView/);
+  assert.match(ui, /data-player-share/);
 });
 
 function createMemoryStorage(initial = {}) {

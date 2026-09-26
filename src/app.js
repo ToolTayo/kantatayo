@@ -1,14 +1,16 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=21";
-import { loadCatalog } from "./catalog.js?v=1";
+import { focusSongAction, hidePlayer, renderExclusiveView, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=23";
+import { EXCLUSIVE_CATALOG_URL, loadCatalog } from "./catalog.js?v=2";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
 import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
 import { addPartySinger, assignPartySong, clearPartyAssignments, clearPartySession, getAssignedSinger, getNextPartySinger, recordPartyTurn, reconcilePartyQueue, relaxRouletteConstraints, removePartySinger, renamePartySinger, selectRouletteSong, unassignPartySong } from "./party.js?v=1";
-import { normalizeView, viewFromHash, viewHash } from "./view.js";
+import { normalizeView, viewFromHash, viewHash } from "./view.js?v=2";
 import { containFocus } from "./focus.js";
-import { getDailyChallenge } from "./engagement.js?v=3";
+import { getDailyChallenge } from "./engagement.js?v=4";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
+import { createInstallController } from "./install.js";
+import { parseSongShareId, shareSong } from "./share.js";
 
 const state = createAppState();
 let youtubeController = null;
@@ -23,11 +25,27 @@ let partyStatusMessage = "Party details stay on this device.";
 let currentView = viewFromHash(window.location.hash);
 let playerFinishedSongId = null;
 let selectedCollectionId = getFeaturedCollectionId();
+let exclusiveSongs = [];
+let installController = null;
 
 async function startApp() {
   try {
+    installController = createInstallController({
+      windowRef: window,
+      buttons: document.querySelectorAll('[data-action="install-app"]'),
+      onStatus: showToast
+    });
     const catalog = await loadCatalog();
-    setCatalog(state, catalog.songs, createSearchIndex(catalog.songs));
+    let exclusiveCatalog = { songs: [] };
+    try {
+      exclusiveCatalog = await loadCatalog(EXCLUSIVE_CATALOG_URL);
+    } catch (error) {
+      console.warn("[KantaTayo] Exclusive collection could not be loaded.", error);
+    }
+    const primaryIds = new Set(catalog.songs.map((song) => song.id.toLowerCase()));
+    exclusiveSongs = exclusiveCatalog.songs.filter((song) => !primaryIds.has(song.id.toLowerCase()));
+    const allSongs = [...catalog.songs, ...exclusiveSongs];
+    setCatalog(state, allSongs, createSearchIndex(catalog.songs));
     if (currentView === "party" && !state.user.partySession.enabled) state.user.partySession.enabled = true;
     refreshRecommendationsSnapshot();
     youtubeController = createYouTubePlayerController({
@@ -41,6 +59,7 @@ async function startApp() {
     render();
     bindEvents();
     registerServiceWorker();
+    handleIncomingSongLink();
   } catch (error) {
     console.error(error);
     document.querySelector("[data-catalog-loading]")?.remove();
@@ -55,6 +74,7 @@ function render({ refreshRecommendations = false } = {}) {
   if (loading) loading.hidden = true;
   renderPreferences(state.songs, state.user.preferences);
   renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId);
+  renderExclusiveView(exclusiveSongs, state.user);
   renderSongRequests(state.user);
   const searchInput = document.querySelector("#song-search");
   if (searchInput && searchInput.value !== state.query) searchInput.value = state.query;
@@ -66,7 +86,7 @@ function render({ refreshRecommendations = false } = {}) {
 }
 
 function refreshRecommendationsSnapshot() {
-  recommendationSnapshot = getRecommendations(state.songs, state.user, { limit: 12 });
+  recommendationSnapshot = getRecommendations(state.searchIndex.map((entry) => entry.song), state.user, { limit: 12 });
   if (recommendationSnapshot.length > 0) {
     const changed = setRecentRecommendations(state.user, recommendationSnapshot.map((item) => item.song.id));
     if (changed) persistAppState(state);
@@ -143,6 +163,11 @@ function bindEvents() {
       render({ refreshRecommendations: true });
       actionTarget.focus();
       showToast("Preferences cleared");
+      return;
+    }
+    if (action === "share-song") {
+      const song = state.songs.find((item) => item.id === actionTarget.dataset.songId);
+      void shareCurrentSong(song, actionTarget);
       return;
     }
     if (action === "clear-search") {
@@ -395,6 +420,49 @@ function getLegacyNavView(target) {
   if (href === "#recent-title") return "recent";
   if (href === "#preferences-panel") return "preferences";
   return "";
+}
+
+function handleIncomingSongLink() {
+  const sharedId = parseSongShareId(window.location);
+  if (!sharedId) return;
+  const song = state.songs.find((item) => item.id.toLowerCase() === sharedId.toLowerCase());
+  const isExclusive = song && exclusiveSongs.some((item) => item.id.toLowerCase() === song.id.toLowerCase());
+  const targetView = isExclusive ? "exclusive" : "discover";
+  if (!song) {
+    removeSongShareParam(currentView);
+    showToast("That shared song is no longer available.");
+    return;
+  }
+  currentView = targetView;
+  state.filter = "all";
+  state.discoveryFilters = createDefaultDiscoveryFilters();
+  state.discoveryPage = 1;
+  state.query = isExclusive ? "" : `${song.title} ${song.artist}`;
+  removeSongShareParam(targetView);
+  render();
+  window.requestAnimationFrame?.(() => focusSongAction(song.id, "play"));
+  showToast(`${song.title} is ready to sing`);
+}
+
+function removeSongShareParam(view) {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("song");
+  url.hash = viewHash(view);
+  window.history.replaceState(null, "", url.toString());
+  setViewHash(view);
+}
+
+async function shareCurrentSong(song, button) {
+  if (!song) return;
+  button.disabled = true;
+  const result = await shareSong(song, { navigatorRef: window.navigator, locationRef: window.location });
+  button.disabled = false;
+  button.focus();
+  if (result.status === "shared") showToast("Share sheet opened");
+  else if (result.status === "copied") showToast("KantaTayo song link copied");
+  else if (result.status === "cancelled") showToast("Share cancelled");
+  else if (result.status === "unavailable") showToast("Sharing is not available on this browser");
+  else if (result.status === "failed") showToast("Could not copy the song link");
 }
 
 function handleSongAction(action, song, { fromPlayer = false } = {}) {
@@ -812,7 +880,12 @@ function handleVideoEnded(videoId) {
 
 function handleYouTubeError(details) {
   console.warn("[KantaTayo YouTube] Playback error", details.code, details.videoId);
-  showPlayerError();
+  showPlayerError({ code: details.code, development: isDevelopmentOrigin() });
+}
+
+function isDevelopmentOrigin() {
+  const hostname = window.location.hostname;
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
 }
 
 async function togglePlayerFullscreen() {

@@ -58,15 +58,20 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=21"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=28"/);
-  assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=3"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=23"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=30"/);
+  assert.match(serviceWorker, /"\.\/src\/catalog\.js\?v=2"/);
+  assert.match(serviceWorker, /"\.\/src\/view\.js\?v=2"/);
+  assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=4"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=21"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=23"/);
   assert.match(serviceWorker, /"\.\/src\/state\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v37"/);
+  assert.match(serviceWorker, /"\.\/data\/songs\.exclusive\.json\?v=1"/);
+  assert.match(serviceWorker, /"\.\/src\/install\.js"/);
+  assert.match(serviceWorker, /"\.\/src\/share\.js"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v42"/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);
   assert.match(serviceWorker, /request\.mode === "navigate"/);
   assert.match(serviceWorker, /key\.startsWith\(CACHE_PREFIX\)/);

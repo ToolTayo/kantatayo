@@ -11,6 +11,7 @@
  */
 
 export const DEFAULT_CATALOG_URL = "data/songs.sample.json?v=1";
+export const EXCLUSIVE_CATALOG_URL = "data/songs.exclusive.json?v=1";
 
 const DIFFICULTIES = new Set(["easy", "medium", "hard"]);
 const VOCAL_RANGES = new Set(["low", "medium", "high"]);

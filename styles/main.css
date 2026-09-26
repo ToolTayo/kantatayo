@@ -429,6 +429,7 @@ h1 { font-weight: 850; text-wrap: balance; }
 .skip-link:focus { top: .75rem !important; }
 
 .site-header { align-items: center; background: rgba(7, 10, 18, .9); border-bottom: 1px solid var(--line); display: grid; gap: 1rem; grid-template-columns: auto minmax(0, 1fr) auto; margin: 0; max-width: none; min-height: 4.5rem; padding: .75rem 1rem; position: sticky; top: 0; z-index: 15; backdrop-filter: blur(18px); }
+.header-actions { align-items: center; display: flex; gap: .45rem; justify-self: end; min-width: 0; }
 .header-identity { min-width: 0; }
 .header-context { color: var(--subtle); font-size: .68rem; }
 .topbar-search { align-items: center; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 11px; display: flex; gap: .65rem; justify-self: center; max-width: 36rem; min-height: 2.7rem; padding: .25rem .35rem .25rem .7rem; width: 100%; }
@@ -440,6 +441,7 @@ h1 { font-weight: 850; text-wrap: balance; }
 .search-clear { background: transparent; border: 0; color: var(--muted); font-size: 1.15rem; line-height: 1; min-height: 2rem; min-width: 2rem; padding: 0; }
 .search-clear:hover { color: var(--ink); }
 .queue-button { gap: .45rem; min-height: 2.7rem; white-space: nowrap; }
+.install-button { border: 1px solid var(--line-strong); border-radius: 999px; color: var(--accent); min-height: 2.7rem; padding: .45rem .7rem; white-space: nowrap; }
 
 .app-sidebar { display: none !important; }
 .mobile-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -516,7 +518,7 @@ h1 { font-weight: 850; text-wrap: balance; }
   .mini-player-copy span:last-child { color: var(--subtle); }
   .mini-player-open { color: var(--accent); font-size: 1.1rem; margin-left: auto; }
   .mini-player-close { align-items: center; background: transparent; border: 0; border-left: 1px solid var(--line); color: var(--muted); display: inline-flex; font-size: 1.1rem; justify-content: center; min-width: 2.6rem; }
-  .player-panel { background: #0b101c; border: 0; border-radius: 0; bottom: 0; left: 0; max-height: 100vh; padding: 1rem; right: 0; top: 0; z-index: 26; }
+  .player-panel { background: #0b101c; border: 0; border-radius: 0; bottom: 0; left: 0; max-height: 100vh; max-width: none; padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); right: 0; top: 0; width: 100%; z-index: 26; }
   .player-panel:not(.is-expanded) { display: none; }
   .player-panel.is-expanded { display: block; }
 }
@@ -525,7 +527,7 @@ h1 { font-weight: 850; text-wrap: balance; }
   .site-header { grid-template-columns: minmax(0, 1fr) auto; margin-left: 15rem; padding-left: 2rem; padding-right: 2rem; }
   .site-header .header-identity { display: none; }
   .topbar-search { grid-column: 1; justify-self: start; max-width: 42rem; }
-  .queue-button { grid-column: 2; }
+  .header-actions { grid-column: 2; }
   .app-sidebar { background: #0a0f1b; border-right: 1px solid var(--line-strong); bottom: 0; display: flex !important; flex-direction: column; left: 0; padding: 1.5rem 1rem; position: fixed; top: 0; width: 15rem; z-index: 20; }
   .sidebar-inner { display: flex; flex-direction: column; height: 100%; }
   .sidebar-brand { align-items: center; color: var(--ink); display: inline-flex; font-size: 1.08rem; font-weight: 850; gap: .6rem; letter-spacing: -.04em; margin: .1rem .55rem 2.1rem; }
@@ -767,7 +769,9 @@ body { line-height: 1.45; }
 .mobile-more-menu { align-items: stretch; background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: var(--radius-md); bottom: calc(4.55rem + env(safe-area-inset-bottom)); box-shadow: var(--shadow-premium); display: grid; gap: .3rem; left: .65rem; padding: .45rem; position: fixed; right: .65rem; z-index: 19; }
 .mobile-more-menu[hidden] { display: none; }
 .mobile-more-menu a { align-items: center; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); display: flex; gap: .65rem; min-height: var(--control-height); padding: .55rem .7rem; }
+.mobile-more-menu button { align-items: center; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-secondary); display: flex; font: inherit; gap: .65rem; min-height: var(--control-height); padding: .55rem .7rem; text-align: left; }
 .mobile-more-menu a:hover, .mobile-more-menu a:focus-visible, .mobile-more-menu a.is-active { background: var(--brand-lime-soft); border-color: rgba(163, 242, 99, .24); color: var(--text-primary); }
+.mobile-more-menu button:hover, .mobile-more-menu button:focus-visible { background: var(--brand-lime-soft); border-color: rgba(163, 242, 99, .24); color: var(--text-primary); }
 .mobile-more-menu a span:first-child { color: var(--brand-lime); font-size: 1.1rem; width: 1.2rem; }
 .mobile-nav [data-action="toggle-mobile-more"].is-active { color: var(--brand-lime); }
 
@@ -923,6 +927,43 @@ body { line-height: 1.45; }
   .song-card::before,
   .mobile-nav-link {
     transition: none;
+  }
+}
+
+/* Shared stage atmosphere: one quiet visual identity across every view. */
+.app-shell {
+  background: var(--bg-base);
+  isolation: isolate;
+  position: relative;
+}
+
+.app-shell::before {
+  background:
+    linear-gradient(180deg, rgba(8, 11, 16, .78) 0%, rgba(8, 11, 16, .58) 34%, rgba(8, 11, 16, .84) 100%),
+    url("../assets/kantatayo-stage-bg.png") center top / cover no-repeat;
+  content: "";
+  inset: 0;
+  opacity: .56;
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+.app-main {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 619px) {
+  .app-shell::before {
+    background-position: 58% top;
+    opacity: .48;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app-shell::before {
+    opacity: .28;
   }
 }
 

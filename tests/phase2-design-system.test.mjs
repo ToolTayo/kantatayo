@@ -39,8 +39,12 @@ test("sparse shelves keep bounded card tracks and shared 16:9 media sizing", () 
   assert.match(css, /@media \(max-width: 619px\)[\s\S]*?\.song-card\s*\{[\s\S]*?max-width:\s*none/);
 });
 
+test("mobile player clears the tablet max-width and includes safe-area padding", () => {
+  assert.match(css, /@media \(max-width: 799px\)[\s\S]*?\.player-panel \{[\s\S]*?max-width:\s*none;[\s\S]*?padding:[^;]*env\(safe-area-inset-bottom\)[^;]*;[\s\S]*?width:\s*100%;/);
+});
+
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=21/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=21"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v37"/);
+  assert.match(index, /styles\/main\.css\?v=23/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=23"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantatayo-shell-v42"/);
 });

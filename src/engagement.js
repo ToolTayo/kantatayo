@@ -98,7 +98,7 @@ export function getRecentlyAddedSongs(songs = [], limit = 4) {
     .slice(0, Math.max(0, Number(limit) || 4));
 }
 
-export function getTrendingSongs(songs = [], userState = {}, limit = 4) {
+export function getMostSungSongs(songs = [], userState = {}, limit = 4) {
   const catalog = (Array.isArray(songs) ? songs : []).filter(isPlayableSong);
   const history = Array.isArray(userState.sungHistory) ? userState.sungHistory : [];
   const historyCount = new Map();
@@ -112,13 +112,22 @@ export function getTrendingSongs(songs = [], userState = {}, limit = 4) {
     const key = song.id.toLowerCase();
     return {
       song,
-      score: (historyCount.get(key) || 0) * 4 + (favorites.has(key) ? 2 : 0) + (likes.has(key) ? 1 : 0)
+      sungCount: historyCount.get(key) || 0,
+      favoriteSignal: favorites.has(key) ? 1 : 0,
+      likeSignal: likes.has(key) ? 1 : 0
     };
-  }).filter((item) => item.score > 0);
-  return scored.sort((left, right) => right.score - left.score || left.song.title.localeCompare(right.song.title))
+  }).filter((item) => item.sungCount > 0);
+  return scored.sort((left, right) => right.sungCount - left.sungCount
+    || right.favoriteSignal - left.favoriteSignal
+    || right.likeSignal - left.likeSignal
+    || left.song.title.localeCompare(right.song.title)
+    || left.song.id.localeCompare(right.song.id))
     .slice(0, Math.max(0, Number(limit) || 4))
     .map((item) => item.song);
 }
+
+// Keep the old helper name as a compatibility alias for callers from earlier steps.
+export const getTrendingSongs = getMostSungSongs;
 
 export function getLocalStats(songs = [], userState = {}, options = {}) {
   const byId = new Map((Array.isArray(songs) ? songs : []).map((song) => [song.id.toLowerCase(), song]));

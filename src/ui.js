@@ -3,7 +3,7 @@ import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryP
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getRecentlyAddedSongs, getTrendingSongs } from "./engagement.js?v=3";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs } from "./engagement.js?v=4";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 
 const homeSectionOrder = ["continue", "recommended", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
@@ -41,6 +41,23 @@ function renderLocalCollections(allSongs, userState, interactionState, selectedC
   if (empty) empty.hidden = songs.length > 0;
 }
 
+export function renderExclusiveView(songs = [], userState = {}) {
+  const target = document.querySelector('[data-grid="exclusive"]');
+  const empty = document.querySelector("[data-exclusive-empty]");
+  const count = document.querySelector("[data-exclusive-count]");
+  if (!target) return;
+  const interactionState = {
+    favoriteIds: new Set((userState.favorites || []).map((id) => String(id).toLowerCase())),
+    likedIds: new Set((userState.likedSongs || []).map((id) => String(id).toLowerCase())),
+    dislikedIds: new Set((userState.dislikedSongs || []).map((id) => String(id).toLowerCase()))
+  };
+  const playableSongs = (Array.isArray(songs) ? songs : []).filter((song) => isValidYouTubeVideoId(song?.youtubeVideoId));
+  target.innerHTML = playableSongs.map((song) => renderSongCard(song, interactionState, { reason: "Exclusive · Sing King Karaoke" })).join("");
+  target.hidden = playableSongs.length === 0;
+  if (empty) empty.hidden = playableSongs.length > 0;
+  if (count) count.textContent = `${playableSongs.length} song${playableSongs.length === 1 ? "" : "s"}`;
+}
+
 function updateViewPanels(view) {
   document.body.dataset.view = view;
   document.querySelectorAll("[data-view-panel]").forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== view; });
@@ -71,7 +88,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   const sections = getHomeShelves(allSongs, recommendations, userState);
   sections.continue = getContinueSingingSongs(allSongs, userState);
   sections.recentlyAdded = getRecentlyAddedSongs(allSongs);
-  sections.trending = getTrendingSongs(allSongs, userState);
+  sections.trending = getMostSungSongs(allSongs, userState);
   const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
   const personalized = hasMeaningfulUserSignals(userState);
   const homeCopy = {
@@ -83,7 +100,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
     popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
     recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
-    trending: { title: "Trending in KantaTayo", lede: "Based only on activity saved on this device." },
+    trending: { title: "Most sung on this device", lede: "Based on Sang It completions saved on this device." },
     opm: { title: "Popular OPM", lede: "Filipino favorites for the next round." },
     international: { title: "International hits", lede: "Familiar English songs made for a sing-along." },
     easy: { title: "Easy wins", lede: "Comfortable picks when you want a confident chorus." },
@@ -497,12 +514,22 @@ export function showPlayerOffline() {
   setPlayerEmbedVisible(panel, false);
 }
 
-export function showPlayerError() {
+export function showPlayerError({ code = null, development = false } = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
-  panel.querySelector("[data-player-status]").textContent = "This karaoke video could not be played.";
-  panel.querySelector("[data-player-note]").textContent = "You can try the next song, choose another queued song, or close the player.";
-  updateMiniPlayerStatus("Couldn’t play video");
+  const status = panel.querySelector("[data-player-status]");
+  const note = panel.querySelector("[data-player-note]");
+  const numericCode = Number(code);
+  const messages = {
+    100: ["This karaoke video is no longer available.", "Try another queued song or choose a different karaoke pick."],
+    101: ["This video cannot play inside KantaTayo.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
+    150: ["This video cannot play inside KantaTayo.", "YouTube has disabled embedding for this video. Try another karaoke pick."],
+    153: ["YouTube could not identify this playback request.", development ? "Development detail: Error 153. Serve KantaTayo from HTTP/HTTPS with its normal referrer policy, then retry." : "Refresh the page or try another karaoke pick."]
+  };
+  const [message, detail] = messages[numericCode] || ["This karaoke video could not be played.", "You can try the next song, choose another queued song, or close the player."];
+  if (status) status.textContent = message;
+  if (note) note.textContent = detail;
+  updateMiniPlayerStatus(numericCode === 100 ? "Video unavailable" : "Couldn’t play video");
   setPlayerEmbedVisible(panel, false);
 }
 
@@ -557,6 +584,7 @@ export function updatePlayerActions(song, userState = {}) {
   const isFavorite = (userState.favorites || []).some((id) => id.toLowerCase() === songId);
   const isSung = (userState.sungHistory || []).some((entry) => entry.id?.toLowerCase() === songId);
   const favorite = panel.querySelectorAll("[data-player-favorite], [data-player-completion-favorite]");
+  const share = panel.querySelectorAll("[data-player-share]");
   const sang = panel.querySelector("[data-player-sang]");
   favorite.forEach((button) => {
     button.dataset.songId = song.id;
@@ -569,6 +597,10 @@ export function updatePlayerActions(song, userState = {}) {
     sang.textContent = isSung ? "Sang it ✓" : "Sang it";
     sang.setAttribute("aria-label", isSung ? `${song.title} is already in sung history` : `Mark ${song.title} as sung`);
   }
+  share.forEach((button) => {
+    button.dataset.songId = song.id;
+    button.setAttribute("aria-label", `Share ${song.title} by ${song.artist} on KantaTayo`);
+  });
 }
 
 export function setPlayerFeedback(visible) {

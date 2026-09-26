@@ -1,19 +1,20 @@
 const CACHE_PREFIX = "kantatayo-";
-const CACHE_NAME = "kantatayo-shell-v37";
+const CACHE_NAME = "kantatayo-shell-v42";
 const INDEX_URL = new URL("./index.html", self.location.href).href;
 const APP_SHELL_URLS = [
   "./",
   "./index.html",
   "./styles/main.css",
-  "./styles/main.css?v=21",
+  "./styles/main.css?v=23",
   "./src/app.js",
-  "./src/app.js?v=28",
+  "./src/app.js?v=30",
   "./src/catalog.js?v=1",
+  "./src/catalog.js?v=2",
   "./src/catalog.js",
   "./src/discovery.js",
   "./src/discovery.js?v=4",
   "./src/engagement.js",
-  "./src/engagement.js?v=3",
+  "./src/engagement.js?v=4",
   "./src/daily-challenge.js?v=2",
   "./src/daily-challenge.js",
   "./src/collections.js",
@@ -26,18 +27,24 @@ const APP_SHELL_URLS = [
   "./src/state.js?v=5",
   "./src/storage.js",
   "./src/ui.js",
-  "./src/ui.js?v=21",
+  "./src/ui.js?v=23",
+  "./src/install.js",
+  "./src/share.js",
   "./src/focus.js",
   "./src/utils.js",
   "./src/view.js",
+  "./src/view.js?v=2",
   "./src/youtube.js",
   "./data/songs.sample.json",
   "./data/songs.sample.json?v=1",
+  "./data/songs.exclusive.json",
+  "./data/songs.exclusive.json?v=1",
   "./manifest.webmanifest",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/icon-192.svg",
-  "./assets/icon-512.svg"
+  "./assets/icon-512.svg",
+  "./assets/kantatayo-stage-bg.png"
 ];
 const APP_SHELL_PATHS = new Set(APP_SHELL_URLS.map((path) => new URL(path, self.location.href).pathname));
 

@@ -8,6 +8,7 @@
 const YOUTUBE_API_URL = "https://www.youtube.com/iframe_api";
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const API_TIMEOUT_MS = 15000;
+export const YOUTUBE_REFERRER_POLICY = "strict-origin-when-cross-origin";
 
 let apiPromise = null;
 let apiWindow = null;
@@ -85,6 +86,7 @@ export function createYouTubePlayerController({
   let lastEndedVideoId = null;
   let pendingLoad = null;
   let requestNumber = 0;
+  let iframeObserver = null;
 
   async function load(videoId, { autoplay = true } = {}) {
     const normalizedId = typeof videoId === "string" ? videoId.trim() : "";
@@ -103,6 +105,7 @@ export function createYouTubePlayerController({
       if (requestId !== requestNumber) return { ok: false, reason: "stale-request" };
 
       if (!player) {
+        watchPlayerIframe();
         player = new api.Player(container, {
           width: "100%",
           height: "100%",
@@ -129,6 +132,7 @@ export function createYouTubePlayerController({
             }
           }
         });
+        applyPlayerIframePolicy();
       } else if (!playerReady) {
         pendingLoad = { requestId, videoId: normalizedId, autoplay };
       } else {
@@ -177,6 +181,8 @@ export function createYouTubePlayerController({
     lastEndedVideoId = null;
     pendingLoad = null;
     playerReady = false;
+    iframeObserver?.disconnect?.();
+    iframeObserver = null;
     try { player?.destroy?.(); } catch (error) { logger.info?.("[KantaTayo YouTube] Player destroy was unavailable.", error); }
     player = null;
   }
@@ -188,11 +194,42 @@ export function createYouTubePlayerController({
     isReady: () => playerReady,
     getCurrentVideoId: () => currentVideoId
   };
+
+  function applyPlayerIframePolicy() {
+    const iframe = container?.querySelector?.("iframe");
+    if (!iframe) return false;
+    iframe.setAttribute?.("referrerpolicy", YOUTUBE_REFERRER_POLICY);
+    try { iframe.referrerPolicy = YOUTUBE_REFERRER_POLICY; } catch {}
+    return true;
+  }
+
+  function watchPlayerIframe() {
+    if (applyPlayerIframePolicy() || iframeObserver || !container) return;
+    const Observer = windowRef?.MutationObserver;
+    if (!Observer) return;
+    iframeObserver = new Observer(() => {
+      if (applyPlayerIframePolicy()) {
+        iframeObserver?.disconnect?.();
+        iframeObserver = null;
+      }
+    });
+    iframeObserver.observe?.(container, { childList: true, subtree: true });
+  }
 }
 
-function buildPlayerVars(windowRef) {
+export function buildPlayerVars(windowRef = globalThis.window) {
   const origin = windowRef?.location?.origin;
-  const playerVars = { controls: 1, playsinline: 1, rel: 0 };
-  if (origin && origin !== "null" && /^https?:$/.test(windowRef.location.protocol)) playerVars.origin = origin;
+  const protocol = windowRef?.location?.protocol;
+  const playerVars = { controls: 1, enablejsapi: 1, playsinline: 1, rel: 0 };
+  if (typeof origin === "string" && origin !== "null" && (protocol === "http:" || protocol === "https:") && isHttpOrigin(origin)) playerVars.origin = origin;
   return playerVars;
+}
+
+function isHttpOrigin(value) {
+  try {
+    const parsed = new URL(value);
+    return (parsed.protocol === "http:" || parsed.protocol === "https:") && parsed.origin === value;
+  } catch {
+    return false;
+  }
 }

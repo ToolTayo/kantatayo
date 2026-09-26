@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getRecentlyAddedSongs, getStreakStats, getTrendingSongs } from "../src/engagement.js";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs, getStreakStats } from "../src/engagement.js";
 import { completeDailyChallenge, createDefaultUserState, loadUserState, recordSongPlayed, saveUserState } from "../src/state.js";
 
 const songs = JSON.parse(await readFile(new URL("../data/songs.sample.json", import.meta.url), "utf8"));
@@ -38,14 +38,21 @@ test("continue singing combines recent plays and sung history without duplicate 
   assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[0].id]);
 });
 
-test("recently added shelf follows appended catalog order and trending waits for real local activity", () => {
+test("recently added shelf follows appended catalog order and most-sung waits for real local activity", () => {
   const recent = getRecentlyAddedSongs(songs, 3);
   assert.equal(recent.length, 3);
   assert.equal(recent[0].id, "sample-190");
   const state = createDefaultUserState();
-  assert.deepEqual(getTrendingSongs(songs, state), []);
+  assert.deepEqual(getMostSungSongs(songs, state), []);
   state.favorites = [playable[0].id];
-  assert.deepEqual(getTrendingSongs(songs, state, 1).map((song) => song.id), [playable[0].id]);
+  state.likedSongs = [playable[1].id];
+  assert.deepEqual(getMostSungSongs(songs, state), []);
+  state.sungHistory = [
+    { id: playable[1].id, sungAt: "2026-09-25T02:00:00Z" },
+    { id: playable[0].id, sungAt: "2026-09-25T01:00:00Z" },
+    { id: playable[1].id, sungAt: "2026-09-24T02:00:00Z" }
+  ];
+  assert.deepEqual(getMostSungSongs(songs, state, 2).map((song) => song.id), [playable[1].id, playable[0].id]);
 });
 
 test("local stats remain derived from history and survive state persistence", () => {

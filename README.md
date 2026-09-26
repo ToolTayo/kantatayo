@@ -6,6 +6,18 @@ YouTube IDs must be verified separately before they are added to the production 
 
 The sample catalog intentionally uses null YouTube IDs, so the app shows a friendly unavailable-video state during normal development. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
 
+## Exclusive collection
+
+The optional [data/songs.exclusive.json](data/songs.exclusive.json) collection is kept separate from the 171-song production catalog. It contains a small set of manually inspected public karaoke pages from Sing King Karaoke and is shown on the dedicated `#exclusive` page using the same validated song-card, queue, and official YouTube player flow. The collection does not use the YouTube Data API, store media, or change the production catalog count.
+
+## Sharing, installation, and local popularity
+
+The player’s Share song action creates a same-origin KantaTayo deep link such as `?song=sample-029#top`. It uses the browser Web Share API when available and copies the link to the clipboard otherwise. Shared links contain only the stable internal song ID, never a YouTube video ID. A valid link surfaces the song without counting it as played until the user explicitly opens it.
+
+KantaTayo captures `beforeinstallprompt` only when the browser exposes an actionable install flow. The Install app action stays hidden in browsers that cannot install the PWA and in standalone mode; installation is never triggered automatically. iOS-specific instructions are intentionally omitted because browser detection is not reliable enough to present them truthfully.
+
+The Home shelf is named **Most sung on this device**. It appears only after local `Sang it` history exists and ranks songs by actual local completion count, with deterministic favorite/like/title tie-breakers. It is not global popularity. **Crowd favorites** remains the separate catalog-demand shelf and does not use device history as a substitute for demand evidence.
+
 ## Karaoke demand signals
 
 The catalog includes a small, transparent `demandTier` signal for songs supported by current karaoke-play evidence. The runtime uses only the tier (`very-high`, `high`, or `established`); source URLs, ranking positions, and methodology are kept separately in [data/song-demand.json](data/song-demand.json). Demand is a weak cold-start prior, not proof that a song has a suitable YouTube karaoke video. It never bypasses catalog validation, technical verification, Party Tyme exclusion, or the existing personalization and repetition rules.
