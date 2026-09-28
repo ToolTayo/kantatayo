@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs, getStreakStats } from "../src/engagement.js";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getQualifyingSungHistory, getRecentlyAddedSongs, getStreakStats } from "../src/engagement.js";
 import { completeDailyChallenge, createDefaultUserState, loadUserState, recordSongPlayed, saveUserState } from "../src/state.js";
 
 const songs = JSON.parse(await readFile(new URL("../data/songs.sample.json", import.meta.url), "utf8"));
 const playable = songs.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || ""));
+const filipinoSong = playable.find((song) => song.language.toLowerCase() === "filipino");
+const englishSong = playable.find((song) => song.language.toLowerCase() === "english");
+const unavailableSong = songs.find((song) => !song.youtubeVideoId);
+const atLocalDay = (day, hour = 12) => new Date(2026, 8, day, hour).toISOString();
 
 test("daily challenge is deterministic, playable, and local-date based", () => {
   const userState = createDefaultUserState();
@@ -63,11 +67,12 @@ test("local stats remain derived from history and survive state persistence", ()
   ];
   const challengeSong = songs.find((song) => song.youtubeVideoId);
   completeDailyChallenge(state, "2026-09-25", challengeSong.id, { now: new Date(2026, 8, 25), expectedSongId: challengeSong.id });
-  const stats = getLocalStats(songs, state, { now: new Date(2026, 8, 25) });
+  const stats = getLocalStats(songs, state, { now: new Date(2026, 8, 25, 23) });
   assert.equal(stats.songsSung, 2);
   assert.equal(stats.opm, 1);
   assert.equal(stats.international, 1);
-  assert.equal(stats.currentStreak, 1);
+  assert.equal(stats.currentStreak, 2);
+  assert.equal(stats.longestStreak, 2);
 
   const storage = new Map();
   const adapter = { getItem: (key) => storage.get(key) || null, setItem: (key, value) => storage.set(key, value), removeItem: (key) => storage.delete(key) };
@@ -85,4 +90,71 @@ test("malformed engagement fields degrade safely during migration", () => {
   assert.deepEqual(state.recentlyPlayed, []);
   assert.deepEqual(state.dailyChallenge.completedDates, []);
   assert.deepEqual(state.favorites, ["sample-001"]);
+});
+
+test("local stats start empty and ignore malformed, future, unknown, and unavailable history", () => {
+  const state = createDefaultUserState();
+  state.favorites = [filipinoSong.id, filipinoSong.id, "deleted-song"];
+  state.sungHistory = [
+    { id: unavailableSong.id, sungAt: atLocalDay(25) },
+    { id: "deleted-song", sungAt: atLocalDay(25) },
+    { id: filipinoSong.id, sungAt: atLocalDay(26) },
+    { id: filipinoSong.id, sungAt: atLocalDay(26) },
+    { id: filipinoSong.id, sungAt: atLocalDay(27) },
+    { id: filipinoSong.id, sungAt: atLocalDay(28) },
+    { id: filipinoSong.id, sungAt: atLocalDay(28) },
+    { id: englishSong.id, sungAt: "not-a-date" },
+    { id: englishSong.id, sungAt: atLocalDay(30) }
+  ];
+  const stats = getLocalStats(songs, state, { now: new Date(2026, 8, 28, 23) });
+  assert.equal(stats.songsSung, 3);
+  assert.equal(stats.favorites, 1);
+  assert.equal(stats.opm, 3);
+  assert.equal(stats.international, 0);
+  assert.equal(stats.currentStreak, 3);
+  assert.equal(stats.longestStreak, 3);
+  assert.deepEqual(stats.topArtists[0], { artist: filipinoSong.artist, count: 3 });
+});
+
+test("favorite statistics follow the current favorite list", () => {
+  const state = createDefaultUserState();
+  state.favorites = [filipinoSong.id];
+  assert.equal(getLocalStats(songs, state).favorites, 1);
+  state.favorites = [];
+  assert.equal(getLocalStats(songs, state).favorites, 0);
+});
+
+test("singing activity creates calendar streaks independently of Daily Challenge completion", () => {
+  const state = createDefaultUserState();
+  state.sungHistory = [
+    { id: filipinoSong.id, sungAt: atLocalDay(20) },
+    { id: englishSong.id, sungAt: atLocalDay(21) },
+    { id: filipinoSong.id, sungAt: atLocalDay(21, 21) },
+    { id: filipinoSong.id, sungAt: atLocalDay(23) }
+  ];
+
+  const day21 = getLocalStats(songs, state, { now: new Date(2026, 8, 21, 23) });
+  assert.equal(day21.songsSung, 3);
+  assert.equal(day21.currentStreak, 2);
+  assert.equal(day21.longestStreak, 2);
+
+  const afterMissedDay = getLocalStats(songs, state, { now: new Date(2026, 8, 23, 23) });
+  assert.equal(afterMissedDay.currentStreak, 1);
+  assert.equal(afterMissedDay.longestStreak, 2);
+  assert.equal(afterMissedDay.opm, 3);
+  assert.equal(afterMissedDay.international, 1);
+});
+
+test("duplicate completion callbacks do not double-count one persisted event", () => {
+  const state = createDefaultUserState();
+  state.sungHistory = [
+    { id: filipinoSong.id, sungAt: atLocalDay(25) },
+    { id: filipinoSong.id, sungAt: atLocalDay(25) },
+    { id: filipinoSong.id, sungAt: atLocalDay(25, 1) }
+  ];
+  const qualifying = getQualifyingSungHistory(songs, state, { now: new Date(2026, 8, 25, 23) });
+  const stats = getLocalStats(songs, state, { now: new Date(2026, 8, 25, 23) });
+  assert.equal(qualifying.length, 2);
+  assert.equal(stats.songsSung, 2);
+  assert.equal(stats.currentStreak, 1);
 });

@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=26";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=27";
 import { loadCatalog } from "./catalog.js?v=2";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
 import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
@@ -7,7 +7,7 @@ import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_ST
 import { addPartySinger, assignPartySong, clearPartyAssignments, clearPartySession, getAssignedSinger, getNextPartySinger, recordPartyTurn, reconcilePartyQueue, relaxRouletteConstraints, removePartySinger, renamePartySinger, selectRouletteSong, unassignPartySong } from "./party.js?v=1";
 import { normalizeView, viewFromHash, viewHash } from "./view.js?v=2";
 import { containFocus } from "./focus.js";
-import { getDailyChallenge } from "./engagement.js?v=4";
+import { getDailyChallenge } from "./engagement.js?v=5";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
 import { createInstallController } from "./install.js";
 import { parseSongShareId, shareSong } from "./share.js";
@@ -27,6 +27,7 @@ let playerFinishedSongId = null;
 let selectedCollectionId = getFeaturedCollectionId();
 let installController = null;
 let queueConfirmReturnFocus = null;
+let lastPlaybackErrorSongId = null;
 
 async function startApp() {
   try {
@@ -475,22 +476,32 @@ function handleSongAction(action, song, { fromPlayer = false } = {}) {
     const active = toggleDislike(state.user, song.id);
     message = active ? "Marked as not for me" : "Not for me removed";
   } else {
-    const result = markSung(state.user, song.id);
-    changed = result.added;
-    if (result.added) {
-      const challenge = getDailyChallenge(state.songs, state.user);
-      if (challenge.song?.id?.toLowerCase() === song.id.toLowerCase()) {
-        const completed = completeDailyChallenge(state.user, challenge.dateKey, song.id, { expectedSongId: challenge.song.id });
-        if (completed) message = "Marked as sung · daily challenge complete";
+    // Sang It is the explicit completion signal. It is never inferred from
+    // opening, queueing, or a failed/unavailable player session.
+    if (action === "mark-sung" && !isValidYouTubeVideoId(song.youtubeVideoId)) {
+      changed = false;
+      message = "This song has no playable karaoke video yet";
+    } else if (action === "mark-sung" && lastPlaybackErrorSongId?.toLowerCase() === song.id.toLowerCase()) {
+      changed = false;
+      message = "Finish a working playback before marking this song as sung";
+    } else {
+      const result = markSung(state.user, song.id);
+      changed = result.added;
+      if (result.added) {
+        const challenge = getDailyChallenge(state.songs, state.user);
+        if (challenge.song?.id?.toLowerCase() === song.id.toLowerCase()) {
+          const completed = completeDailyChallenge(state.user, challenge.dateKey, song.id, { expectedSongId: challenge.song.id });
+          if (completed) message = "Marked as sung · daily challenge complete";
+        }
       }
+      if (result.added && state.user.partySession.enabled) {
+        syncPartyQueueAssignments();
+        const assignedSinger = getAssignedSinger(state.user.partySession, song.id);
+        recordPartyTurn(state.user.partySession, song.id, assignedSinger?.id);
+        partyStatusMessage = "Party turn counted.";
+      }
+      message ||= result.added ? "Marked as sung" : "Already marked as sung just now";
     }
-    if (result.added && state.user.partySession.enabled) {
-      syncPartyQueueAssignments();
-      const assignedSinger = getAssignedSinger(state.user.partySession, song.id);
-      recordPartyTurn(state.user.partySession, song.id, assignedSinger?.id);
-      partyStatusMessage = "Party turn counted.";
-    }
-    message ||= result.added ? "Marked as sung" : "Already marked as sung just now";
   }
   if (changed) {
     persistAppState(state);
@@ -702,6 +713,7 @@ function removeFromQueue(songId) {
 function startSong(song, launcher = null) {
   rememberPlayerLauncher(launcher);
   playerFinishedSongId = null;
+  lastPlaybackErrorSongId = null;
   addSongToQueue(state.user, song.id);
   recordSongPlayed(state.user, song.id);
   if (state.user.partySession.enabled && !getAssignedSinger(state.user.partySession, song.id)) assignPartySong(state.user.partySession, song.id);
@@ -734,6 +746,7 @@ function replayCurrentSong() {
     return;
   }
   playerFinishedSongId = null;
+  lastPlaybackErrorSongId = null;
   syncPlayer(getQueueSnapshot(state));
   showToast(currentSong.title + " is playing again");
 }
@@ -834,6 +847,7 @@ function syncPlayer(snapshot, { reloadVideo = true } = {}) {
   const nextSong = snapshot.currentIndex >= 0 ? snapshot.songs[snapshot.currentIndex + 1] || getRecommendedNext(snapshot) : getRecommendedNext(snapshot);
   const nextType = snapshot.currentIndex >= 0 && snapshot.songs[snapshot.currentIndex + 1] ? "queued" : "recommended";
   if (playerFinishedSongId && playerFinishedSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) playerFinishedSongId = null;
+  if (lastPlaybackErrorSongId && lastPlaybackErrorSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) lastPlaybackErrorSongId = null;
   showPlayer(snapshot.currentSong, {
     position: snapshot.position,
     total: snapshot.total,
@@ -921,6 +935,7 @@ function handleYouTubeError(details) {
   console.warn("[KantaCue YouTube] Playback error", details.code, details.videoId);
   const currentSong = getQueueSnapshot(state).currentSong;
   if (!currentSong || currentSong.youtubeVideoId !== details.videoId) return;
+  lastPlaybackErrorSongId = currentSong.id;
   showPlayerError({ code: details.code, development: isDevelopmentOrigin() });
 }
 

@@ -3,7 +3,7 @@ import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryP
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs } from "./engagement.js?v=4";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs } from "./engagement.js?v=5";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 
 const homeSectionOrder = ["continue", "recommended", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
@@ -164,6 +164,7 @@ function renderHomeEngagement(allSongs, userState) {
   const stats = getLocalStats(allSongs, userState);
   const statsCard = document.querySelector("[data-local-stats]");
   if (!statsCard) return;
+  statsCard.hidden = false;
   const set = (name, value) => {
     const target = statsCard.querySelector(`[data-stat="${name}"]`);
     if (target) target.textContent = value;
@@ -173,7 +174,7 @@ function renderHomeEngagement(allSongs, userState) {
   set("streak", stats.currentStreak > 0 ? formatDayCount(stats.currentStreak) : "No streak yet");
   set("longest", stats.longestStreak > 0 ? formatDayCount(stats.longestStreak) : "No streak yet");
   set("split", `${stats.opm} OPM · ${stats.international} Intl`);
-  set("artists", stats.topArtists.length ? stats.topArtists.map((item) => `${item.artist} (${item.count})`).join(" · ") : "No artists yet");
+  set("artists", stats.topArtists.length ? `Most sung: ${stats.topArtists.map((item) => `${item.artist} (${item.count})`).join(" · ")}` : "No artists yet");
 }
 
 function formatDayCount(value) {

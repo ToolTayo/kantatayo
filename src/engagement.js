@@ -100,11 +100,10 @@ export function getRecentlyAddedSongs(songs = [], limit = 4) {
 
 export function getMostSungSongs(songs = [], userState = {}, limit = 4) {
   const catalog = (Array.isArray(songs) ? songs : []).filter(isPlayableSong);
-  const history = Array.isArray(userState.sungHistory) ? userState.sungHistory : [];
   const historyCount = new Map();
-  history.forEach((entry) => {
-    const id = typeof entry?.id === "string" ? entry.id.toLowerCase() : "";
-    if (id) historyCount.set(id, (historyCount.get(id) || 0) + 1);
+  getQualifyingSungHistory(songs, userState).forEach(({ song }) => {
+    const id = song.id.toLowerCase();
+    historyCount.set(id, (historyCount.get(id) || 0) + 1);
   });
   const favorites = new Set((userState.favorites || []).map((id) => String(id).toLowerCase()));
   const likes = new Set((userState.likedSongs || []).map((id) => String(id).toLowerCase()));
@@ -129,26 +128,77 @@ export function getMostSungSongs(songs = [], userState = {}, limit = 4) {
 // Keep the old helper name as a compatibility alias for callers from earlier steps.
 export const getTrendingSongs = getMostSungSongs;
 
+/**
+ * A sung-history entry is a qualifying local completion only when it points
+ * to a current playable catalog record, has a valid timestamp, and is not in
+ * the future. Exact duplicate callbacks are ignored for derived statistics,
+ * while separate later performances of the same song still count.
+ */
+export function getQualifyingSungHistory(songs = [], userState = {}, options = {}) {
+  const catalog = Array.isArray(songs) ? songs : [];
+  const byId = new Map(catalog
+    .filter((song) => typeof song?.id === "string")
+    .map((song) => [song.id.toLowerCase(), song]));
+  const now = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  const nowMs = now.getTime();
+  if (Number.isNaN(nowMs)) return [];
+  const seen = new Set();
+
+  return (Array.isArray(userState.sungHistory) ? userState.sungHistory : [])
+    .map((entry) => {
+      const id = typeof entry?.id === "string" ? entry.id.trim().toLowerCase() : "";
+      const sungAt = typeof entry?.sungAt === "string" ? Date.parse(entry.sungAt) : NaN;
+      return { entry, id, sungAt };
+    })
+    .filter(({ id, sungAt }) => id && Number.isFinite(sungAt) && sungAt <= nowMs && isPlayableSong(byId.get(id)))
+    .filter(({ id, sungAt }) => {
+      const duplicateKey = `${id}|${sungAt}`;
+      if (seen.has(duplicateKey)) return false;
+      seen.add(duplicateKey);
+      return true;
+    })
+    .map(({ entry, id, sungAt }) => ({
+      entry,
+      song: byId.get(id),
+      sungAt,
+      dateKey: getLocalDateKey(new Date(sungAt))
+    }));
+}
+
 export function getLocalStats(songs = [], userState = {}, options = {}) {
-  const byId = new Map((Array.isArray(songs) ? songs : []).map((song) => [song.id.toLowerCase(), song]));
-  const history = Array.isArray(userState.sungHistory) ? userState.sungHistory : [];
+  const catalog = Array.isArray(songs) ? songs : [];
+  const byId = new Map(catalog
+    .filter((song) => typeof song?.id === "string")
+    .map((song) => [song.id.toLowerCase(), song]));
+  const requestedNow = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  const now = Number.isNaN(requestedNow.getTime()) ? new Date() : requestedNow;
+  const history = getQualifyingSungHistory(catalog, userState, { now });
   const artists = new Map();
   let opm = 0;
   let international = 0;
-  history.forEach((entry) => {
-    const song = byId.get(String(entry?.id || "").toLowerCase());
-    if (!song) return;
-    const artistKey = song.artist.trim();
-    artists.set(artistKey, (artists.get(artistKey) || 0) + 1);
+  history.forEach(({ song }) => {
+    const artistKey = typeof song.artist === "string" ? song.artist.trim() : "";
+    if (artistKey) artists.set(artistKey, (artists.get(artistKey) || 0) + 1);
     if (String(song.language).toLowerCase() === "filipino") opm += 1;
     if (String(song.language).toLowerCase() === "english") international += 1;
   });
-  const dateKey = getLocalDateKey(options.now || new Date());
-  const streak = getStreakStats(userState.dailyChallenge?.completedDates, dateKey);
+  const dateKey = getLocalDateKey(now);
+  const activityDates = new Set(history.map(({ dateKey: sungDate }) => sungDate).filter(isValidDateKey));
+  // Keep older Daily Challenge completions meaningful even if they predate
+  // sungHistory retention. They are already explicit completion events.
+  (Array.isArray(userState.dailyChallenge?.completedDates) ? userState.dailyChallenge.completedDates : [])
+    .filter((value) => isValidDateKey(value) && value <= dateKey)
+    .forEach((value) => activityDates.add(value));
+  const streak = getStreakStats([...activityDates], dateKey);
+  const favoriteIds = new Set();
+  (Array.isArray(userState.favorites) ? userState.favorites : []).forEach((id) => {
+    const key = typeof id === "string" ? id.trim().toLowerCase() : "";
+    if (key && byId.has(key)) favoriteIds.add(key);
+  });
   return {
     songsSung: history.length,
-    uniqueSongsSung: new Set(history.map((entry) => String(entry?.id || "").toLowerCase()).filter(Boolean)).size,
-    favorites: Array.isArray(userState.favorites) ? userState.favorites.length : 0,
+    uniqueSongsSung: new Set(history.map(({ song }) => song.id.toLowerCase())).size,
+    favorites: favoriteIds.size,
     currentStreak: streak.currentStreak,
     longestStreak: streak.longestStreak,
     opm,

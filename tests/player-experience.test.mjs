@@ -55,6 +55,12 @@ test("Sang It uses durable history and the existing duplicate guard", () => {
   assert.match(css, /\.player-completion\.is-celebration/);
 });
 
+test("Sang It cannot record unavailable or recently failed playback", () => {
+  assert.match(app, /action === "mark-sung" && !isValidYouTubeVideoId\(song\.youtubeVideoId\)/);
+  assert.match(app, /lastPlaybackErrorSongId/);
+  assert.match(app, /Finish a working playback before marking this song as sung/);
+});
+
 test("queued next song remains the first explicit next target", () => {
   const state = createDefaultUserState();
   addSongToQueue(state, "sample-001");
