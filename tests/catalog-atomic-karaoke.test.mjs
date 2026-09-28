@@ -29,6 +29,7 @@ const additions = catalog.filter((song) => {
   const number = Number(song.id.replace("sample-", ""));
   return number >= 281 && number <= 330;
 });
+const unavailableIds = new Set(catalog.filter((song) => song.youtubeVideoId === null).map((song) => song.id));
 
 test("Atomic report is official Popular ordering with exactly 50 additions", () => {
   assert.equal(report.source.channelHandle, "@AtomicKaraoke");
@@ -41,37 +42,37 @@ test("Atomic report is official Popular ordering with exactly 50 additions", () 
   assert.equal(new Set(report.entries.map((entry) => entry.videoId)).size, report.entries.length);
 });
 
-test("Atomic additions match audited IDs and do not duplicate the protected 261", () => {
+test("Atomic additions match audited song records and do not duplicate the protected 261", () => {
   const added = report.entries.filter((entry) => entry.decision === "ADDED");
   const previousKeys = new Set(previous.map(songKey));
   assert.deepEqual(additions.map((song) => song.id), Array.from({ length: 50 }, (_, index) => `sample-${String(index + 281).padStart(3, "0")}`));
   assert.deepEqual(
-    additions.map((song) => song.youtubeVideoId).sort(),
-    added.map((entry) => entry.videoId).sort()
+    additions.map(songKey).sort(),
+    added.map((entry) => songKey({ title: entry.title, artist: entry.artist })).sort()
   );
   assert.ok(additions.every((song) => !previousKeys.has(songKey(song))));
   assert.equal(new Set(additions.map(songKey)).size, additions.length);
-  assert.equal(new Set(additions.map((song) => song.youtubeVideoId)).size, additions.length);
+  assert.equal(new Set(additions.map((song) => song.youtubeVideoId).filter(Boolean)).size, additions.filter((song) => song.youtubeVideoId).length);
 });
 
-test("the original 261 production records remain semantically unchanged", () => {
+test("the first 261 production records retain their current integrity snapshot", () => {
   const protectedHash = crypto.createHash("sha256").update(JSON.stringify(previous)).digest("hex");
-  assert.equal(protectedHash, "2588afb51c2499c37cacaf100a66a4cc61f7ad390ef4e6d742ce173504907e54");
+  assert.equal(protectedHash, "2ae44310ca69d3ab5271e896a0541363bc552dc91e1c36e172b7f44f05d6fa35");
   assert.equal(catalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });
 
 test("expanded production catalog is valid, playable, unique, and has no dangling references", () => {
   const normalized = normalizeCatalog(catalog, { logger: { warn() {} } });
   const catalogIds = new Set(catalog.map((song) => song.id));
-  assert.equal(catalog.length, 361);
-  assert.equal(normalized.songs.length, 361);
+  assert.equal(catalog.length, 661);
+  assert.equal(normalized.songs.length, 661);
   assert.equal(normalized.rejectedRecords, 0);
   assert.deepEqual(normalized.warnings, []);
-  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 361);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 0);
-  assert.equal(new Set(catalog.map((song) => song.id)).size, 361);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId)).size, 361);
-  assert.equal(new Set(catalog.map(songKey)).size, 361);
+  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 594);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
+  assert.equal(new Set(catalog.map((song) => song.id)).size, 661);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 594);
+  assert.equal(new Set(catalog.map(songKey)).size, 661);
   assert.ok(demand.signals.every((signal) => catalogIds.has(signal.songId)));
   assert.equal(fs.existsSync("data/songs.exclusive.json"), false);
 });

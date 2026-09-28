@@ -222,9 +222,9 @@ test("roulette stress preserves user state and handles zero and one-song pools",
   assert.ok(candidates.every((song) => song.youtubeVideoId && !userState.queue.includes(song.id) && song.id !== userState.currentSongId && !userState.dislikedSongs.includes(song.id)));
   assert.deepEqual(userState, before);
   assert.deepEqual(getRouletteCandidates(catalog, userState, { language: "spanish" }), []);
-  const oneSongFolkCatalog = catalog.filter((song) => song.id === "sample-016");
-  assert.deepEqual(getRouletteCandidates(oneSongFolkCatalog, userState, { genre: "folk" }).map((song) => song.id), ["sample-016"]);
-  assert.equal(selectRouletteSong(oneSongFolkCatalog, userState, { genre: "folk" })?.id, "sample-016");
+  const oneSongFolkCatalog = [catalog.find((song) => song.youtubeVideoId && String(song.genre).toLowerCase() === "folk")];
+  assert.deepEqual(getRouletteCandidates(oneSongFolkCatalog, userState, { genre: "folk" }).map((song) => song.id), [oneSongFolkCatalog[0].id]);
+  assert.equal(selectRouletteSong(oneSongFolkCatalog, userState, { genre: "folk" })?.id, oneSongFolkCatalog[0].id);
 });
 
 test("roulette relaxation preserves language when possible and never returns unavailable songs", () => {

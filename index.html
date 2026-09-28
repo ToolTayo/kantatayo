@@ -6,12 +6,22 @@
     <meta name="theme-color" content="#0b0f1a" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="description" content="Discover your next karaoke song with KantaCue." />
+    <meta name="application-name" content="KantaCue" />
+    <link rel="canonical" href="https://kantacue.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="KantaCue" />
+    <meta property="og:title" content="KantaCue — Your next song is waiting" />
+    <meta property="og:description" content="Discover karaoke songs, build a queue, and keep your singing night moving." />
+    <meta property="og:url" content="https://kantacue.vercel.app/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="KantaCue — Your next song is waiting" />
+    <meta name="twitter:description" content="Discover karaoke songs, build a queue, and keep your singing night moving." />
     <title>KantaCue — Your next song is waiting</title>
     <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=24" />
-    <script type="module" src="src/app.js?v=32"></script>
+    <link rel="stylesheet" href="styles/main.css?v=28" />
+    <script type="module" src="src/app.js?v=33"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -247,12 +257,25 @@
         </section>
       </main>
 
-      <aside class="queue-drawer" id="queue-drawer" data-queue-drawer role="dialog" aria-modal="true" aria-label="Karaoke queue" aria-hidden="true">
-        <div class="drawer-header"><div><p class="eyebrow">Up next</p><h2>Your queue</h2></div><button class="icon-button" type="button" data-action="toggle-queue" aria-label="Close singing queue" title="Close singing queue">×</button></div>
-        <div class="queue-content" data-queue-content role="list"></div>
-        <div class="drawer-footer"><button class="text-button" type="button" data-action="clear-queue">Clear queue</button><span data-queue-summary>0 songs</span></div>
+      <aside class="queue-drawer" id="queue-drawer" data-queue-drawer role="dialog" aria-modal="true" aria-labelledby="queue-title" aria-describedby="queue-description" aria-hidden="true">
+        <div class="drawer-header"><div class="queue-heading"><span class="queue-heading-mark" aria-hidden="true">♫</span><div><p class="eyebrow">Up next</p><h2 id="queue-title">Your queue</h2><p class="queue-header-count" data-queue-header-count>0 songs ready</p></div></div><button class="icon-button" type="button" data-action="toggle-queue" aria-label="Close singing queue" title="Close singing queue">×</button></div>
+        <p class="sr-only" id="queue-description">Songs in the order they will play. Select a song to start singing, or use the reorder controls to change its place.</p>
+        <div class="queue-content" data-queue-content role="list" aria-label="Songs in your karaoke queue"></div>
+        <div class="drawer-footer"><div class="queue-footer-copy"><strong data-queue-summary>0 songs ready</strong><span>Saved on this device</span></div><button class="text-button queue-clear-button" type="button" data-action="clear-queue" disabled>Clear queue</button></div>
       </aside>
       <div class="drawer-backdrop" data-action="toggle-queue" aria-hidden="true"></div>
+
+      <dialog class="queue-confirm-dialog" data-queue-confirm aria-labelledby="queue-confirm-title" aria-describedby="queue-confirm-copy">
+        <form class="queue-confirm-card" method="dialog">
+          <p class="eyebrow">Queue management</p>
+          <h2 id="queue-confirm-title">Clear queue?</h2>
+          <p id="queue-confirm-copy" data-queue-confirm-copy>Remove all songs from your queue?</p>
+          <div class="queue-confirm-actions">
+            <button class="add-button" type="button" data-action="cancel-clear-queue">Keep queue</button>
+            <button class="danger-button" type="button" data-action="confirm-clear-queue">Clear queue</button>
+          </div>
+        </form>
+      </dialog>
 
       <div class="player-panel" data-player-panel hidden role="region" aria-label="Now singing">
         <div class="player-header"><div class="player-heading"><p class="eyebrow">Now singing</p><h2 id="player-title" data-player-title>Select a song to begin</h2><p data-player-artist class="muted">Select a queued song to begin.</p><p data-player-position class="player-position"></p><p data-player-meta class="player-meta"></p></div><div class="player-header-actions"><button class="icon-button" type="button" data-action="expand-player" aria-label="Expand player" title="Expand player" aria-expanded="false">↗</button><button class="icon-button" type="button" data-action="fullscreen-player" aria-label="Full screen player" title="Full screen player">⛶</button><button class="icon-button" type="button" data-action="close-player" aria-label="Close player" title="Close player">×</button></div></div>

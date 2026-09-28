@@ -27,8 +27,8 @@ test("candidate tester uses the persisted 35 NEW CANDIDATE report", async () => 
 
 test("tester additions do not alter the primary catalog", async () => {
   const songs = JSON.parse(await read("data/songs.sample.json"));
-  assert.equal(songs.length, 361);
-  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 361);
-  assert.equal(songs.filter((song) => !song.youtubeVideoId).length, 0);
+  assert.equal(songs.length, 661);
+  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 594);
+  assert.equal(songs.filter((song) => !song.youtubeVideoId).length, 67);
   assert.equal(songs.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });

@@ -79,9 +79,9 @@ test("fallback recommendation candidates are playable and excluded from the acti
 });
 
 test("player interactions do not alter catalog assignments or protected songs", () => {
-  assert.equal(songs.length, 361);
-  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 361);
-  assert.equal(songs.filter((song) => song.youtubeVideoId === null).length, 0);
+  assert.equal(songs.length, 661);
+  assert.equal(songs.filter((song) => song.youtubeVideoId).length, 594);
+  assert.equal(songs.filter((song) => song.youtubeVideoId === null).length, 67);
   assert.equal(songs.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
   assert.doesNotMatch(app, /YOUTUBE_API_KEY|youtubeDataApi|apiKey/i);
   assert.doesNotMatch(serviceWorker, /youtube\.com|ytimg\.com/i);

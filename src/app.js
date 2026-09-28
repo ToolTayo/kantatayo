@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=25";
+import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=26";
 import { loadCatalog } from "./catalog.js?v=2";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
 import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
@@ -26,6 +26,7 @@ let currentView = viewFromHash(window.location.hash);
 let playerFinishedSongId = null;
 let selectedCollectionId = getFeaturedCollectionId();
 let installController = null;
+let queueConfirmReturnFocus = null;
 
 async function startApp() {
   try {
@@ -193,7 +194,9 @@ function bindEvents() {
     if (song && ["toggle-favorite", "toggle-like", "toggle-dislike", "mark-sung"].includes(action)) handleSongAction(action, song, { fromPlayer: Boolean(actionTarget.closest("[data-player-panel]")) });
     if (action === "toggle-queue") toggleQueue();
     if (action === "close-queue") closeQueue();
-    if (action === "clear-queue") clearQueueFromUi();
+    if (action === "clear-queue") { requestClearQueue(); return; }
+    if (action === "cancel-clear-queue") { closeClearQueueDialog(); return; }
+    if (action === "confirm-clear-queue") { confirmClearQueue(); return; }
     if (action === "player-next") advanceToNext();
     if (action === "player-prev") selectPrevious();
     if (action === "close-player") closePlayer();
@@ -269,6 +272,11 @@ function bindEvents() {
     if (player && !player.hidden) {
       closePlayer();
     }
+  });
+
+  document.querySelector("[data-queue-confirm]")?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeClearQueueDialog();
   });
 
   document.querySelector("[data-search-form]").addEventListener("submit", (event) => {
@@ -735,7 +743,6 @@ function focusSongActionOrQueue(songId, action) {
 }
 
 function clearQueueFromUi() {
-  if (state.user.queue.length > 1 && typeof window !== "undefined" && typeof window.confirm === "function" && !window.confirm("Clear all songs from your karaoke queue?")) return;
   clearQueue(state.user);
   clearPartyAssignments(state.user.partySession);
   persistAppState(state);
@@ -744,6 +751,44 @@ function clearQueueFromUi() {
   closePlayer();
   document.querySelector('[data-action="toggle-queue"]')?.focus();
   showToast("Queue cleared");
+}
+
+function requestClearQueue() {
+  const count = state.user.queue.length;
+  if (!count) return;
+  const dialog = document.querySelector("[data-queue-confirm]");
+  const copy = dialog?.querySelector("[data-queue-confirm-copy]");
+  if (copy) copy.textContent = `Remove all ${count} song${count === 1 ? "" : "s"} from your queue? The current song will also be stopped.`;
+  queueConfirmReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (dialog && typeof dialog.showModal === "function") {
+    dialog.showModal();
+    dialog.querySelector('[data-action="cancel-clear-queue"]')?.focus();
+    return;
+  }
+  const confirmed = typeof window !== "undefined" && typeof window.confirm === "function"
+    ? window.confirm(`Clear queue?\nRemove all ${count} song${count === 1 ? "" : "s"} from your queue? The current song will also be stopped.`)
+    : false;
+  queueConfirmReturnFocus = null;
+  if (confirmed) clearQueueFromUi();
+}
+
+function closeClearQueueDialog() {
+  const dialog = document.querySelector("[data-queue-confirm]");
+  if (dialog?.open) dialog.close();
+  const returnTarget = queueConfirmReturnFocus;
+  queueConfirmReturnFocus = null;
+  if (returnTarget instanceof HTMLElement && document.contains(returnTarget)) returnTarget.focus();
+}
+
+function confirmClearQueue() {
+  if (!state.user.queue.length) {
+    closeClearQueueDialog();
+    return;
+  }
+  const dialog = document.querySelector("[data-queue-confirm]");
+  if (dialog?.open) dialog.close();
+  queueConfirmReturnFocus = null;
+  clearQueueFromUi();
 }
 
 function advanceToNext({ automatic = false } = {}) {

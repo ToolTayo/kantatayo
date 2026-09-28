@@ -15,3 +15,14 @@ tools/youtube-catalog-batch-2.json
 tools/youtube-batch-2-final-audit.json
 tools/youtube-batch-2-final-audit.md
 tools/youtube-batch-2-production-decisions.json
+tools/youtube-full-playability-audit.json
+tools/youtube-full-playability-audit.json.tmp
+tools/youtube-full-playability-audit.runtime.json
+tools/youtube-full-playability-audit.runtime.json.tmp
+tools/youtube-full-playability-audit.runtime.checkpoint.json
+tools/youtube-embed-repair*.json
+tools/youtube-embed-repair*.json.tmp
+tools/karaokeytv-expansion-100-runtime-report.json
+tools/karaokeytv-expansion-100-runtime.json
+tools/karaokeytv-expansion-100-runtime.checkpoint.json
+tools/karaokeytv-expansion-100.runtime-manifest.json

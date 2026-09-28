@@ -167,9 +167,9 @@ test("Step 9A recommendation behavioral audit", () => {
 
 test("Step 9A preserves catalog and frontend boundaries", async () => {
   const raw = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
-  assert.equal(raw.length, 361);
-  assert.equal(raw.filter((song) => song.youtubeVideoId !== null).length, 361);
-  assert.equal(raw.filter((song) => song.youtubeVideoId === null).length, 0);
+  assert.equal(raw.length, 661);
+  assert.equal(raw.filter((song) => song.youtubeVideoId !== null).length, 594);
+  assert.equal(raw.filter((song) => song.youtubeVideoId === null).length, 67);
 
   const frontendPaths = ["index.html", "src/app.js", "src/recommendations.js", "src/state.js", "src/ui.js", "styles/main.css"];
   const source = (await Promise.all(frontendPaths.map((path) => readFile(path, "utf8")))).join("\n");

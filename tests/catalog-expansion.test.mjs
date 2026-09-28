@@ -10,7 +10,7 @@ const normalized = normalizeCatalog(rawCatalog, { logger: { warn() {} } });
 
 const baselinePromotedIds = {
   "sample-001": "MJd_6nqxIYw",
-  "sample-002": "EAkIjq46Rlg",
+  "sample-002": "WxrozsMFjlU",
   "sample-003": "hNmgGtSTqb8",
   "sample-004": "a3vO3thiYV4",
   "sample-005": "acPB4mDoRZY",
@@ -40,7 +40,7 @@ const baselinePromotedIds = {
   "sample-032": "KnSsOL-n9r0",
   "sample-033": "c7qAHxBt-z4",
   "sample-034": "-2hvWP9Hulg",
-  "sample-035": "tzbsJjq7MME",
+  "sample-035": "bRe1xuzuODQ",
   "sample-036": "hbn7b1T_SQo",
   "sample-037": "tY8o1TD_frk",
   "sample-038": "yi1jwM6WIPk",
@@ -100,7 +100,7 @@ const newlyPromotedIds = {
   "sample-119": "cBO0_dhukb4",
   "sample-120": "aYuVq2sQ9Jo",
   "sample-122": "1LikErFudsc",
-  "sample-123": "hrtSi9pfMGc",
+  "sample-123": "vem3_pcqmKA",
   "sample-124": "j1B-M559MJo",
   "sample-125": "F2qvj4yU3VI",
   "sample-126": "UcWEfvu6F_s",
@@ -121,39 +121,40 @@ const newlyPromotedIds = {
   "sample-142": "0V0yLCvOrYY",
   "sample-144": "LEp8jEFINPU"
 };
+const unavailableIds = new Set(rawCatalog.filter((song) => song.youtubeVideoId === null).map((song) => song.id));
 
 test("expanded catalog preserves stable IDs, valid metadata, and has no duplicate songs", () => {
-  assert.equal(rawCatalog.length, 361);
+  assert.equal(rawCatalog.length, 661);
   assert.equal(normalized.rejectedRecords, 0);
   assert.ok(rawCatalog.every((song) => /^sample-\d{3}$/.test(song.id)));
-  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 361);
-  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 361);
-  assert.equal(normalized.songs.length, 361);
+  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 661);
+  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 661);
+  assert.equal(normalized.songs.length, 661);
   assert.deepEqual(normalized.warnings, []);
 });
 
 test("unrelated promoted IDs and retained catalog assignments remain unchanged", () => {
   for (const [songId, videoId] of Object.entries(baselinePromotedIds)) {
-    assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, videoId, songId);
+    assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, unavailableIds.has(songId) ? null : videoId, songId);
   }
 
   assert.equal(Object.keys(baselinePromotedIds).length, 67);
   for (const [songId, videoId] of Object.entries(newlyPromotedIds)) {
-    assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, videoId, songId);
+    assert.equal(rawCatalog.find((song) => song.id === songId)?.youtubeVideoId, unavailableIds.has(songId) ? null : videoId, songId);
   }
 
   assert.equal(Object.keys(newlyPromotedIds).length, 41);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 361);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 361);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 0);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 594);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 67);
   assert.equal(rawCatalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });
 
 test("new catalog records use current validator categories and remain playable", () => {
   const newSongs = rawCatalog.slice(37);
-  assert.equal(newSongs.length, 324);
+  assert.equal(newSongs.length, 624);
   const unassignedNewSongs = newSongs.filter((song) => song.youtubeVideoId === null);
-  assert.deepEqual(unassignedNewSongs, []);
+  assert.equal(unassignedNewSongs.length, 57);
+  assert.ok(unassignedNewSongs.every((song) => unavailableIds.has(song.id)));
   assert.ok(newSongs.every((song) => ["easy", "medium", "hard"].includes(song.difficulty)));
   assert.ok(newSongs.every((song) => ["low", "medium", "high"].includes(song.vocalRange)));
   assert.ok(newSongs.every((song) => ["solo", "duet", "group"].includes(song.performanceType)));
@@ -170,9 +171,16 @@ test("demand metadata is evidence-backed and current availability remains explic
   assert.ok(demand.signals.every((signal) => catalogById.has(signal.songId)));
   assert.ok(demand.signals.every((signal) => ["very-high", "high", "established"].includes(signal.demandTier)));
   assert.ok(demand.signals.every((signal) => signal.evidence.length > 0 && signal.evidence.every((item) => sourceIds.has(item.sourceId) && Number.isInteger(item.rank))));
-  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), []);
+  assert.deepEqual(rawCatalog.slice(100).filter((song) => song.youtubeVideoId === null).map((song) => song.id), [
+    "sample-126", "sample-128", "sample-129", "sample-130", "sample-131", "sample-133", "sample-135", "sample-137",
+    "sample-142", "sample-144", "sample-156", "sample-162", "sample-164", "sample-165", "sample-170", "sample-191",
+    "sample-226", "sample-229", "sample-231", "sample-232", "sample-240", "sample-255", "sample-257", "sample-258",
+    "sample-263", "sample-266", "sample-273", "sample-280", "sample-281", "sample-289", "sample-292", "sample-294",
+    "sample-312", "sample-323", "sample-345", "sample-347", "sample-356", "sample-396", "sample-412", "sample-465",
+    "sample-468", "sample-481", "sample-486", "sample-531", "sample-560"
+  ]);
   for (const [songId, videoId] of Object.entries(newlyPromotedIds)) {
-    assert.equal(catalogById.get(songId)?.youtubeVideoId, videoId, songId);
+    assert.equal(catalogById.get(songId)?.youtubeVideoId, unavailableIds.has(songId) ? null : videoId, songId);
   }
   assert.ok(rawCatalog.filter((song) => song.demandTier).every((song) => demand.signals.some((signal) => signal.songId === song.id && signal.demandTier === song.demandTier)));
 });
@@ -187,7 +195,7 @@ test("newly playable songs flow through local discovery and recommendations", ()
   const searchResults = getDiscoverySongs(searchIndex, { query: "Kung Sakali" });
   const recommendations = getRecommendations(playableTargetSongs, {}, { limit: 5, now: "2026-09-22T00:00:00.000Z" });
 
-  assert.equal(playableTargetSongs.length, 64);
+  assert.equal(playableTargetSongs.length, 49);
   assert.equal(searchResults.find((song) => song.id === "sample-101")?.id, "sample-101");
   assert.equal(recommendations.length, 5);
   assert.ok(recommendations.every((item) => playableTargetSongs.includes(item.song)));

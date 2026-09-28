@@ -1,10 +1,12 @@
 # KantaCue
 
+Live app: <https://kantacue.vercel.app/>
+
 KantaCue uses YouTube's official embedded IFrame Player API for playback. KantaCue does not host, download, proxy, extract, or separately play YouTube videos or audio.
 
 YouTube IDs must be verified separately before they are added to the production catalog. A syntactically valid ID may still be unavailable, restricted, or non-embeddable. Made-for-Kids status must not be guessed and is part of that future catalog-verification process.
 
-The production sample catalog contains only promoted playable IDs; defensive null-ID handling remains in place for future catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
+The production sample catalog contains 661 records; 594 currently retain runtime-verified promoted IDs and 67 remain explicit `youtubeVideoId: null` records pending safe replacement. Defensive null-ID handling is part of normal catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
 
 ## Sharing, installation, and local popularity
 
@@ -20,7 +22,11 @@ The Home shelf is named **Most sung on this device**. It appears only after loca
 
 The catalog includes a small, transparent `demandTier` signal for songs supported by current karaoke-play evidence. The runtime uses only the tier (`very-high`, `high`, or `established`); source URLs, ranking positions, and methodology are kept separately in [data/song-demand.json](data/song-demand.json). Demand is a weak cold-start prior, not proof that a song has a suitable YouTube karaoke video. It never bypasses catalog validation, technical verification, Party Tyme exclusion, or the existing personalization and repetition rules.
 
-The catalog also includes a 40-song CoversPH Popular expansion sourced from the persisted public-channel report. Those records use the exact reported video IDs; the report is provenance for the catalog addition, not a substitute for runtime playback handling or future quality review.
+The catalog also includes a 40-song CoversPH Popular expansion sourced from the persisted public-channel report, plus 100 additional unique CoversPH records (`sample-481` through `sample-580`). The +100 provenance and rejection audit is recorded in [tools/coversph-expansion-100-report.json](tools/coversph-expansion-100-report.json); it is development evidence, not runtime catalog data or proof of manual audio/visual review.
+
+The catalog also includes 100 Atomic Karaoke additions (`sample-381` through `sample-480`). Their development-only provenance is recorded in [tools/atomic-karaoke-expansion-100-report.json](tools/atomic-karaoke-expansion-100-report.json). The report was built from the official `@AtomicKaraoke` upload set using public video metadata, then explicitly applied only after duplicate, embeddability, Made-for-Kids, HD-title, and normalized-song-pair checks. It contains no API credentials; `YOUTUBE_API_KEY` is read only from the local development environment when rebuilding the report.
+
+The catalog also includes up to 100 KaraokeyTV additions (`sample-581` through `sample-680`) from the official `@karaokeytv0618` public Popular listing. Discovery evidence is kept in the ignored [KaraokeyTV runtime report](tools/karaokeytv-expansion-100-runtime-report.json) and was applied only for exact runtime-`PASS` rows from the existing Chromium player audit. The public Popular ordering is a source-selection signal, not a first-party demand tier, so these additions intentionally leave `demandTier` unset until supported demand evidence exists.
 
 Run the app from a local HTTP/HTTPS server during development. Direct `file://` opening is not supported for reliable module, fetch, origin, or YouTube IFrame API behavior.
 
@@ -201,6 +207,64 @@ node tools/audit-youtube.mjs
 ```
 
 The audit reads the catalog and ignored verification store without making network requests. It writes durable JSON and Markdown reports to `tools/youtube-quality-audit.json` and `tools/youtube-quality-audit.md`. It flags explicit metadata indicators such as altered keys, live/remix/lyrics-only wording, or guide vocals, while keeping audio quality, original-key confirmation, completeness, and arrangement unresolved until a person listens through the official YouTube embed. It never changes catalog IDs, verification approvals, or promotion state.
+
+## Full real-playability audit
+
+The development-only full audit separates metadata preflight from actual player behavior. Build the ignored 661-entry manifest without an API call:
+
+```text
+node tools/build-playability-audit.mjs
+```
+
+Start the local HTTP server, then open:
+
+```text
+node tools/serve-local.mjs
+http://127.0.0.1:8765/youtube-playability-audit.html
+```
+
+For each song, `Test` loads exactly one video through `src/youtube.js`; it never creates a second player implementation and never changes catalog/local user state. `PASS` requires `onReady`, `PLAYING`, and 15 seconds of sustained playback. Errors 2, 5, 100, 101, 150, and 153 remain distinct. `READY` without playback is recorded as `AUTOPLAY POLICY ONLY`, while initialization failures are `TIMEOUT` or `INCONCLUSIVE`, never a fabricated playback pass. Results are resumable in a separate browser-local key and can be exported with `Export report` as `youtube-full-playability-audit.json` for review or manual placement back into the ignored `tools/` folder. The manifest and result file are ignored; no YouTube media or credentials are stored.
+
+For an automated runtime audit, use an existing Playwright/Chromium runtime (no package is added to the app) and run:
+
+```powershell
+node tools/run-playability-audit.mjs --concurrency 3
+```
+
+The runner starts a temporary local server, verifies controls including `sample-029` and `sample-486`, then processes the catalog through three isolated official players. It stops before the full run if no control reaches PASS, checkpoints results for `--resume`, and writes the ignored runtime report to `tools/youtube-full-playability-audit.runtime.json`. Set `KANTACUE_PLAYWRIGHT_MODULE` when Playwright is not resolvable from the normal Node module path.
+
+### Repairing confirmed Error 150 assignments
+
+When a completed runtime audit identifies Error 150 assignments, the isolated repair workflow uses existing local provenance first, searches only songs without reusable candidates, verifies API metadata in batches, and then tests ranked alternatives through the same real Playwright audit page. Preparation and testing never modify the catalog:
+
+```powershell
+node tools/repair-youtube-embeds.mjs prepare --max-candidates 2
+$env:KANTACUE_PLAYWRIGHT_MODULE = "C:\Users\palo\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\playwright\index.mjs"
+node tools/repair-youtube-embeds.mjs test --resume --concurrency 3
+node tools/repair-youtube-embeds.mjs apply
+```
+
+Only candidates that reach `PASS` through `onReady`, `PLAYING`, advancing current time, and sustained playback are applied. Candidate and runtime manifests are ignored; unresolved songs remain documented instead of receiving a metadata-only or guessed replacement. A fresh full audit is required after `apply`.
+
+For the second pass over the remaining confirmed Error 150 assignments, keep the scope explicit and preserve the first-pass report:
+
+```powershell
+node tools/repair-youtube-embeds.mjs prepare --second-pass --max-results 10 --max-candidates 3
+node tools/repair-youtube-embeds.mjs test --second-pass --resume --concurrency 3
+node tools/repair-youtube-embeds.mjs apply --mark-unavailable
+node tools/repair-youtube-embeds.mjs report
+```
+
+`--second-pass` searches exact catalog title/artist identity with a deeper karaoke/instrumental query, reuses prior candidate attempts, batches API metadata checks, and never promotes metadata-only candidates. `--retry-rate-limited` may be used later for persisted HTTP 429 entries; it is intentionally opt-in. `--mark-unavailable` is PASS-only: it changes a still-confirmed Error 150 assignment to `youtubeVideoId: null` only when no candidate has passed the real iframe audit. Null assignments remain in the catalog for repair/history, but are excluded from normal discovery, recommendations, and new queue additions.
+
+After availability changes, the metadata manifest can be rebuilt without network access. If a prior complete browser report exists, reconcile its retained PASS results and the explicit unavailable decisions with:
+
+```powershell
+node tools/build-playability-audit.mjs --output tools/youtube-full-playability-audit.json
+node tools/reconcile-playability-runtime.mjs
+```
+
+The reconciler refuses to rewrite a retained assignment unless its video ID still matches a prior runtime `PASS`; it does not claim a fresh browser test for the unavailable rows.
 
 ## Production assignment quality audit
 

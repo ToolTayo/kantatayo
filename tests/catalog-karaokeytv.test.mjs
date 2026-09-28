@@ -44,18 +44,21 @@ test("KaraokeyTV additions are unique against the prior 211-song catalog", () =>
   assert.deepEqual(additions.map((song) => song.id), Array.from({ length: 50 }, (_, index) => `sample-${String(index + 231).padStart(3, "0")}`));
   assert.ok(additionKeys.every((key) => !previousKeys.has(key)));
   assert.equal(new Set(additionKeys).size, additions.length);
-  assert.equal(new Set(additionVideoIds).size, additions.length);
-  assert.deepEqual(additions.map((song) => song.youtubeVideoId), report.entries.map((entry) => entry.videoId));
+  assert.equal(new Set(additionVideoIds.filter(Boolean)).size, additions.filter((song) => song.youtubeVideoId).length);
+  assert.deepEqual(
+    additions.map(songKey).sort(),
+    report.entries.map((entry) => songKey({ title: entry.title, artist: entry.artist })).sort()
+  );
 });
 
 test("expanded catalog remains fully valid and playable", () => {
   const normalized = normalizeCatalog(catalog, { logger: { warn() {} } });
-  assert.equal(catalog.length, 361);
-  assert.equal(normalized.songs.length, 361);
+  assert.equal(catalog.length, 661);
+  assert.equal(normalized.songs.length, 661);
   assert.equal(normalized.rejectedRecords, 0);
   assert.deepEqual(normalized.warnings, []);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 361);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 0);
-  assert.equal(new Set(catalog.map((song) => song.id)).size, 361);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId)).size, 361);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 594);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
+  assert.equal(new Set(catalog.map((song) => song.id)).size, 661);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 594);
 });

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>KantaCue Local YouTube Playability Audit</title>
+    <link rel="stylesheet" href="styles/candidate-tester.css?v=1" />
+    <script type="module" src="src/full-playability-audit.js?v=1"></script>
+  </head>
+  <body>
+    <main class="tester-shell" data-audit-app hidden>
+      <header class="tester-header">
+        <div>
+          <p class="eyebrow">Local development tool</p>
+          <h1>Full catalog playability audit</h1>
+          <p>Tests one current catalog video at a time through KantaCue’s real YouTube controller. Metadata and thumbnails never count as playback proof.</p>
+        </div>
+        <span class="dev-badge">No catalog changes</span>
+      </header>
+      <section class="tester-player" aria-labelledby="audit-player-title">
+        <div class="tester-player-copy">
+          <p class="eyebrow">Current assignment</p>
+          <h2 id="audit-player-title" data-current-title>Choose a song to test</h2>
+          <p data-current-meta></p>
+          <p class="tester-status" data-status role="status" aria-live="polite">Select Test in player to begin.</p>
+          <div class="tester-actions"><button type="button" data-action="next" class="primary-button">Test next untested</button><button type="button" data-action="mark-inconclusive">Mark inconclusive</button><button type="button" data-action="export">Export report</button></div>
+          <label class="audit-note">Operator note <textarea data-audit-note rows="3" placeholder="Optional playback, quality, or region note"></textarea></label>
+          <button type="button" data-action="save-note">Save note locally</button>
+          <p class="tester-help">PASS requires onReady, PLAYING, advancing playback time, and 15 seconds of sustained playback. READY without PLAYING is recorded as autoplay-policy-only after the grace period.</p>
+        </div>
+        <div class="tester-player-frame" data-youtube-mount aria-label="Official YouTube audit player"></div>
+      </section>
+      <section class="candidate-list-section" aria-labelledby="audit-list-title">
+        <div class="section-heading"><div><p class="eyebrow">Persisted audit manifest</p><h2 id="audit-list-title">Current catalog assignments</h2></div><p class="progress" data-progress>0 tested</p></div>
+        <p class="tester-help" data-counts>Loading counts…</p>
+        <div class="candidate-table-wrap"><table class="candidate-table"><caption class="sr-only">KantaCue full catalog YouTube playability results</caption><thead><tr><th scope="col">Song ID</th><th scope="col">Song</th><th scope="col">Provider</th><th scope="col">Video ID</th><th scope="col">Views</th><th scope="col">Player result</th><th scope="col">Action</th></tr></thead><tbody data-candidate-rows></tbody></table></div>
+      </section>
+    </main>
+    <main class="blocked-state" data-blocked-state hidden><p class="eyebrow">Development tool unavailable</p><h1>Open this audit on localhost.</h1><p>This page is intentionally limited to localhost, 127.0.0.1, or an explicit <code>?dev=1</code> development flag.</p></main>
+    <div class="tester-toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

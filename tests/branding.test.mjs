@@ -20,6 +20,14 @@ test("KantaCue uses the original A2 soundmark in both navigation brands", () => 
   assert.doesNotMatch(html, /https?:\/\/[^"']+\.(png|jpg|svg)/i);
 });
 
+test("KantaCue exposes accurate production share metadata", () => {
+  assert.match(html, /<link rel="canonical" href="https:\/\/kantacue\.vercel\.app\/"\s*\/>/);
+  assert.match(html, /<meta property="og:site_name" content="KantaCue"\s*\/>/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/kantacue\.vercel\.app\/"\s*\/>/);
+  assert.match(html, /<meta name="twitter:card" content="summary"\s*\/>/);
+  assert.doesNotMatch(html, /kantatayo\.vercel\.app/i);
+});
+
 test("the install icon remains an original first-party KantaCue mark", () => {
   assert.match(icon, /<title id="title">KantaCue<\/title>/);
   assert.match(icon, /stroke="#a6f36f"/);

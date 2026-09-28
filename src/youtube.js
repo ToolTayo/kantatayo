@@ -192,7 +192,15 @@ export function createYouTubePlayerController({
     stop,
     destroy,
     isReady: () => playerReady,
-    getCurrentVideoId: () => currentVideoId
+    getCurrentVideoId: () => currentVideoId,
+    getCurrentTime: () => {
+      try {
+        const value = player?.getCurrentTime?.();
+        return Number.isFinite(value) ? value : null;
+      } catch {
+        return null;
+      }
+    }
   };
 
   function applyPlayerIframePolicy() {

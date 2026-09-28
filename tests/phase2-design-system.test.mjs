@@ -25,6 +25,13 @@ test("shared controls expose consistent touch sizing and focus styling", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
+test("discovery toolbar groups filters with a clear active state", () => {
+  assert.match(css, /\.discover-controls\s*\{[\s\S]*?background: linear-gradient/);
+  assert.match(css, /\.filter-label::before\s*\{[\s\S]*?background: var\(--brand-lime\)/);
+  assert.match(css, /\.discover-controls \.chip\.is-active\s*\{[\s\S]*?background: var\(--brand-lime\)/);
+  assert.match(css, /@media \(max-width: 619px\)[\s\S]*?\.discover-controls \.discovery-filters[\s\S]*?padding-bottom/);
+});
+
 test("long card content can wrap without widening the layout", () => {
   assert.match(css, /\.song-card-body, \.song-card-top \{ min-width: 0; \}/);
   assert.match(css, /\.song-card h4, \.song-artist, \.song-reason, \.song-availability \{ overflow-wrap: anywhere; \}/);
@@ -44,7 +51,7 @@ test("mobile player clears the tablet max-width and includes safe-area padding",
 });
 
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=24/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=24"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v52"/);
+  assert.match(index, /styles\/main\.css\?v=28/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=28"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v61"/);
 });
