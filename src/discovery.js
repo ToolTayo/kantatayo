@@ -56,6 +56,7 @@ export function getDiscoverySongs(index, options = {}) {
   const filters = normalizeDiscoveryFilters(options.filters, options.filter);
   const favoriteIds = new Set((options.favoriteIds || []).map((id) => String(id).toLowerCase()));
   const filtered = index.filter((entry) => {
+    if (!isPlayableSong(entry.song)) return false;
     const matchesQuery = tokens.length === 0 || tokens.every((token) => entry.searchText.includes(token));
     return matchesQuery && matchesDiscoveryFilters(entry.song, filters, favoriteIds);
   });
@@ -74,7 +75,10 @@ export function normalizeDiscoveryFilters(filters = {}, legacyFilter = "all") {
   const legacy = normalizeQuery(legacyFilter || "all");
   if (!filters || Object.keys(source).length === 0) {
     if (legacy === "favorites") next.favorites = true;
-    else if (legacy === "playable") next.availability = "playable";
+    // "playable" was the previous public default. Discovery is now
+    // playable-only by definition, so safely migrate that legacy state to
+    // the neutral public "all" filter.
+    else if (legacy === "playable") next.availability = "all";
     else if (["filipino", "english"].includes(legacy)) next.language = legacy;
     else if (["easy", "medium", "hard"].includes(legacy)) next.difficulty = legacy;
     else if (["solo", "duet", "group"].includes(legacy)) next.performanceType = legacy;
@@ -82,6 +86,7 @@ export function normalizeDiscoveryFilters(filters = {}, legacyFilter = "all") {
       next.genre = legacy;
     }
   }
+  if (next.availability === "playable") next.availability = "all";
   return next;
 }
 
@@ -89,18 +94,12 @@ export function createDefaultDiscoveryFilters() {
   return { ...DEFAULT_DISCOVERY_FILTERS };
 }
 
-/**
- * The first Discover view favors songs that can actually play. The neutral
- * filter remains available through the explicit "All songs" quick filter.
- */
-export function createDiscoverEntryFilters() {
-  return createQuickFilterState("playable");
-}
-
 export function createQuickFilterState(filter) {
   const next = createDefaultDiscoveryFilters();
   const normalized = normalizeQuery(filter || "all");
-  if (normalized === "playable") next.availability = "playable";
+  // Retain this legacy input for callers restoring old view state, but map it
+  // to the new public meaning of "all current playable songs".
+  if (normalized === "playable") next.availability = "all";
   else if (["filipino", "english"].includes(normalized)) next.language = normalized;
   else if (["easy", "medium", "hard"].includes(normalized)) next.difficulty = normalized;
   else if (["solo", "duet", "group"].includes(normalized)) next.performanceType = normalized;

@@ -182,8 +182,8 @@ function formatDayCount(value) {
 }
 
 function renderCatalogView(searchIndex, query, filter, sortBy, userState, interactionState, discoveryFilters, discoveryPage) {
-  const allSongs = searchIndex.map((entry) => entry.song);
   const filters = normalizeDiscoveryFilters(discoveryFilters, filter);
+  const publicSongs = getDiscoverySongs(searchIndex, { filters: createDefaultDiscoveryFilters(), sortBy: "title" });
   const songs = getDiscoverySongs(searchIndex, { query, filters, sortBy, favoriteIds: userState.favorites });
   const page = getDiscoveryPage(songs, discoveryPage, 24);
   const visibleSongs = songs.slice(0, page.page * page.pageSize);
@@ -193,7 +193,7 @@ function renderCatalogView(searchIndex, query, filter, sortBy, userState, intera
   if (count) count.textContent = `${songs.length} song${songs.length === 1 ? "" : "s"}`;
   const empty = document.querySelector("[data-discover-empty]");
   if (empty) empty.hidden = songs.length > 0;
-  renderDiscoveryFilterControls(allSongs, filters);
+  renderDiscoveryFilterControls(publicSongs, filters);
   const loadMore = document.querySelector("[data-discover-load-more]");
   if (loadMore) loadMore.hidden = !page.hasMore || songs.length === 0;
   const remaining = document.querySelector("[data-discover-remaining]");
@@ -206,9 +206,7 @@ function renderCatalogView(searchIndex, query, filter, sortBy, userState, intera
 
 function renderDiscoveryFilterControls(songs, filters) {
   const options = getDiscoveryFilterOptions(songs);
-  const activeQuickFilter = filters.availability === "playable"
-    ? "playable"
-    : filters.language !== "any" && filters.genre === "any" && filters.mood === "any" && filters.difficulty === "any" && filters.vocalRange === "any" && filters.performanceType === "any" && filters.era === "any" ? filters.language
+  const activeQuickFilter = filters.language !== "any" && filters.genre === "any" && filters.mood === "any" && filters.difficulty === "any" && filters.vocalRange === "any" && filters.performanceType === "any" && filters.era === "any" ? filters.language
       : filters.difficulty !== "any" && filters.language === "any" && filters.genre === "any" && filters.mood === "any" && filters.vocalRange === "any" && filters.performanceType === "any" && filters.era === "any" ? filters.difficulty
         : filters.performanceType !== "any" && filters.language === "any" && filters.genre === "any" && filters.mood === "any" && filters.difficulty === "any" && filters.vocalRange === "any" && filters.era === "any" ? filters.performanceType
           : "all";
@@ -227,7 +225,6 @@ function renderDiscoveryFilterControls(songs, filters) {
   });
 
   const activeLabels = [];
-  if (filters.availability === "playable") activeLabels.push("Playable now");
   for (const [key, label] of [["language", "language"], ["genre", "genre"], ["mood", "mood"], ["difficulty", "difficulty"], ["vocalRange", "vocalRange"], ["performanceType", "performanceType"], ["era", "era"]]) {
     if (filters[key] === "any") continue;
     const match = (options[key] || []).find((value) => normalizeQuery(value) === filters[key]);
@@ -235,7 +232,7 @@ function renderDiscoveryFilterControls(songs, filters) {
   }
   if (filters.favorites) activeLabels.push("Favorites");
   const summary = document.querySelector("[data-discovery-filter-summary]");
-  if (summary) summary.textContent = activeLabels.length ? activeLabels.join(" · ") : "All catalog songs";
+  if (summary) summary.textContent = activeLabels.length ? activeLabels.join(" · ") : "All playable songs";
   const count = document.querySelector("[data-discovery-filter-count]");
   if (count) {
     count.hidden = activeLabels.length === 0;

@@ -3,21 +3,21 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   createDefaultDiscoveryFilters,
-  createDiscoverEntryFilters,
   createQuickFilterState,
   createSearchIndex,
   getDiscoveryFilterOptions,
   getDiscoveryPage,
   getDiscoverySongs,
-  hasActiveDiscoveryFilters
+  hasActiveDiscoveryFilters,
+  normalizeDiscoveryFilters
 } from "../src/discovery.js";
 
 const catalog = JSON.parse(await readFile(new URL("../data/songs.sample.json", import.meta.url), "utf8"));
 const index = createSearchIndex(catalog);
 
 test("search matches title and punctuation-insensitively", () => {
-  const results = getDiscoverySongs(index, { query: "Don't Stop Believin" });
-  assert.ok(results.some((song) => /don't stop believin/i.test(song.title)));
+  const results = getDiscoverySongs(index, { query: "Cant Help Falling in Love" });
+  assert.ok(results.some((song) => /can't help falling in love/i.test(song.title)));
 });
 
 test("search matches artist and metadata fields locally", () => {
@@ -33,17 +33,17 @@ test("playable-only discovery excludes every unavailable catalog record", () => 
   assert.equal(results.some((song) => !song.youtubeVideoId), false);
 });
 
-test("Discover entry defaults to the playable catalog", () => {
-  const filters = createDiscoverEntryFilters();
+test("Discover defaults to the playable public catalog", () => {
+  const filters = createDefaultDiscoveryFilters();
   const results = getDiscoverySongs(index, { filters });
-  assert.equal(filters.availability, "playable");
+  assert.equal(filters.availability, "all");
   assert.equal(results.length, 594);
   assert.equal(results.every((song) => Boolean(song.youtubeVideoId)), true);
 });
 
 test("all songs remains browseable when the playable pool is empty", () => {
   const unavailableIndex = createSearchIndex([{ ...catalog[0], id: "fixture-unavailable", youtubeVideoId: null }]);
-  assert.equal(getDiscoverySongs(unavailableIndex, {}).length, 1);
+  assert.equal(getDiscoverySongs(unavailableIndex, {}).length, 0);
   assert.equal(getDiscoverySongs(unavailableIndex, { filters: { availability: "playable" } }).length, 0);
 });
 
@@ -66,12 +66,12 @@ test("catalog filters compose as an intersection", () => {
 test("reset state has no active filters and preferences are not discovery filters", () => {
   assert.equal(hasActiveDiscoveryFilters(createDefaultDiscoveryFilters()), false);
   assert.equal(hasActiveDiscoveryFilters({ language: "filipino" }), true);
-  assert.equal(getDiscoverySongs(index, { filters: createDefaultDiscoveryFilters() }).length, catalog.length);
+  assert.equal(getDiscoverySongs(index, { filters: createDefaultDiscoveryFilters() }).length, 594);
 });
 
 test("quick filters replace the previous quick-filter state", () => {
   assert.deepEqual(createQuickFilterState("all"), createDefaultDiscoveryFilters());
-  assert.deepEqual(createQuickFilterState("playable"), { ...createDefaultDiscoveryFilters(), availability: "playable" });
+  assert.deepEqual(createQuickFilterState("playable"), createDefaultDiscoveryFilters());
   assert.deepEqual(createQuickFilterState("filipino"), { ...createDefaultDiscoveryFilters(), language: "filipino" });
   assert.deepEqual(createQuickFilterState("easy"), { ...createDefaultDiscoveryFilters(), difficulty: "easy" });
   assert.deepEqual(createQuickFilterState("duet"), { ...createDefaultDiscoveryFilters(), performanceType: "duet" });
@@ -110,9 +110,10 @@ test("zero-result searches remain safe and countable", () => {
   assert.equal(getDiscoveryPage(results, 1, 24).hasMore, false);
 });
 
-test("discover UI exposes availability, derived filters, sorting, reset, and load more controls", async () => {
+test("discover UI exposes playable-only browsing, derived filters, sorting, reset, and load more controls", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
-  assert.match(html, /data-filter="playable"/);
+  assert.doesNotMatch(html, /data-filter="playable"/);
+  assert.match(html, /data-filter="all"[^>]*aria-pressed="true"/);
   assert.match(html, /data-discovery-filter="language"/);
   assert.match(html, /data-discovery-filter="genre"/);
   assert.match(html, /data-discovery-filter="mood"/);
@@ -120,4 +121,11 @@ test("discover UI exposes availability, derived filters, sorting, reset, and loa
   assert.match(html, /value="popular"/);
   assert.match(html, /data-action="reset-discovery-filters"/);
   assert.match(html, /data-action="load-more-discover"/);
+});
+
+test("legacy playable filter state safely falls back to public all", () => {
+  assert.equal(normalizeDiscoveryFilters({ availability: "playable" }).availability, "all");
+  assert.equal(normalizeDiscoveryFilters({}, "playable").availability, "all");
+  const unavailableSong = catalog.find((song) => !song.youtubeVideoId);
+  assert.equal(getDiscoverySongs(index, { query: unavailableSong.title }).some((song) => song.id === unavailableSong.id), false);
 });

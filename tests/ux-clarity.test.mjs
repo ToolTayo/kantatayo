@@ -7,7 +7,8 @@ test("Discover explains quick filters and exposes clear control state", async ()
   const html = await readFile("index.html", "utf8");
   assert.match(html, /aria-describedby="discover-filter-guide"/);
   assert.match(html, /id="discover-filter-guide"/);
-  assert.match(html, /title="Show songs with a playable karaoke video"/);
+  assert.match(html, /title="Show all playable songs"/);
+  assert.doesNotMatch(html, /data-filter="playable"/);
   assert.match(html, /data-action="reset-discovery-filters" disabled/);
   assert.match(html, /data-action="expand-player"/);
 });
