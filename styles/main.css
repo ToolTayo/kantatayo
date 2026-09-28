@@ -10,7 +10,7 @@
   --border-strong: rgba(255, 255, 255, .12);
   --text-primary: #f4f6f8;
   --text-secondary: #a8b0bd;
-  --text-muted: #707a89;
+  --text-muted: #8893a3;
   --brand-lime: #a3f263;
   --brand-lime-soft: rgba(163, 242, 99, .1);
   --party-accent: #c09ab8;
@@ -1692,5 +1692,136 @@ body { line-height: 1.45; }
 
   .queue-confirm-actions button {
     width: 100%;
+  }
+}
+
+/* Mobile readability pass: keep hierarchy compact, but make supporting copy and
+   every actionable control comfortable to read and use on a phone. */
+.icon-button {
+  height: var(--control-height);
+  min-height: var(--control-height);
+  min-width: var(--control-height);
+  width: var(--control-height);
+}
+
+.search-form button,
+.topbar-search-submit,
+.search-clear,
+.song-thumbnail-play,
+.queue-select,
+.queue-singer-control select,
+.queue-clear-button {
+  min-height: var(--control-height);
+}
+
+.search-clear,
+.song-thumbnail-play {
+  min-width: var(--control-height);
+}
+
+.song-thumbnail-play {
+  height: var(--control-height);
+  width: var(--control-height);
+}
+
+.song-card h4 {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.song-artist {
+  font-size: .875rem;
+  line-height: 1.4;
+}
+
+.song-meta {
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.song-reason,
+.song-availability {
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.song-card-actions .play-button,
+.song-card-actions .add-button,
+.feedback-button,
+.player-actions .add-button,
+.player-controls button,
+.queue-control,
+.remove-button {
+  font-size: .78rem;
+}
+
+.discover-controls .chip,
+.discovery-filters .chip,
+.preference-option {
+  font-size: .78rem;
+  min-height: var(--control-height);
+}
+
+.filter-label,
+.discover-filter-grid label {
+  font-size: .72rem;
+  line-height: 1.35;
+}
+
+.sort-control,
+.sort-control select,
+.discover-filter-grid select {
+  font-size: .8rem;
+}
+
+.mobile-nav-link {
+  font-size: .75rem;
+}
+
+.queue-item-copy strong {
+  font-size: .95rem;
+}
+
+.queue-item-copy > span:not(.queue-item-state) {
+  font-size: .82rem;
+}
+
+.queue-item-copy .queue-item-state,
+.queue-control-label {
+  font-size: .7rem;
+}
+
+.player-meta,
+.player-queue-status {
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+.home-section-heading .section-lede,
+.section-link {
+  font-size: .78rem;
+}
+
+@media (max-width: 619px) {
+  .hero-description,
+  .section-lede {
+    font-size: .9rem;
+    line-height: 1.55;
+  }
+
+  .song-card-actions {
+    gap: .4rem;
+  }
+
+  .player-header-actions {
+    gap: .3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .song-thumbnail-play,
+  .icon-button,
+  .search-clear {
+    transition: none !important;
   }
 }
