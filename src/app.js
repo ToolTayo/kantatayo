@@ -1,6 +1,6 @@
 import { focusSongAction, hidePlayer, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=26";
 import { loadCatalog } from "./catalog.js?v=2";
-import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
+import { createDefaultDiscoveryFilters, createDiscoverEntryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=4";
 import { addSongRequest, addSongToQueue, advanceQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeSongFromQueue, selectPreviousQueueSong, setCatalog, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=5";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
@@ -23,6 +23,7 @@ let rouletteHistory = [];
 let rouletteRecovery = { available: false, message: "" };
 let partyStatusMessage = "Party details stay on this device.";
 let currentView = viewFromHash(window.location.hash);
+if (currentView === "discover") state.discoveryFilters = createDiscoverEntryFilters();
 let playerFinishedSongId = null;
 let selectedCollectionId = getFeaturedCollectionId();
 let installController = null;
@@ -95,7 +96,9 @@ function navigateToView(view, { preserveQuery = false, discoveryFilter = "" } = 
   state.filter = "all";
   state.discoveryFilters = discoveryFilter && currentView === "discover"
     ? createQuickFilterState(discoveryFilter)
-    : createDefaultDiscoveryFilters();
+    : currentView === "discover"
+      ? createDiscoverEntryFilters()
+      : createDefaultDiscoveryFilters();
   state.discoveryPage = 1;
   if (currentView === "party" && !state.user.partySession.enabled) {
     state.user.partySession.enabled = true;
@@ -132,8 +135,8 @@ function bindEvents() {
     if (action === "toggle-mobile-more") { toggleMobileMore(); return; }
     if (action === "toggle-discover-filters") { toggleDiscoverFilters(); return; }
     if (action === "load-more-discover") { state.discoveryPage += 1; render(); return; }
-    if (action === "reset-discovery-filters") { state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); return; }
-    if (action === "reset-discovery") { state.query = ""; state.filter = "all"; state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
+    if (action === "reset-discovery-filters") { state.discoveryFilters = createDiscoverEntryFilters(); state.discoveryPage = 1; render(); return; }
+    if (action === "reset-discovery") { state.query = ""; state.filter = "all"; state.discoveryFilters = createDiscoverEntryFilters(); state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
     if (action === "toggle-party-mode") { togglePartyMode(); return; }
     if (action === "remove-party-singer") { removePartySingerFromUi(actionTarget.dataset.singerId); return; }
     if (action === "clear-party-session") { clearPartySessionFromUi(); return; }
@@ -332,6 +335,7 @@ function bindEvents() {
     if (state.query.trim() && currentView !== "discover") {
       currentView = "discover";
       state.filter = "all";
+      state.discoveryFilters = createDiscoverEntryFilters();
       setViewHash("discover");
     }
     render();

@@ -89,6 +89,14 @@ export function createDefaultDiscoveryFilters() {
   return { ...DEFAULT_DISCOVERY_FILTERS };
 }
 
+/**
+ * The first Discover view favors songs that can actually play. The neutral
+ * filter remains available through the explicit "All songs" quick filter.
+ */
+export function createDiscoverEntryFilters() {
+  return createQuickFilterState("playable");
+}
+
 export function createQuickFilterState(filter) {
   const next = createDefaultDiscoveryFilters();
   const normalized = normalizeQuery(filter || "all");

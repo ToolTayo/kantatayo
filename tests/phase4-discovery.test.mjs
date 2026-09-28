@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   createDefaultDiscoveryFilters,
+  createDiscoverEntryFilters,
   createQuickFilterState,
   createSearchIndex,
   getDiscoveryFilterOptions,
@@ -30,6 +31,14 @@ test("playable-only discovery excludes every unavailable catalog record", () => 
   const results = getDiscoverySongs(index, { filters: { availability: "playable" } });
   assert.equal(results.length, catalog.length - unavailable.length);
   assert.equal(results.some((song) => !song.youtubeVideoId), false);
+});
+
+test("Discover entry defaults to the playable catalog", () => {
+  const filters = createDiscoverEntryFilters();
+  const results = getDiscoverySongs(index, { filters });
+  assert.equal(filters.availability, "playable");
+  assert.equal(results.length, 594);
+  assert.equal(results.every((song) => Boolean(song.youtubeVideoId)), true);
 });
 
 test("all songs remains browseable when the playable pool is empty", () => {
