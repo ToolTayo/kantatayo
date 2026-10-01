@@ -56,12 +56,12 @@ test("the current catalog duplicates and Torete variant remain skipped", () => {
 });
 
 test("primary catalog remains the playable production baseline", () => {
-  assert.equal(catalog.length, 661);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 594);
+  assert.equal(catalog.length, 761);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 694);
   assert.equal(catalog.filter((song) => !song.youtubeVideoId).length, 67);
   assert.equal(catalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
   assert.equal(new Set(catalog.map((song) => song.id)).size, catalog.length);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 594);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 694);
   assert.equal(new Set(catalog.map((song) => songKey(song.title, song.artist))).size, catalog.length);
 });
 
@@ -73,5 +73,5 @@ test("normalization is deterministic and accent-safe for duplicate comparison", 
 test("audit loader preserves the persisted report and current catalog without network access", async () => {
   const audit = await loadExpansionAudit();
   assert.equal(audit.entries.length, 50);
-  assert.equal(audit.catalog.length, 661);
+  assert.equal(audit.catalog.length, 761);
 });

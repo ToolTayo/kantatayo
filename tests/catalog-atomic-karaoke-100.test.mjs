@@ -44,7 +44,7 @@ test("Atomic expansion is appended without duplicate IDs, videos, or song pairs"
   assert.ok(additions.every((song) => song.tags.includes("atomic-karaoke")));
   assert.equal(additions.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 96);
   assert.equal(new Set(catalog.map((song) => song.id)).size, catalog.length);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 594);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 694);
   assert.equal(new Set(catalog.map(songKey)).size, catalog.length);
   assert.equal(catalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });

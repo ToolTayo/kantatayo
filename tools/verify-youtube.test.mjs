@@ -153,8 +153,8 @@ test("production Party Tyme removals are catalog-only unassignments with preserv
     assert.match(record?.unassignmentReason || "", /Party Tyme presentation/);
     assert.equal(candidates.candidates.some((item) => item.songId === songId), false, songId);
   }
-  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 594);
-  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 594);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 694);
+  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 694);
 });
 
 test("unassigns only currently promoted Party Tyme records and preserves historical evidence", async () => {

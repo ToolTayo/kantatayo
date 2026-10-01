@@ -113,7 +113,7 @@ test("preferences do not filter local discovery results", async () => {
 test("promoted IDs and catalog playability remain unchanged", async () => {
   const raw = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
   const promoted = raw.filter((song) => song.youtubeVideoId !== null);
-  assert.equal(promoted.length, 594);
+  assert.equal(promoted.length, 694);
   assert.equal(raw.filter((song) => song.youtubeVideoId === null).length, 67);
   assert.equal(raw.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });
