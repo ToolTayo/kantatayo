@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { buildPlayabilityAudit, hashCatalog } from "../tools/build-playability-audit.mjs";
-import { PLAYABILITY_STATUSES, resultStatusForError, summarizeAuditEntries } from "../src/playability-audit.js";
+import { isTerminalStatus, PLAYABILITY_STATUSES, resultStatusForError, summarizeAuditEntries } from "../src/playability-audit.js";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
@@ -10,14 +10,14 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 test("playability manifest covers the current catalog without claiming iframe playback", async () => {
   const catalogBefore = await read("data/songs.sample.json");
   const report = await buildPlayabilityAudit({ outputPath: null, generatedAt: "2026-09-27T00:00:00.000Z" });
-  assert.equal(report.catalogCount, 859);
-  assert.equal(report.entries.length, 859);
+  assert.equal(report.catalogCount, 959);
+  assert.equal(report.entries.length, 959);
   assert.equal(report.auditStatus, "PENDING_BROWSER_AUDIT");
   assert.equal(report.counts.confirmedPlayable, 0);
   assert.equal(report.counts.unavailable, 67);
   assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNAVAILABLE").length, 67);
-  assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNTESTED").length, 792);
-  assert.equal(new Set(report.entries.map((entry) => entry.songId)).size, 859);
+  assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNTESTED").length, 892);
+  assert.equal(new Set(report.entries.map((entry) => entry.songId)).size, 959);
   assert.equal(report.entries.find((entry) => entry.title === "Ere")?.videoId, null);
   assert.equal(await read("data/songs.sample.json"), catalogBefore);
 });
@@ -33,6 +33,9 @@ test("the browser harness exposes conservative player classifications", async ()
   assert.match(script, /localStorage/);
   assert.match(runner, /CONTROL_IDS/);
   assert.match(runner, /CONTROL_GATE_FAILED/);
+  assert.match(runner, /stale results overwrite a/);
+  assert.match(runner, /Date\.parse\(result\?\.testedAt/);
+  assert.match(script, /isTerminalStatus\(currentStatus\(\)\)/);
   assert.match(runner, /chromium\.launch/);
   assert.match(runner, /youtube-playability-audit\.html/);
   assert.match(html, /Export report/);
@@ -46,6 +49,12 @@ test("known YouTube player errors remain distinct", () => {
   assert.equal(resultStatusForError(150), "ERROR 150");
   assert.equal(resultStatusForError(153), "ERROR 153");
   assert.equal(resultStatusForError(999), "INCONCLUSIVE");
+});
+
+test("terminal runtime results are protected from late player callbacks", () => {
+  assert.equal(isTerminalStatus("PASS"), true);
+  assert.equal(isTerminalStatus("ERROR 150"), true);
+  assert.equal(isTerminalStatus("PLAYING"), false);
 });
 
 test("summary counts do not mistake metadata for actual playback", () => {

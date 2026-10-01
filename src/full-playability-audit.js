@@ -1,5 +1,5 @@
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
-import { isAllowedAuditContext, mergeAuditResult, PLAYABILITY_STATUSES, resultStatusForError, summarizeAuditEntries } from "./playability-audit.js";
+import { isAllowedAuditContext, isTerminalStatus, mergeAuditResult, PLAYABILITY_STATUSES, resultStatusForError, summarizeAuditEntries } from "./playability-audit.js";
 
 const DEFAULT_REPORT_URL = "tools/youtube-full-playability-audit.json";
 const STORAGE_KEY_BASE = "kantacue:youtube-full-playability-audit:v1";
@@ -120,6 +120,10 @@ function handleReady(videoId) {
 
 function handleState(playerState, videoId) {
   if (videoId !== state.activeVideoId) return;
+  // YouTube can emit a late PLAYING callback after the sustained-playback
+  // timer has already recorded PASS (or after a terminal failure). Never
+  // downgrade a terminal audit result back to an in-progress state.
+  if (isTerminalStatus(currentStatus())) return;
   if (playerState === YOUTUBE_PLAYER_STATE.PLAYING) {
     saveResult(videoId, { iframeStatus: "PLAYING", failureClassification: null });
     const run = state.run;

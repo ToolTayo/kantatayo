@@ -19442,5 +19442,2177 @@
     ],
     "demandTier": null,
     "youtubeVideoId": "iTUm909BzgU"
+  },
+  {
+    "id": "sample-881",
+    "title": "SAMPU",
+    "artist": "Jona",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "7zd-RVYdpRU"
+  },
+  {
+    "id": "sample-882",
+    "title": "BAKIT BA GANYAN",
+    "artist": "Dina Bonnevie",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "RVU9nEPogw0"
+  },
+  {
+    "id": "sample-883",
+    "title": "IKAW SANA",
+    "artist": "Rob Deniel",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "hopeful"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "pop"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "Cw8Bmf0VIEk"
+  },
+  {
+    "id": "sample-884",
+    "title": "IF YOU'RE NOT THE ONE",
+    "artist": "Daniel Bedingfield",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "OPUtfnInk7w"
+  },
+  {
+    "id": "sample-885",
+    "title": "KITA NA KITA",
+    "artist": "Moira Dela Torre & Jason Hernandez",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "shuBr3RlS4Y"
+  },
+  {
+    "id": "sample-886",
+    "title": "CEBUANA",
+    "artist": "Karencitta",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "AkiwBKpHMEU"
+  },
+  {
+    "id": "sample-887",
+    "title": "THE OLD SONGS",
+    "artist": "David Pomeranz",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "VqD1xTWLUJE"
+  },
+  {
+    "id": "sample-888",
+    "title": "FAREWELL (To You My Friend)",
+    "artist": "Raymond Lauchengco",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "QkiX4V1UVV4"
+  },
+  {
+    "id": "sample-889",
+    "title": "I LIKE YOU SO MUCH, WE LOST IT",
+    "artist": "Ysabelle Cuevas",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "vrO8DiaMTrM"
+  },
+  {
+    "id": "sample-890",
+    "title": "LOVE STORY KO",
+    "artist": "Gloc 9",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "reflective",
+      "empowering"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "pop"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "52NCZG4JkWA"
+  },
+  {
+    "id": "sample-891",
+    "title": "THIS TIME",
+    "artist": "Jadine",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "UiwO7XZX5n4"
+  },
+  {
+    "id": "sample-892",
+    "title": "GIVE ME A CHANCE",
+    "artist": "Ric Segreto",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "nGJzlPwEV1Y"
+  },
+  {
+    "id": "sample-893",
+    "title": "HAPPY BREAKUP",
+    "artist": "Donnalyn Bartolome",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "dI_A9kkBkM4"
+  },
+  {
+    "id": "sample-894",
+    "title": "MANGGA",
+    "artist": "Jireh Lim",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "modern"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "pNlmPcfYAFU"
+  },
+  {
+    "id": "sample-895",
+    "title": "BABAERO",
+    "artist": "Gins & Melodies ft. Hev Abi",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "UTUn0fN4FZU"
+  },
+  {
+    "id": "sample-896",
+    "title": "KUNG PWEDE LANG",
+    "artist": "Emman Nimedez",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "jRpX1zO-BUA"
+  },
+  {
+    "id": "sample-897",
+    "title": "JAR OF HEARTS",
+    "artist": "Christina Perri",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "ballad",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "M1dZHEcxSbw"
+  },
+  {
+    "id": "sample-898",
+    "title": "TIL DEATH DO US PART",
+    "artist": "Leroy Sanchez",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "JVl-xdLS8z4"
+  },
+  {
+    "id": "sample-899",
+    "title": "ONE MOMENT IN TIME",
+    "artist": "Whitney Houston",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "reflective"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "classics",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "3GrPSMWhJOI"
+  },
+  {
+    "id": "sample-900",
+    "title": "PERHAPS LOVE",
+    "artist": "John Denver",
+    "language": "English",
+    "genre": "Country",
+    "era": "1970s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "tags": [
+      "popular",
+      "coversph",
+      "classics",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "eAYX5ZV2Ku8"
+  },
+  {
+    "id": "sample-901",
+    "title": "WHEN SCARS BECOME ART",
+    "artist": "Gatton",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "coNqRPSbp9Q"
+  },
+  {
+    "id": "sample-902",
+    "title": "HEALING",
+    "artist": "Deniece Williams",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "Vg3ylBD5o_g"
+  },
+  {
+    "id": "sample-903",
+    "title": "IF I'M NOT IN LOVE",
+    "artist": "Faith Hill",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "INGlvBIPt7g"
+  },
+  {
+    "id": "sample-904",
+    "title": "BE MY FAIRYTALE",
+    "artist": "Janella Salvador",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "KSsL7mKAqsI"
+  },
+  {
+    "id": "sample-905",
+    "title": "TUNAY NA LIGAYA",
+    "artist": "Ariel Rivera",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "C8jvm3WlnQ8"
+  },
+  {
+    "id": "sample-906",
+    "title": "HAYAAN MO SILA",
+    "artist": "Aiana Juarez",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "nRsI_Kk0kWY"
+  },
+  {
+    "id": "sample-907",
+    "title": "ALONE",
+    "artist": "Celine Dion",
+    "language": "English",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "classics",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "rfbLyDGutdY"
+  },
+  {
+    "id": "sample-908",
+    "title": "PAKISABI NA LANG",
+    "artist": "Aiza \"Ice\" Seguerra",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "GYRSVgWwJ10"
+  },
+  {
+    "id": "sample-909",
+    "title": "25 MINUTES",
+    "artist": "Michael Learns To Rock",
+    "language": "English",
+    "genre": "Rock",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "bT0LvRskoNM"
+  },
+  {
+    "id": "sample-910",
+    "title": "MAHAL KO O MAHAL AKO",
+    "artist": "Regine Velasquez",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "classics",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "kfPVDL-7an0"
+  },
+  {
+    "id": "sample-911",
+    "title": "GUSTO KO NANG BUMITAW",
+    "artist": "Morisette Amon",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "7Yb4Prp5IVA"
+  },
+  {
+    "id": "sample-912",
+    "title": "PANAKIP BUTAS",
+    "artist": "Hajji Alejandro",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "1970s",
+    "mood": [
+      "feel-good",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "VCvad8Embk0"
+  },
+  {
+    "id": "sample-913",
+    "title": "'TIL THEY TAKE MY HEART AWAY",
+    "artist": "Clair Marlo",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "xtWfcXK1sBY"
+  },
+  {
+    "id": "sample-914",
+    "title": "BAGAY TAYO",
+    "artist": "ALLMO$T",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "A2wG9u7jyIw"
+  },
+  {
+    "id": "sample-915",
+    "title": "THERE YOU'LL BE",
+    "artist": "Faith Hill",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "PS4natbG-DA"
+  },
+  {
+    "id": "sample-916",
+    "title": "THE JOURNEY",
+    "artist": "Lea Salonga",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "bIDgEh4Jy3k"
+  },
+  {
+    "id": "sample-917",
+    "title": "SO MANY QUESTIONS",
+    "artist": "Side A",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "classics"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "i1t4YfzmDlo"
+  },
+  {
+    "id": "sample-918",
+    "title": "FATHER AND SON",
+    "artist": "Rod Steward",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "ygz7dK9QtJA"
+  },
+  {
+    "id": "sample-919",
+    "title": "PPAP",
+    "artist": "Pen Pineapple Apple Pen",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "vZE63I9J4Ms"
+  },
+  {
+    "id": "sample-920",
+    "title": "LIGAYA",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "classics"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "JS1l8BFnp6c"
+  },
+  {
+    "id": "sample-921",
+    "title": "MINAMAHAL",
+    "artist": "Sarah Geronimo",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "modern",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "eIaXzQQRXzI"
+  },
+  {
+    "id": "sample-922",
+    "title": "GET HERE",
+    "artist": "Oleta Adams",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "eYoZIqTWoCY"
+  },
+  {
+    "id": "sample-923",
+    "title": "REFLECTION (2020)",
+    "artist": "Christina Aguilera",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "5aSXChS6lHI"
+  },
+  {
+    "id": "sample-924",
+    "title": "IMAHINASYON",
+    "artist": "TJ Monterde",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2020s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "modern"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "lAJKxOeZIr8"
+  },
+  {
+    "id": "sample-925",
+    "title": "NGAYONG PASKO MAGNININGNING ANG PILIPINO",
+    "artist": "ABS CBN CSID 2010",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "lOY__dV79vI"
+  },
+  {
+    "id": "sample-926",
+    "title": "PALIGOY LIGOY",
+    "artist": "Nadine Lustre",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "WEesL4ZWK98"
+  },
+  {
+    "id": "sample-927",
+    "title": "I'LL BE THERE",
+    "artist": "Mariah Carey",
+    "language": "English",
+    "genre": "Pop",
+    "era": "1990s",
+    "mood": [
+      "empowering",
+      "hopeful"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "pop",
+      "classics",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "-FgRPn9TfbM"
+  },
+  {
+    "id": "sample-928",
+    "title": "ANO NGA BA TAYO",
+    "artist": "Jona",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "hT2Ki50MtJQ"
+  },
+  {
+    "id": "sample-929",
+    "title": "ANG AKING AWITIN",
+    "artist": "Bong Gabriel",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "eb_z25dXna4"
+  },
+  {
+    "id": "sample-930",
+    "title": "LOVE WILL LEAD YOU BACK",
+    "artist": "Taylor Dayne",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "h9se5Iz0wHI"
+  },
+  {
+    "id": "sample-931",
+    "title": "TILL THERE WAS YOU",
+    "artist": "The Beatles",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "m7lTbYMkXRk"
+  },
+  {
+    "id": "sample-932",
+    "title": "SANA'Y TUMIBOK MULI",
+    "artist": "Klarisse De Guzman",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "heartbreak",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "oTYk2av3Rok"
+  },
+  {
+    "id": "sample-933",
+    "title": "BEAUTY AND MADNESS",
+    "artist": "Fra Lippo Lippi",
+    "language": "English",
+    "genre": "Pop Rock",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "ay15Lrrz6Rk"
+  },
+  {
+    "id": "sample-934",
+    "title": "CATCH ME I'M FALLING",
+    "artist": "Toni Gonzaga",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "7-BP1bZduHE"
+  },
+  {
+    "id": "sample-935",
+    "title": "IMAGINE YOU AND ME",
+    "artist": "ALDUB DUET",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "qzlruSO-FNs"
+  },
+  {
+    "id": "sample-936",
+    "title": "NERBYOSO",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "rock"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "b8k60cVvszM"
+  },
+  {
+    "id": "sample-937",
+    "title": "Beautiful Days",
+    "artist": "KYLA",
+    "language": "Filipino",
+    "genre": "R&B",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "heartbreak"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "5jVXawmwcNU"
+  },
+  {
+    "id": "sample-938",
+    "title": "ALAY",
+    "artist": "Kamikazee",
+    "language": "Filipino",
+    "genre": "Rock",
+    "era": "2000s",
+    "mood": [
+      "party",
+      "empowering"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "group",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "rock"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "xNchS40L8cE"
+  },
+  {
+    "id": "sample-939",
+    "title": "DREAMING OF YOU",
+    "artist": "Selena",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "1g-ecfIa33Q"
+  },
+  {
+    "id": "sample-940",
+    "title": "IKAW PA LAMANG",
+    "artist": "Rodel Naval",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "hnm_rZM8_oU"
+  },
+  {
+    "id": "sample-941",
+    "title": "PAIN IN MY HEART",
+    "artist": "Second Wind",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "-Vwo-jzoZis"
+  },
+  {
+    "id": "sample-942",
+    "title": "FAMILY IS LOVE",
+    "artist": "ABS CBN CSID 2018",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "68HWsHCofVs"
+  },
+  {
+    "id": "sample-943",
+    "title": "UNCHAINED MELODY",
+    "artist": "Righteous Brothers",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "fkVZGXJZvAc"
+  },
+  {
+    "id": "sample-944",
+    "title": "ISANG PAMILYA TAYO",
+    "artist": "ABS-CBN CSID 2016",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "VUlhXmq1bts"
+  },
+  {
+    "id": "sample-945",
+    "title": "BALIW",
+    "artist": "COLN",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "ENOxvLIJrRs"
+  },
+  {
+    "id": "sample-946",
+    "title": "PANAGINIP LANG",
+    "artist": "Moira Dela Torre",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2020s",
+    "mood": [
+      "heartbreak",
+      "reflective"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "modern",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "n6yWgLXxeDQ"
+  },
+  {
+    "id": "sample-947",
+    "title": "DDU DU DDU DU",
+    "artist": "BLACKPINK",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "cqNE7PsYb6Y"
+  },
+  {
+    "id": "sample-948",
+    "title": "PART OF YOUR WORLD",
+    "artist": "Jodi Benson",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "cpqZD1_v6JA"
+  },
+  {
+    "id": "sample-949",
+    "title": "KAN GOO",
+    "artist": "Bright Vachirawit",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "nedlyYj_83I"
+  },
+  {
+    "id": "sample-950",
+    "title": "AKALA",
+    "artist": "Marion Aunor",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "ORcP5iVuuJ8"
+  },
+  {
+    "id": "sample-951",
+    "title": "FOR YOU I WILL",
+    "artist": "Monica",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "Oa4xR6BZYvY"
+  },
+  {
+    "id": "sample-952",
+    "title": "KING AND QUEEN OF HEARTS",
+    "artist": "David Pomeranz",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "kR0hKwteCTM"
+  },
+  {
+    "id": "sample-953",
+    "title": "EXCHANGE OF HEARTS",
+    "artist": "David Slater",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "lid082veCFE"
+  },
+  {
+    "id": "sample-954",
+    "title": "LIKE A ROSE",
+    "artist": "A1",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "LxVZKM12Rys"
+  },
+  {
+    "id": "sample-955",
+    "title": "I WILL BE HERE - Alessandra De Rossi [from Through Night And Day] (KARAOKE VERSION)",
+    "artist": "SOLO VERSION",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "5I6r2aCz0ic"
+  },
+  {
+    "id": "sample-956",
+    "title": "HUWAG SIYA",
+    "artist": "Donnalyn Bartolome ft. Shehyee",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "79N-lIylcJU"
+  },
+  {
+    "id": "sample-957",
+    "title": "SI AIDA, SI LORNA, O SI FE",
+    "artist": "Marco Sison",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "l2-QNMWXWrY"
+  },
+  {
+    "id": "sample-958",
+    "title": "WAG NA INIT ULO BABY",
+    "artist": "Rivermaya",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "rock"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "_ciw7VaKfac"
+  },
+  {
+    "id": "sample-959",
+    "title": "GOD GAVE ME YOU",
+    "artist": "Bryan White",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "X1RD7dlmhqA"
+  },
+  {
+    "id": "sample-960",
+    "title": "HEAVEN BY YOUR SIDE",
+    "artist": "A1",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "K1dGI8Slexk"
+  },
+  {
+    "id": "sample-961",
+    "title": "DULO",
+    "artist": "Sarah Geronimo",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "2010s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "modern",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "OTB3S0ibwT0"
+  },
+  {
+    "id": "sample-962",
+    "title": "KATARUNGAN",
+    "artist": "Freddie Aguilar",
+    "language": "Filipino",
+    "genre": "Folk",
+    "era": "1970s",
+    "mood": [
+      "reflective",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "toeyVEeQ4W8"
+  },
+  {
+    "id": "sample-963",
+    "title": "KALIWETE",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "rock"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "3BP2C4Zt07c"
+  },
+  {
+    "id": "sample-964",
+    "title": "KAILAN",
+    "artist": "Eraserheads",
+    "language": "Filipino",
+    "genre": "Alternative",
+    "era": "1990s",
+    "mood": [
+      "nostalgic",
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "low",
+    "performanceType": "group",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "classics",
+      "rock"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "8zj5ojdmiiI"
+  },
+  {
+    "id": "sample-965",
+    "title": "PARANG TAYO PERO HINDI",
+    "artist": "Angeline Quinto & Michael Pangilinan",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "pWVBjzKeRgA"
+  },
+  {
+    "id": "sample-966",
+    "title": "BREAK IT TO ME GENTLY",
+    "artist": "Angela Bofill",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "z9PgCFhXK0s"
+  },
+  {
+    "id": "sample-967",
+    "title": "LOVER",
+    "artist": "Taylor Swift",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "love",
+      "feel-good"
+    ],
+    "difficulty": "easy",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "modern",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "6q1Oj_yrfq0"
+  },
+  {
+    "id": "sample-968",
+    "title": "ONE HELLO",
+    "artist": "Randy Crawford",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "nxzY5SBvTaY"
+  },
+  {
+    "id": "sample-969",
+    "title": "HUGOT",
+    "artist": "Regine Velasquez",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1990s",
+    "mood": [
+      "love",
+      "dramatic"
+    ],
+    "difficulty": "hard",
+    "vocalRange": "high",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm",
+      "classics",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "UW-sDBpsgYY"
+  },
+  {
+    "id": "sample-970",
+    "title": "QING FEI DE YI",
+    "artist": "Harlem Yu",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "1FX5cLb989w"
+  },
+  {
+    "id": "sample-971",
+    "title": "THIS I PROMISE YOU",
+    "artist": "NSYNC",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "To1vBHyaUqE"
+  },
+  {
+    "id": "sample-972",
+    "title": "CELESTE",
+    "artist": "Tothapi",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "loCN68XvcjA"
+  },
+  {
+    "id": "sample-973",
+    "title": "OKAY NA AKO",
+    "artist": "Kim Chiu",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "opm"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "0XOR098thTU"
+  },
+  {
+    "id": "sample-974",
+    "title": "KAHIT SINO",
+    "artist": "Richard Reynoso",
+    "language": "Filipino",
+    "genre": "Ballad",
+    "era": "1980s",
+    "mood": [
+      "love",
+      "nostalgic"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke",
+      "ballad"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "IF6PT1UMEIM"
+  },
+  {
+    "id": "sample-975",
+    "title": "MAHAL NA MAHAL KITA",
+    "artist": "Rosselle Nava",
+    "language": "Filipino",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "heartbreak"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "opm",
+      "popular",
+      "atomic-karaoke"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "0tXtl2UGrQ0"
+  },
+  {
+    "id": "sample-976",
+    "title": "YOU'LL BE IN MY HEART",
+    "artist": "NIKI",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "GlULskkUGKg"
+  },
+  {
+    "id": "sample-977",
+    "title": "LET ME BE THE ONE",
+    "artist": "Keiko Necesario",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "HG4UtaJBetI"
+  },
+  {
+    "id": "sample-978",
+    "title": "SODA POP",
+    "artist": "Saja Boys, Kpop Demon Hunter",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "Ht1kVSlsVbI"
+  },
+  {
+    "id": "sample-979",
+    "title": "AFRAID FOR LOVE TO FADE",
+    "artist": "Ian Veneracion",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "rL22cYnYFos"
+  },
+  {
+    "id": "sample-980",
+    "title": "MAU",
+    "artist": "Shanti Dope ft. PutapettyWap",
+    "language": "English",
+    "genre": "Pop",
+    "era": "2000s",
+    "mood": [
+      "feel-good"
+    ],
+    "difficulty": "medium",
+    "vocalRange": "medium",
+    "performanceType": "solo",
+    "tags": [
+      "popular",
+      "coversph",
+      "international"
+    ],
+    "demandTier": null,
+    "youtubeVideoId": "squNKHzJuBU"
   }
 ]

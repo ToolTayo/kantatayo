@@ -51,6 +51,13 @@ export function songIdentityKey(title, artist) {
   return normalizePart(title) + "\u0000" + normalizePart(artist);
 }
 
+// Keep explicit historical quality exclusions out of future persisted-report
+// expansions. These are not catalog records and must not be recreated merely
+// because a provider report still contains the old candidate.
+const HISTORICAL_QUALITY_EXCLUSIONS = new Map([
+  [songIdentityKey("TUNAY NA NAGMAMAHAL", "J Brothers"), "previous catalog quality review exclusion"]
+]);
+
 function catalogHash(catalog) {
   return createHash("sha256").update(JSON.stringify(catalog)).digest("hex");
 }
@@ -92,6 +99,8 @@ function candidateRejection(entry, catalog, identityKeys, videoIds) {
   const sourceTitle = String(entry.videoTitle || entry.sourceTitle || "").replace(/\s+/g, " ").trim();
   const metadata = metadataFor(entry);
   const reasons = [];
+  const historicalExclusion = HISTORICAL_QUALITY_EXCLUSIONS.get(songIdentityKey(title, artist));
+  if (historicalExclusion) reasons.push(historicalExclusion);
   if (entry.decision && entry.decision !== "NEW CANDIDATE") reasons.push("source decision was " + entry.decision);
   if (!VIDEO_ID_PATTERN.test(String(entry.videoId || ""))) reasons.push("invalid YouTube video ID");
   if (!title || !artist) reasons.push("metadata incomplete");

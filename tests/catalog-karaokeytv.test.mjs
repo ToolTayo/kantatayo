@@ -53,12 +53,12 @@ test("KaraokeyTV additions are unique against the prior 211-song catalog", () =>
 
 test("expanded catalog remains fully valid and playable", () => {
   const normalized = normalizeCatalog(catalog, { logger: { warn() {} } });
-  assert.equal(catalog.length, 859);
-  assert.equal(normalized.songs.length, 859);
+  assert.equal(catalog.length, 959);
+  assert.equal(normalized.songs.length, 959);
   assert.equal(normalized.rejectedRecords, 0);
   assert.deepEqual(normalized.warnings, []);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 792);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 892);
   assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
-  assert.equal(new Set(catalog.map((song) => song.id)).size, 859);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 792);
+  assert.equal(new Set(catalog.map((song) => song.id)).size, 959);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 892);
 });

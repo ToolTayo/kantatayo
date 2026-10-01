@@ -35,6 +35,13 @@ test("identity normalization treats punctuation and karaoke suffixes as duplicat
   assert.equal(songIdentityKey("MILOVES (OTW SAYO)", "King Badger"), songIdentityKey("MI LOVES [OTW SAYO]", "King Badger"));
 });
 
+test("historical quality exclusions are not reintroduced from provider reports", () => {
+  const sourceReports = [{ provider: "Atomic Karaoke", file: "fixture.json", report: { all: [{ title: "TUNAY NA NAGMAMAHAL", artist: "J Brothers", videoId: "aaaaaaaaaaa", videoTitle: "TUNAY NA NAGMAMAHAL - J Brothers (HD Karaoke)", embeddable: true, madeForKids: false, definition: "hd", metadata: { language: "Filipino", genre: "Pop", era: "2000s", mood: ["romantic"], difficulty: "medium", vocalRange: "medium", performanceType: "group", tags: ["opm"] } }] } }];
+  const report = buildCandidateReport([], sourceReports, { poolSize: 250 });
+  assert.equal(report.runtimeCandidates.length, 0);
+  assert.match(report.entries[0].rejectionReasons.join(" "), /quality review exclusion/);
+});
+
 test("runtime manifest includes protected sample-029 control without changing catalog data", () => {
   const control = baseSong({ id: "sample-029", title: "Sa Aking Puso", artist: "Kaye Cal", youtubeVideoId: "QBb9wO3Bj0k" });
   const source = { provider: "CoversPH", file: "persisted.json", report: { all: [candidate()] } };

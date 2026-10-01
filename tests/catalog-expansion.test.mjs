@@ -124,12 +124,12 @@ const newlyPromotedIds = {
 const unavailableIds = new Set(rawCatalog.filter((song) => song.youtubeVideoId === null).map((song) => song.id));
 
 test("expanded catalog preserves stable IDs, valid metadata, and has no duplicate songs", () => {
-  assert.equal(rawCatalog.length, 859);
+  assert.equal(rawCatalog.length, 959);
   assert.equal(normalized.rejectedRecords, 0);
   assert.ok(rawCatalog.every((song) => /^sample-\d{3}$/.test(song.id)));
-  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 859);
-  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 859);
-  assert.equal(normalized.songs.length, 859);
+  assert.equal(new Set(rawCatalog.map((song) => song.id)).size, 959);
+  assert.equal(new Set(rawCatalog.map((song) => `${song.title.trim().toLocaleLowerCase()}\u0000${song.artist.trim().toLocaleLowerCase()}`)).size, 959);
+  assert.equal(normalized.songs.length, 959);
   assert.deepEqual(normalized.warnings, []);
 });
 
@@ -144,14 +144,14 @@ test("unrelated promoted IDs and retained catalog assignments remain unchanged",
   }
 
   assert.equal(Object.keys(newlyPromotedIds).length, 41);
-  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 792);
+  assert.equal(rawCatalog.filter((song) => song.youtubeVideoId !== null).length, 892);
   assert.equal(rawCatalog.filter((song) => song.youtubeVideoId === null).length, 67);
   assert.equal(rawCatalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
 });
 
 test("new catalog records use current validator categories and remain playable", () => {
   const newSongs = rawCatalog.slice(37);
-  assert.equal(newSongs.length, 822);
+  assert.equal(newSongs.length, 922);
   const unassignedNewSongs = newSongs.filter((song) => song.youtubeVideoId === null);
   assert.equal(unassignedNewSongs.length, 57);
   assert.ok(unassignedNewSongs.every((song) => unavailableIds.has(song.id)));

@@ -103,7 +103,10 @@ try {
     for (let index = 1; index < concurrency; index += 1) {
       const extraPage = await context.newPage();
       attachDiagnostics(extraPage, diagnostics);
-      await preparePage(extraPage, workerUrl(`worker-${index}`), checkpoint, `${STORAGE_KEY}:worker-${index}`);
+      // Worker pages only need fresh rows for entries assigned to them. Loading
+      // the shared checkpoint into every page can let stale results overwrite a
+      // newer control/candidate result when reports are merged at the end.
+      await preparePage(extraPage, workerUrl(`worker-${index}`), null, `${STORAGE_KEY}:worker-${index}`);
       pages.push(extraPage);
     }
     const controlSet = new Set(CONTROL_IDS);
@@ -208,7 +211,12 @@ async function collectStoredResults(pages) {
     const stored = await page.evaluate(() => {
       try { return JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1") || "{}"); } catch { return {}; }
     });
-    Object.assign(results, stored.results || {});
+    for (const [videoId, result] of Object.entries(stored.results || {})) {
+      const previous = results[videoId];
+      const resultTime = Date.parse(result?.testedAt || "") || 0;
+      const previousTime = Date.parse(previous?.testedAt || "") || 0;
+      if (!previous || resultTime >= previousTime) results[videoId] = result;
+    }
   }
   return { version: 1, results };
 }

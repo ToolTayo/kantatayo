@@ -37,7 +37,7 @@ test("Discover defaults to the playable public catalog", () => {
   const filters = createDefaultDiscoveryFilters();
   const results = getDiscoverySongs(index, { filters });
   assert.equal(filters.availability, "all");
-  assert.equal(results.length, 792);
+  assert.equal(results.length, 892);
   assert.equal(results.every((song) => Boolean(song.youtubeVideoId)), true);
 });
 
@@ -66,7 +66,7 @@ test("catalog filters compose as an intersection", () => {
 test("reset state has no active filters and preferences are not discovery filters", () => {
   assert.equal(hasActiveDiscoveryFilters(createDefaultDiscoveryFilters()), false);
   assert.equal(hasActiveDiscoveryFilters({ language: "filipino" }), true);
-  assert.equal(getDiscoverySongs(index, { filters: createDefaultDiscoveryFilters() }).length, 792);
+  assert.equal(getDiscoverySongs(index, { filters: createDefaultDiscoveryFilters() }).length, 892);
 });
 
 test("quick filters replace the previous quick-filter state", () => {
