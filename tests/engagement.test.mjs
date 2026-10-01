@@ -45,7 +45,7 @@ test("continue singing combines recent plays and sung history without duplicate 
 test("recently added shelf follows appended catalog order and most-sung waits for real local activity", () => {
   const recent = getRecentlyAddedSongs(songs, 3);
   assert.equal(recent.length, 3);
-  assert.equal(recent[0].id, "sample-780");
+  assert.equal(recent[0].id, "sample-880");
   const state = createDefaultUserState();
   assert.deepEqual(getMostSungSongs(songs, state), []);
   state.favorites = [playable[0].id];

@@ -43,7 +43,7 @@ function normalizePart(value) {
     .replace(/\b(?:feat\.?|ft\.?)\b/g, " featuring ")
     .replace(/\b(?:karaoke|instrumental|backing\s+track|minus\s+one|original\s+key|lyrics?|hd)\b/g, " ")
     .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, "")
     .trim();
 }
 
@@ -376,4 +376,3 @@ try {
   console.error("KantaCue expansion failed: " + (error.message || error));
   process.exitCode = 1;
 }
-

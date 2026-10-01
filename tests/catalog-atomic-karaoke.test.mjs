@@ -64,15 +64,15 @@ test("the first 261 production records retain their current integrity snapshot",
 test("expanded production catalog is valid, playable, unique, and has no dangling references", () => {
   const normalized = normalizeCatalog(catalog, { logger: { warn() {} } });
   const catalogIds = new Set(catalog.map((song) => song.id));
-  assert.equal(catalog.length, 761);
-  assert.equal(normalized.songs.length, 761);
+  assert.equal(catalog.length, 859);
+  assert.equal(normalized.songs.length, 859);
   assert.equal(normalized.rejectedRecords, 0);
   assert.deepEqual(normalized.warnings, []);
-  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 694);
+  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 792);
   assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
-  assert.equal(new Set(catalog.map((song) => song.id)).size, 761);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 694);
-  assert.equal(new Set(catalog.map(songKey)).size, 761);
+  assert.equal(new Set(catalog.map((song) => song.id)).size, 859);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 792);
+  assert.equal(new Set(catalog.map(songKey)).size, 859);
   assert.ok(demand.signals.every((signal) => catalogIds.has(signal.songId)));
   assert.equal(fs.existsSync("data/songs.exclusive.json"), false);
 });

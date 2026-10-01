@@ -32,6 +32,7 @@ test("candidate preparation deduplicates catalog identities and rejects unsafe v
 
 test("identity normalization treats punctuation and karaoke suffixes as duplicates", () => {
   assert.equal(songIdentityKey("My Song (Karaoke)", "A & B"), songIdentityKey("my-song", "A and B"));
+  assert.equal(songIdentityKey("MILOVES (OTW SAYO)", "King Badger"), songIdentityKey("MI LOVES [OTW SAYO]", "King Badger"));
 });
 
 test("runtime manifest includes protected sample-029 control without changing catalog data", () => {
@@ -43,4 +44,3 @@ test("runtime manifest includes protected sample-029 control without changing ca
   assert.equal(manifest.entries.length, 2);
   assert.equal(control.youtubeVideoId, "QBb9wO3Bj0k");
 });
-

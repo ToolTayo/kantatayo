@@ -30,3 +30,7 @@ tools/kantacue-expansion-100-report.json
 tools/kantacue-expansion-100.runtime.json
 tools/kantacue-expansion-100.runtime.checkpoint.json
 tools/kantacue-expansion-100.runtime-manifest.json
+tools/kantacue-next-100-report.json
+tools/kantacue-next-100.runtime.json
+tools/kantacue-next-100.runtime.checkpoint.json
+tools/kantacue-next-100.runtime-manifest.json
