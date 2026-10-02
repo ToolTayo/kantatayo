@@ -75,6 +75,15 @@ test("meaningful signals unlock a non-duplicating Made for you shelf", () => {
   assert.ok(shelves.madeForYou.every((item) => item.youtubeVideoId));
 });
 
+test("reserved Home songs can stay out of the immediate recommendation shelf", () => {
+  const daily = song("daily", { demandTier: "very-high" });
+  const next = song("next", { demandTier: "high" });
+  const shelves = getHomeShelves([daily, next], [{ song: daily }, { song: next }], {}, { excludeIds: [daily.id] });
+
+  assert.deepEqual(shelves.recommended.map((item) => item.id), ["next"]);
+  assert.equal(shelves.recommended.some((item) => item.id === daily.id), false);
+});
+
 test("OPM and International shelves follow explicit catalog metadata", () => {
   const opm = song("opm", { language: "Filipino", tags: ["opm"] });
   const taggedOpm = song("tagged-opm", { language: "English", tags: ["opm"] });

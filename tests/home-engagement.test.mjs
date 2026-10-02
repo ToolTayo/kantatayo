@@ -27,6 +27,12 @@ test("Home keeps the challenge visible before completion and handles a first-eve
   assert.match(html, /data-daily-meta/);
 });
 
+test("Home introduces the challenge before the recommendation shelf without duplicate wording", () => {
+  assert.match(html, /<h2>Start singing<\/h2>/);
+  assert.match(html, /One featured challenge, then your next best picks\./);
+  assert.match(html, /<h3 id="recommended-title"[^>]*>Sing now<\/h3>/);
+});
+
 test("Home challenge reports active and completed streaks with correct singular/plural language", () => {
   const activeState = createDefaultUserState();
   activeState.dailyChallenge.completedDates = ["2026-09-24"];

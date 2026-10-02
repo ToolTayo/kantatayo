@@ -68,7 +68,10 @@ function legacyView(link) {
 }
 
 function renderHomeSections(allSongs, userState, recommendations, interactionState) {
-  const sections = getHomeShelves(allSongs, recommendations, userState);
+  const dailyChallenge = getDailyChallenge(allSongs, userState);
+  const sections = getHomeShelves(allSongs, recommendations, userState, {
+    excludeIds: dailyChallenge.song ? [dailyChallenge.song.id] : []
+  });
   sections.continue = getContinueSingingSongs(allSongs, userState);
   sections.recentlyAdded = getRecentlyAddedSongs(allSongs);
   sections.trending = getMostSungSongs(allSongs, userState);

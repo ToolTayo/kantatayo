@@ -156,11 +156,13 @@ export function getDiscoveryPage(songs, page = 1, pageSize = 24) {
  * Recommendations keep their existing order; category shelves use demand and
  * stable title order, while used IDs are avoided when there are alternatives.
  */
-export function getHomeShelves(songs = [], recommendations = [], userState = {}) {
+export function getHomeShelves(songs = [], recommendations = [], userState = {}, options = {}) {
   const catalog = Array.isArray(songs) ? songs.filter(Boolean) : [];
+  const excludedIds = new Set((Array.isArray(options.excludeIds) ? options.excludeIds : []).map((id) => String(id).toLowerCase()));
   const recommendationSongs = (Array.isArray(recommendations) ? recommendations : [])
     .map((item) => item?.song)
     .filter((song) => isPlayableSong(song))
+    .filter((song) => !excludedIds.has(song.id.toLowerCase()))
     .filter((song, index, all) => all.findIndex((item) => item.id.toLowerCase() === song.id.toLowerCase()) === index);
   const personalized = hasMeaningfulUserSignals(userState);
   const recommended = selectTopHomePicks(recommendationSongs, personalized);
