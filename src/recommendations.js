@@ -30,7 +30,9 @@ export const RECOMMENDATION_WEIGHTS = Object.freeze({
   RECENT_PLAYED_MAX: 10,
   RECENT_RECOMMENDATION: 14,
   ARTIST_REPEAT: 12,
-  PROFILE_REPEAT: 4
+  PROFILE_REPEAT: 4,
+  SESSION_ARTIST_REPEAT: 8,
+  SESSION_ARTIST_REPEAT_CAP: 24
 });
 
 export const RECENT_PLAYED_HALF_LIFE_DAYS = 7;
@@ -87,11 +89,17 @@ export function getRecommendations(songs = [], userState = {}, options = {}) {
   const sungArtistReferences = createArtistReferenceMap(sungReferences);
   const latestSungAtById = latestActivityById(history, "sungAt");
   const latestPlayedAtById = latestActivityById(recentlyPlayed, "playedAt");
+  const session = normalizeSessionContext(options.session);
+  const sessionCompletedIds = toIdSet(session.completed.map((entry) => entry.id));
+  const sessionArtistCounts = createSessionArtistCounts(session.completed, songsById);
 
   const candidates = safeSongs
     .filter((song) => {
       const key = song.id.toLowerCase();
-      return !dislikedIds.has(key) && !queuedIds.has(key) && key !== currentId.toLowerCase();
+      return !dislikedIds.has(key)
+        && !queuedIds.has(key)
+        && !sessionCompletedIds.has(key)
+        && key !== currentId.toLowerCase();
     })
     .map((song) => scoreRecommendationCandidate(song, {
       preferences: userState.preferences,
@@ -111,6 +119,7 @@ export function getRecommendations(songs = [], userState = {}, options = {}) {
       latestSungAtById,
       latestPlayedAtById,
       recentRecommendationIds,
+      sessionArtistCounts,
       nowMs
     }));
 
@@ -146,6 +155,7 @@ export function scoreRecommendationCandidate(song, context = {}) {
   const likedIds = context.likedIds || new Set();
   const favoriteIds = context.favoriteIds || new Set();
   const recentRecommendationIds = context.recentRecommendationIds || new Set();
+  const sessionArtistCounts = context.sessionArtistCounts || new Map();
   const history = Array.isArray(context.history) ? context.history : [];
   const recentlyPlayed = Array.isArray(context.recentlyPlayed) ? context.recentlyPlayed : [];
   const nowMs = Number.isFinite(context.nowMs) ? context.nowMs : Date.now();
@@ -163,6 +173,7 @@ export function scoreRecommendationCandidate(song, context = {}) {
   const recentSungPenalty = latestSungAt ? getRecentSungPenalty(latestSungAt, nowMs) : 0;
   const recentPlayedPenalty = latestPlayedAt ? getRecentPlayedPenalty(latestPlayedAt, nowMs) : 0;
   const recentRecommendationPenalty = recentRecommendationIds.has(key) ? RECOMMENDATION_WEIGHTS.RECENT_RECOMMENDATION : 0;
+  const sessionArtistRepeatPenalty = getSessionArtistRepeatPenalty(songProfile.artist, sessionArtistCounts);
   const demandTier = normalizeDemandTier(song?.demandTier);
   const demandSignal = demandTier ? DEMAND_WEIGHTS[demandTier] : 0;
   const preferenceSignal = Math.min(
@@ -185,6 +196,7 @@ export function scoreRecommendationCandidate(song, context = {}) {
     recentSungPenalty,
     recentPlayedPenalty,
     recentRecommendationPenalty,
+    sessionArtistRepeatPenalty,
     demandTier,
     demandSignal,
     artistDiversity: false
@@ -203,7 +215,8 @@ export function scoreRecommendationCandidate(song, context = {}) {
     + demandSignal
     - recentSungPenalty
     - recentPlayedPenalty
-    - recentRecommendationPenalty;
+    - recentRecommendationPenalty
+    - sessionArtistRepeatPenalty;
 
   return {
     song,
@@ -232,6 +245,7 @@ export function buildReason(signals = {}) {
   if (preferenceMatches.length > 0) return `Matches your ${joinLabels(preferenceMatches)} preferences`;
   if (signals.likedSimilarity > 0 || signals.favoriteSimilarity > 0) return "Similar to songs you liked or favorited";
   if (signals.sungSimilarity > 0) return "A familiar fit based on songs you have sung";
+  if (signals.sessionArtistRepeatPenalty > 0 && signals.artistDiversity) return "A different artist for your next song";
   if (normalizeDemandTier(signals.demandTier)) return "A popular karaoke pick";
   if (signals.artistDiversity) return "A different artist for variety";
   return "A playable karaoke pick";
@@ -358,6 +372,38 @@ function latestActivityById(entries, timestampKey) {
     if (!current || Date.parse(timestamp) > Date.parse(current)) latest.set(key, timestamp);
   }
   return latest;
+}
+
+function normalizeSessionContext(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    completed: normalizeSessionEvents(source.completed, "completedAt")
+  };
+}
+
+function normalizeSessionEvents(value, timestampKey) {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry) => (
+    entry
+    && typeof entry.id === "string"
+    && typeof entry[timestampKey] === "string"
+    && !Number.isNaN(Date.parse(entry[timestampKey]))
+  )).map((entry) => ({ id: entry.id.trim(), [timestampKey]: entry[timestampKey] })).filter((entry) => entry.id);
+}
+
+function createSessionArtistCounts(events, songsById) {
+  const counts = new Map();
+  for (const entry of events) {
+    const song = songsById.get(entry.id.toLowerCase());
+    const artist = normalizeValue(song?.artist);
+    if (artist) counts.set(artist, (counts.get(artist) || 0) + 1);
+  }
+  return counts;
+}
+
+function getSessionArtistRepeatPenalty(artistKey, counts) {
+  const count = counts.get(artistKey) || 0;
+  return Math.min(count * RECOMMENDATION_WEIGHTS.SESSION_ARTIST_REPEAT, RECOMMENDATION_WEIGHTS.SESSION_ARTIST_REPEAT_CAP);
 }
 
 function getRecencyPenalty(timestampValue, nowMs, maxPenalty, halfLifeDays) {

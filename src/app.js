@@ -11,6 +11,7 @@ import { getDailyChallenge } from "./engagement.js?v=5";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
 import { createInstallController } from "./install.js";
 import { parseSongShareId, shareSong } from "./share.js";
+import { createDefaultSessionState, loadSessionState, persistSessionState, pruneSessionState, recordSessionCompleted, recordSessionOpened } from "./session.js?v=1";
 
 const state = createAppState();
 let youtubeController = null;
@@ -28,6 +29,7 @@ let selectedCollectionId = getFeaturedCollectionId();
 let installController = null;
 let queueConfirmReturnFocus = null;
 let lastPlaybackErrorSongId = null;
+let sessionState = createDefaultSessionState();
 
 async function startApp() {
   try {
@@ -38,6 +40,8 @@ async function startApp() {
     });
     const catalog = await loadCatalog();
     setCatalog(state, catalog.songs, createSearchIndex(catalog.songs));
+    sessionState = loadSessionState();
+    if (pruneSessionState(sessionState, state.songs)) persistSessionState(sessionState);
     if (currentView === "party" && !state.user.partySession.enabled) state.user.partySession.enabled = true;
     refreshRecommendationsSnapshot();
     youtubeController = createYouTubePlayerController({
@@ -77,7 +81,7 @@ function render({ refreshRecommendations = false } = {}) {
 }
 
 function refreshRecommendationsSnapshot() {
-  recommendationSnapshot = getRecommendations(state.searchIndex.map((entry) => entry.song), state.user, { limit: 12 });
+  recommendationSnapshot = getRecommendations(state.searchIndex.map((entry) => entry.song), state.user, { limit: 12, session: sessionState });
   if (recommendationSnapshot.length > 0) {
     const changed = setRecentRecommendations(state.user, recommendationSnapshot.map((item) => item.song.id));
     if (changed) persistAppState(state);
@@ -488,6 +492,8 @@ function handleSongAction(action, song, { fromPlayer = false } = {}) {
       const result = markSung(state.user, song.id);
       changed = result.added;
       if (result.added) {
+        recordSessionCompleted(sessionState, song.id);
+        persistSessionState(sessionState);
         const challenge = getDailyChallenge(state.songs, state.user);
         if (challenge.song?.id?.toLowerCase() === song.id.toLowerCase()) {
           const completed = completeDailyChallenge(state.user, challenge.dateKey, song.id, { expectedSongId: challenge.song.id });
@@ -716,6 +722,10 @@ function startSong(song, launcher = null) {
   lastPlaybackErrorSongId = null;
   addSongToQueue(state.user, song.id);
   recordSongPlayed(state.user, song.id);
+  if (isValidYouTubeVideoId(song.youtubeVideoId)) {
+    recordSessionOpened(sessionState, song.id);
+    persistSessionState(sessionState);
+  }
   if (state.user.partySession.enabled && !getAssignedSinger(state.user.partySession, song.id)) assignPartySong(state.user.partySession, song.id);
   syncPartyQueueAssignments();
   setCurrentSong(state.user, song.id);
@@ -747,6 +757,8 @@ function replayCurrentSong() {
   }
   playerFinishedSongId = null;
   lastPlaybackErrorSongId = null;
+  recordSessionOpened(sessionState, currentSong.id);
+  persistSessionState(sessionState);
   syncPlayer(getQueueSnapshot(state));
   showToast(currentSong.title + " is playing again");
 }
@@ -821,7 +833,14 @@ function advanceToNext({ automatic = false } = {}) {
   persistAppState(state);
   refreshRecommendationsSnapshot();
   render();
-  if (result.currentSongId) syncPlayer(getQueueSnapshot(state));
+  if (result.currentSongId) {
+    const nextSong = state.songs.find((song) => song.id.toLowerCase() === result.currentSongId.toLowerCase());
+    if (nextSong) {
+      recordSessionOpened(sessionState, nextSong.id);
+      persistSessionState(sessionState);
+    }
+    syncPlayer(getQueueSnapshot(state));
+  }
   else if (result.status === "finished") { youtubeController?.stop(); showQueueFinished(getQueueSnapshot(state).total); }
   else { closePlayer(); }
   showToast(result.status === "recommended" ? `${result.song.title} is next` : result.status === "finished" ? "Queue finished" : result.status === "empty" ? "Your queue is empty" : automatic ? "Next queued song is playing" : "Moved to the next song");
@@ -832,7 +851,14 @@ function selectPrevious() {
   persistAppState(state);
   refreshRecommendationsSnapshot();
   render();
-  if (result.currentSongId) syncPlayer(getQueueSnapshot(state));
+  if (result.currentSongId) {
+    const previousSong = state.songs.find((song) => song.id.toLowerCase() === result.currentSongId.toLowerCase());
+    if (previousSong) {
+      recordSessionOpened(sessionState, previousSong.id);
+      persistSessionState(sessionState);
+    }
+    syncPlayer(getQueueSnapshot(state));
+  }
   else { closePlayer(); }
   showToast(result.status === "boundary" ? "Already at the first song" : "Moved to the previous song");
 }
