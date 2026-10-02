@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { normalizeCatalog } from "../src/catalog.js";
 import { createDefaultUserState } from "../src/state.js";
-import { getRecommendations, scoreRecommendationCandidate } from "../src/recommendations.js";
+import { buildReason, getRecommendations, scoreRecommendationCandidate } from "../src/recommendations.js";
 
 const NOW = Date.parse("2026-09-22T00:00:00.000Z");
 const rawCatalog = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
@@ -122,4 +122,30 @@ test("recommendation computation preserves catalog records", () => {
 
   assert.equal(results.length, 12);
   assert.equal(JSON.stringify(catalog), before);
+});
+
+test("popularity reasons require a supported demand tier", () => {
+  const supported = catalog.find((song) => song.demandTier);
+  assert.ok(supported, "the catalog should contain at least one evidence-backed demand tier");
+  const scored = scoreRecommendationCandidate(supported, { nowMs: NOW });
+  assert.equal(scored.signals.demandTier, supported.demandTier);
+  assert.equal(scored.reason, "A popular karaoke pick");
+
+  const unsupported = scoreRecommendationCandidate({ ...supported, demandTier: "viral" }, { nowMs: NOW });
+  assert.equal(unsupported.signals.demandTier, "");
+  assert.notEqual(unsupported.reason, "A popular karaoke pick");
+  assert.notEqual(buildReason({ demandTier: "viral" }), "A popular karaoke pick");
+});
+
+test("cold-start Home copy does not claim every recommendation is popular", async () => {
+  const ui = await readFile("src/ui.js", "utf8");
+  const html = await readFile("index.html", "utf8");
+  assert.match(ui, /Playable picks to get your night moving\./);
+  assert.doesNotMatch(ui, /Popular, playable picks to get your night moving\./);
+  assert.match(ui, /title: "OPM picks"/);
+  assert.match(ui, /title: "International picks"/);
+  assert.match(html, />Playable picks to get your night moving\.<\/p>/);
+  assert.doesNotMatch(html, />Popular, playable picks to get your night moving\.<\/p>/);
+  assert.match(html, /Start with a song from the catalog/);
+  assert.doesNotMatch(html, /Start with a crowd favorite/);
 });

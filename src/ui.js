@@ -80,15 +80,15 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   const homeCopy = {
     recommended: personalized
       ? { title: "Sing now", lede: "Your strongest next-song picks, tuned to your taste." }
-      : { title: "Sing now", lede: "Popular, playable picks to get your night moving." },
+      : { title: "Sing now", lede: "Playable picks to get your night moving." },
     madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
     continue: { title: "Continue singing", lede: "Unfinished songs you opened recently." },
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
     popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
     recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
     trending: { title: "Most sung on this device", lede: "Based on Sang It completions saved on this device." },
-    opm: { title: "Popular OPM", lede: "Filipino favorites for the next round." },
-    international: { title: "International hits", lede: "Familiar English songs made for a sing-along." },
+    opm: { title: "OPM picks", lede: "Filipino songs for the next round." },
+    international: { title: "International picks", lede: "English songs made for a sing-along." },
     easy: { title: "Easy wins", lede: "Comfortable picks when you want a confident chorus." },
     duets: { title: "Duet picks", lede: "Bring someone else to the mic." },
     recent: { title: "Recently sung", lede: "Keep exploring from where you left off." }
@@ -117,7 +117,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   const homeCount = document.querySelector("[data-home-count]");
   if (homeCount) homeCount.textContent = `${sections.recommended.length} ready-to-sing pick${sections.recommended.length === 1 ? "" : "s"}`;
   const resultsNote = document.querySelector("[data-results-note]");
-  if (resultsNote) resultsNote.textContent = personalized ? "Fresh ideas based on what you like and sing." : "Popular playable picks to get your night moving.";
+  if (resultsNote) resultsNote.textContent = personalized ? "Fresh ideas based on what you like and sing." : "Playable picks to get your night moving.";
 }
 
 function renderHomeEngagement(allSongs, userState) {

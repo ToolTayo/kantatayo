@@ -2,7 +2,7 @@ import { isPlayableSong } from "./discovery.js?v=5";
 
 export const LOCAL_COLLECTIONS = [
   { id: "friday-night", title: "Friday Night Karaoke", description: "Big choruses and room-ready picks.", matches: (song) => hasAny(song, ["party", "energetic", "celebratory"]) || ["Pop", "Pop Rock", "Rock"].includes(song.genre) },
-  { id: "opm-classics", title: "OPM Classics", description: "Filipino favorites with staying power.", matches: (song) => isLanguage(song, "filipino") && /classic|throwback|oldies|90s|2000s/i.test(`${song.era} ${(song.tags || []).join(" ")}`) },
+  { id: "opm-classics", title: "OPM Classics", description: "Filipino songs with staying power.", matches: (song) => isLanguage(song, "filipino") && /classic|throwback|oldies|90s|2000s/i.test(`${song.era} ${(song.tags || []).join(" ")}`) },
   { id: "easy-tonight", title: "Easy Songs Tonight", description: "Comfortable songs for a confident round.", matches: (song) => song.difficulty === "easy" },
   { id: "duets-two", title: "Duets for Two", description: "Pass the mic and share the chorus.", matches: (song) => song.performanceType === "duet" },
   { id: "throwbacks", title: "90s / 2000s Throwbacks", description: "Familiar songs from earlier nights out.", matches: (song) => ["1990s", "2000s"].includes(song.era) }

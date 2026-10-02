@@ -232,7 +232,7 @@ export function buildReason(signals = {}) {
   if (preferenceMatches.length > 0) return `Matches your ${joinLabels(preferenceMatches)} preferences`;
   if (signals.likedSimilarity > 0 || signals.favoriteSimilarity > 0) return "Similar to songs you liked or favorited";
   if (signals.sungSimilarity > 0) return "A familiar fit based on songs you have sung";
-  if (signals.demandTier) return "A popular karaoke pick";
+  if (normalizeDemandTier(signals.demandTier)) return "A popular karaoke pick";
   if (signals.artistDiversity) return "A different artist for variety";
   return "A playable karaoke pick";
 }
