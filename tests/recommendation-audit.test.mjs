@@ -193,9 +193,11 @@ function runScenario(name, state, expected, assertion, songs = auditCatalog) {
 
 function assertExplainableReason(item) {
   assert.doesNotMatch(item.reason, /score|\b\d+(?:\.\d+)?\b/i);
-  if (item.signals.preferenceMatches.length > 0) return assert.match(item.reason, /Matches your/);
-  if (item.signals.directLiked) return assert.match(item.reason, /liked/i);
   if (item.signals.directFavorite) return assert.match(item.reason, /favorited/i);
+  if (item.signals.directLiked) return assert.match(item.reason, /liked/i);
+  if (item.signals.artistAffinity?.favorite || item.signals.artistAffinity?.liked) return assert.match(item.reason, /artist you liked or favorited/i);
+  if (item.signals.artistAffinity?.sung) return assert.match(item.reason, /artist you have sung/i);
+  if (item.signals.preferenceMatches.length > 0) return assert.match(item.reason, /Matches your/);
   if (item.signals.likedSimilarity > 0 || item.signals.favoriteSimilarity > 0) return assert.match(item.reason, /Similar to songs you liked or favorited/);
   if (item.signals.sungSimilarity > 0) return assert.match(item.reason, /sung/);
   if (item.signals.demandTier) return assert.match(item.reason, /popular karaoke pick/);

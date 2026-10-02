@@ -4,27 +4,36 @@ export const RECOMMENDATION_LIMIT = 5;
 export const MAX_RECENT_RECOMMENDATIONS = 20;
 
 /**
- * Transparent local ranking model. A playable song starts with +16, each
- * matching preference adds +10, demand adds a small cold-start prior, direct likes/favorites add +22/+18, and
- * metadata similarity to liked/favorite/sung songs contributes up to +20/+16/+7.
- * A recent performance subtracts up to 48 with a 14-day half-life; queued,
- * current, unplayable, and directly disliked songs are excluded. Recent
- * recommendations and repeated artists receive soft penalties so the pool
- * stays available while refreshes still feel varied.
+ * Transparent local ranking model. A playable song starts with +16, matching
+ * preferences contribute a capped signal, demand adds a small cold-start
+ * prior, and explicit likes/favorites are stronger than any single implicit
+ * signal. Metadata and artist affinity help discover related songs without
+ * turning an artist into a hard filter. A recent completion and a recent open
+ * receive separate soft decay penalties; queued, current, unplayable, and
+ * directly disliked songs are excluded. Recent recommendations and repeated
+ * artists receive soft penalties so the pool stays available while refreshes
+ * still feel varied.
  */
 export const RECOMMENDATION_WEIGHTS = Object.freeze({
   PLAYABLE: 16,
-  PREFERENCE_MATCH: 10,
-  DIRECT_LIKE: 22,
-  DIRECT_FAVORITE: 18,
+  PREFERENCE_MATCH: 8,
+  PREFERENCE_MATCH_CAP: 32,
+  DIRECT_LIKE: 28,
+  DIRECT_FAVORITE: 30,
   LIKED_SIMILARITY: 20,
   FAVORITE_SIMILARITY: 16,
   SUNG_SIMILARITY: 7,
+  LIKED_ARTIST: 12,
+  FAVORITE_ARTIST: 10,
+  SUNG_ARTIST: 4,
   RECENT_SUNG_MAX: 48,
+  RECENT_PLAYED_MAX: 10,
   RECENT_RECOMMENDATION: 14,
   ARTIST_REPEAT: 12,
   PROFILE_REPEAT: 4
 });
+
+export const RECENT_PLAYED_HALF_LIFE_DAYS = 7;
 
 export const DEMAND_WEIGHTS = Object.freeze({
   "very-high": 12,
@@ -64,11 +73,20 @@ export function getRecommendations(songs = [], userState = {}, options = {}) {
   const likedIds = toIdSet(userState.likedSongs);
   const favoriteIds = toIdSet(userState.favorites);
   const history = normalizeHistory(userState.sungHistory);
+  const recentlyPlayed = normalizeRecentlyPlayed(userState.recentlyPlayed);
   const songsById = new Map(safeSongs.map((song) => [song.id.toLowerCase(), song]));
 
   const likedReferences = [...likedIds].map((id) => songsById.get(id)).filter(Boolean);
   const favoriteReferences = [...favoriteIds].map((id) => songsById.get(id)).filter(Boolean);
   const sungReferences = history.map((entry) => songsById.get(entry.id.toLowerCase())).filter(Boolean);
+  const likedReferenceProfiles = likedReferences.map(createMetadataProfile);
+  const favoriteReferenceProfiles = favoriteReferences.map(createMetadataProfile);
+  const sungReferenceProfiles = sungReferences.map(createMetadataProfile);
+  const likedArtistReferences = createArtistReferenceMap(likedReferences);
+  const favoriteArtistReferences = createArtistReferenceMap(favoriteReferences);
+  const sungArtistReferences = createArtistReferenceMap(sungReferences);
+  const latestSungAtById = latestActivityById(history, "sungAt");
+  const latestPlayedAtById = latestActivityById(recentlyPlayed, "playedAt");
 
   const candidates = safeSongs
     .filter((song) => {
@@ -82,28 +100,45 @@ export function getRecommendations(songs = [], userState = {}, options = {}) {
       likedReferences,
       favoriteReferences,
       sungReferences,
+      likedReferenceProfiles,
+      favoriteReferenceProfiles,
+      sungReferenceProfiles,
+      likedArtistReferences,
+      favoriteArtistReferences,
+      sungArtistReferences,
       history,
+      recentlyPlayed,
+      latestSungAtById,
+      latestPlayedAtById,
       recentRecommendationIds,
       nowMs
     }));
 
   const selected = [];
+  const selectedArtistKeys = new Set();
+  const selectedProfileKeys = new Set();
   while (selected.length < limit && candidates.length > 0) {
-    candidates.sort((left, right) => compareCandidates(left, right, selected));
-    const next = candidates.shift();
-    const artistAlreadyUsed = selected.some((item) => sameValue(item.song.artist, next.song.artist));
-    const profileAlreadyUsed = selected.some((item) => profileKey(item.song) === profileKey(next.song));
+    let bestIndex = 0;
+    for (let index = 1; index < candidates.length; index += 1) {
+      if (compareCandidates(candidates[index], candidates[bestIndex], selectedArtistKeys, selectedProfileKeys) < 0) bestIndex = index;
+    }
+    const [next] = candidates.splice(bestIndex, 1);
+    const artistAlreadyUsed = selectedArtistKeys.has(next.artistKey);
+    const profileAlreadyUsed = selectedProfileKeys.has(next.candidateProfileKey);
     const diversityPenalty = (artistAlreadyUsed ? RECOMMENDATION_WEIGHTS.ARTIST_REPEAT : 0) + (profileAlreadyUsed ? RECOMMENDATION_WEIGHTS.PROFILE_REPEAT : 0);
     const signals = { ...next.signals, artistDiversity: selected.length > 0 && !artistAlreadyUsed };
     selected.push({
+      ...next,
       song: next.song,
       score: next.score - diversityPenalty,
       reason: buildReason(signals),
       signals
     });
+    selectedArtistKeys.add(next.artistKey);
+    selectedProfileKeys.add(next.candidateProfileKey);
   }
 
-  return selected;
+  return selected.map(({ song, score, reason, signals }) => ({ song, score, reason, signals }));
 }
 
 export function scoreRecommendationCandidate(song, context = {}) {
@@ -112,59 +147,89 @@ export function scoreRecommendationCandidate(song, context = {}) {
   const favoriteIds = context.favoriteIds || new Set();
   const recentRecommendationIds = context.recentRecommendationIds || new Set();
   const history = Array.isArray(context.history) ? context.history : [];
+  const recentlyPlayed = Array.isArray(context.recentlyPlayed) ? context.recentlyPlayed : [];
   const nowMs = Number.isFinite(context.nowMs) ? context.nowMs : Date.now();
   const key = normalizeId(song?.id).toLowerCase();
   const preferenceMatches = getPreferenceMatches(song, preferences);
-  const likedSimilarity = maxSimilarity(song, context.likedReferences || []);
-  const favoriteSimilarity = maxSimilarity(song, context.favoriteReferences || []);
-  const sungSimilarity = maxSimilarity(song, context.sungReferences || []);
-  const latestSungAt = history.find((entry) => entry.id.toLowerCase() === key)?.sungAt;
+  const songProfile = context.songProfile || createMetadataProfile(song);
+  const likedReferences = context.likedReferences || [];
+  const favoriteReferences = context.favoriteReferences || [];
+  const sungReferences = context.sungReferences || [];
+  const likedSimilarity = maxSimilarity(songProfile, likedReferences, context.likedReferenceProfiles);
+  const favoriteSimilarity = maxSimilarity(songProfile, favoriteReferences, context.favoriteReferenceProfiles);
+  const sungSimilarity = maxSimilarity(songProfile, sungReferences, context.sungReferenceProfiles);
+  const latestSungAt = context.latestSungAtById?.get(key) || latestActivityById(history, "sungAt").get(key);
+  const latestPlayedAt = context.latestPlayedAtById?.get(key) || latestActivityById(recentlyPlayed, "playedAt").get(key);
   const recentSungPenalty = latestSungAt ? getRecentSungPenalty(latestSungAt, nowMs) : 0;
+  const recentPlayedPenalty = latestPlayedAt ? getRecentPlayedPenalty(latestPlayedAt, nowMs) : 0;
   const recentRecommendationPenalty = recentRecommendationIds.has(key) ? RECOMMENDATION_WEIGHTS.RECENT_RECOMMENDATION : 0;
   const demandTier = normalizeDemandTier(song?.demandTier);
   const demandSignal = demandTier ? DEMAND_WEIGHTS[demandTier] : 0;
+  const preferenceSignal = Math.min(
+    preferenceMatches.length * RECOMMENDATION_WEIGHTS.PREFERENCE_MATCH,
+    RECOMMENDATION_WEIGHTS.PREFERENCE_MATCH_CAP
+  );
+  const likedArtist = hasOtherArtistReference(songProfile, key, context.likedArtistReferences || createArtistReferenceMap(likedReferences));
+  const favoriteArtist = hasOtherArtistReference(songProfile, key, context.favoriteArtistReferences || createArtistReferenceMap(favoriteReferences));
+  const sungArtist = hasOtherArtistReference(songProfile, key, context.sungArtistReferences || createArtistReferenceMap(sungReferences));
   const signals = {
     playable: isUsableSong(song),
     preferenceMatches,
+    preferenceSignal,
     directLiked: likedIds.has(key),
     directFavorite: favoriteIds.has(key),
     likedSimilarity,
     favoriteSimilarity,
     sungSimilarity,
+    artistAffinity: { liked: likedArtist, favorite: favoriteArtist, sung: sungArtist },
     recentSungPenalty,
+    recentPlayedPenalty,
     recentRecommendationPenalty,
     demandTier,
     demandSignal,
-    artistDiversity: true
+    artistDiversity: false
   };
 
   const score = (signals.playable ? RECOMMENDATION_WEIGHTS.PLAYABLE : 0)
-    + preferenceMatches.length * RECOMMENDATION_WEIGHTS.PREFERENCE_MATCH
+    + preferenceSignal
     + (signals.directLiked ? RECOMMENDATION_WEIGHTS.DIRECT_LIKE : 0)
     + (signals.directFavorite ? RECOMMENDATION_WEIGHTS.DIRECT_FAVORITE : 0)
     + likedSimilarity * RECOMMENDATION_WEIGHTS.LIKED_SIMILARITY
     + favoriteSimilarity * RECOMMENDATION_WEIGHTS.FAVORITE_SIMILARITY
     + sungSimilarity * RECOMMENDATION_WEIGHTS.SUNG_SIMILARITY
+    + (likedArtist ? RECOMMENDATION_WEIGHTS.LIKED_ARTIST : 0)
+    + (favoriteArtist ? RECOMMENDATION_WEIGHTS.FAVORITE_ARTIST : 0)
+    + (sungArtist ? RECOMMENDATION_WEIGHTS.SUNG_ARTIST : 0)
     + demandSignal
     - recentSungPenalty
+    - recentPlayedPenalty
     - recentRecommendationPenalty;
 
-  return { song, score, reason: buildReason(signals), signals };
+  return {
+    song,
+    score,
+    reason: buildReason(signals),
+    signals,
+    artistKey: songProfile.artist,
+    candidateProfileKey: profileKey(song)
+  };
 }
 
 export function getRecentSungPenalty(sungAt, nowMs = Date.now()) {
-  const timestamp = Date.parse(sungAt);
-  if (Number.isNaN(timestamp)) return 0;
-  const ageDays = Math.max(0, (nowMs - timestamp) / 86400000);
-  const halfLifeDays = 14;
-  return RECOMMENDATION_WEIGHTS.RECENT_SUNG_MAX * Math.pow(0.5, ageDays / halfLifeDays);
+  return getRecencyPenalty(sungAt, nowMs, RECOMMENDATION_WEIGHTS.RECENT_SUNG_MAX, 14);
+}
+
+export function getRecentPlayedPenalty(playedAt, nowMs = Date.now()) {
+  return getRecencyPenalty(playedAt, nowMs, RECOMMENDATION_WEIGHTS.RECENT_PLAYED_MAX, RECENT_PLAYED_HALF_LIFE_DAYS);
 }
 
 export function buildReason(signals = {}) {
   const preferenceMatches = Array.isArray(signals.preferenceMatches) ? signals.preferenceMatches : [];
-  if (preferenceMatches.length > 0) return `Matches your ${joinLabels(preferenceMatches)} preferences`;
-  if (signals.directLiked) return "Because you liked this song before";
   if (signals.directFavorite) return "Because you favorited this song before";
+  if (signals.directLiked) return "Because you liked this song before";
+  if (signals.artistAffinity?.favorite || signals.artistAffinity?.liked) return "More from an artist you liked or favorited";
+  if (signals.artistAffinity?.sung) return "More from an artist you have sung";
+  if (preferenceMatches.length > 0) return `Matches your ${joinLabels(preferenceMatches)} preferences`;
   if (signals.likedSimilarity > 0 || signals.favoriteSimilarity > 0) return "Similar to songs you liked or favorited";
   if (signals.sungSimilarity > 0) return "A familiar fit based on songs you have sung";
   if (signals.demandTier) return "A popular karaoke pick";
@@ -183,43 +248,84 @@ function getPreferenceMatches(song, preferences) {
   }, []);
 }
 
-function maxSimilarity(song, references) {
-  return references.reduce((best, reference) => Math.max(best, metadataSimilarity(song, reference)), 0);
+function maxSimilarity(songProfile, references, referenceProfiles = null) {
+  const profiles = Array.isArray(referenceProfiles) && referenceProfiles.length === references.length
+    ? referenceProfiles
+    : references.map(createMetadataProfile);
+  return profiles.reduce((best, referenceProfile) => Math.max(best, metadataProfileSimilarity(songProfile, referenceProfile)), 0);
 }
 
 export function metadataSimilarity(left, right) {
   if (!left || !right) return 0;
-  const moodMatch = overlapRatio(left.mood, right.mood);
-  const tagMatch = overlapRatio(left.tags, right.tags);
+  return metadataProfileSimilarity(createMetadataProfile(left), createMetadataProfile(right));
+}
+
+function metadataProfileSimilarity(left, right) {
+  if (!left || !right) return 0;
+  const moodMatch = overlapSetRatio(left.mood, right.mood);
+  const tagMatch = overlapSetRatio(left.tags, right.tags);
   let score = 0;
-  if (sameValue(left.language, right.language)) score += SIMILARITY_WEIGHTS.language;
-  if (sameValue(left.genre, right.genre)) score += SIMILARITY_WEIGHTS.genre;
-  if (sameValue(left.difficulty, right.difficulty)) score += SIMILARITY_WEIGHTS.difficulty;
-  if (sameValue(left.vocalRange, right.vocalRange)) score += SIMILARITY_WEIGHTS.vocalRange;
-  if (sameValue(left.performanceType, right.performanceType)) score += SIMILARITY_WEIGHTS.performanceType;
-  if (sameValue(left.era, right.era)) score += SIMILARITY_WEIGHTS.era;
+  if (left.language && left.language === right.language) score += SIMILARITY_WEIGHTS.language;
+  if (left.genre && left.genre === right.genre) score += SIMILARITY_WEIGHTS.genre;
+  if (left.difficulty && left.difficulty === right.difficulty) score += SIMILARITY_WEIGHTS.difficulty;
+  if (left.vocalRange && left.vocalRange === right.vocalRange) score += SIMILARITY_WEIGHTS.vocalRange;
+  if (left.performanceType && left.performanceType === right.performanceType) score += SIMILARITY_WEIGHTS.performanceType;
+  if (left.era && left.era === right.era) score += SIMILARITY_WEIGHTS.era;
   return score + moodMatch * SIMILARITY_WEIGHTS.mood + tagMatch * SIMILARITY_WEIGHTS.tags;
 }
 
-function compareCandidates(left, right, selected) {
-  const leftScore = selectionScore(left, selected);
-  const rightScore = selectionScore(right, selected);
+function compareCandidates(left, right, selectedArtistKeys, selectedProfileKeys) {
+  const leftScore = selectionScore(left, selectedArtistKeys, selectedProfileKeys);
+  const rightScore = selectionScore(right, selectedArtistKeys, selectedProfileKeys);
   return rightScore - leftScore
     || compareText(left.song.title, right.song.title)
     || compareText(left.song.artist, right.song.artist)
     || compareText(left.song.id, right.song.id);
 }
 
-function selectionScore(candidate, selected) {
-  const artistAlreadyUsed = selected.some((item) => sameValue(item.song.artist, candidate.song.artist));
-  const profileAlreadyUsed = selected.some((item) => profileKey(item.song) === profileKey(candidate.song));
+function selectionScore(candidate, selectedArtistKeys, selectedProfileKeys) {
+  const artistAlreadyUsed = selectedArtistKeys.has(candidate.artistKey);
+  const profileAlreadyUsed = selectedProfileKeys.has(candidate.candidateProfileKey);
   return candidate.score
     - (artistAlreadyUsed ? RECOMMENDATION_WEIGHTS.ARTIST_REPEAT : 0)
     - (profileAlreadyUsed ? RECOMMENDATION_WEIGHTS.PROFILE_REPEAT : 0);
 }
 
-function profileKey(song) {
-  return [song.language, song.genre, song.mood?.[0], song.difficulty, song.performanceType].map(normalizeValue).join("|");
+function profileKey(song = {}) {
+  return [song?.language, song?.genre, song?.mood?.[0], song?.difficulty, song?.performanceType].map(normalizeValue).join("|");
+}
+
+function createMetadataProfile(song) {
+  return {
+    id: normalizeId(song?.id).toLowerCase(),
+    artist: normalizeValue(song?.artist),
+    language: normalizeValue(song?.language),
+    genre: normalizeValue(song?.genre),
+    difficulty: normalizeValue(song?.difficulty),
+    vocalRange: normalizeValue(song?.vocalRange),
+    performanceType: normalizeValue(song?.performanceType),
+    era: normalizeValue(song?.era),
+    mood: toValueSet(song?.mood),
+    tags: toValueSet(song?.tags)
+  };
+}
+
+function createArtistReferenceMap(references) {
+  const map = new Map();
+  for (const reference of references) {
+    const artist = normalizeValue(reference?.artist);
+    const id = normalizeId(reference?.id).toLowerCase();
+    if (!artist || !id) continue;
+    if (!map.has(artist)) map.set(artist, new Set());
+    map.get(artist).add(id);
+  }
+  return map;
+}
+
+function hasOtherArtistReference(songProfile, key, artistReferences) {
+  const ids = artistReferences.get(songProfile.artist);
+  if (!ids) return false;
+  return [...ids].some((id) => id !== key);
 }
 
 function isUsableSong(song) {
@@ -228,7 +334,37 @@ function isUsableSong(song) {
 
 function normalizeHistory(value) {
   if (!Array.isArray(value)) return [];
-  return value.filter((entry) => entry && typeof entry.id === "string" && typeof entry.sungAt === "string" && !Number.isNaN(Date.parse(entry.sungAt)));
+  return value
+    .filter((entry) => entry && typeof entry.id === "string" && typeof entry.sungAt === "string" && !Number.isNaN(Date.parse(entry.sungAt)))
+    .map((entry) => ({ ...entry, id: entry.id.trim() }))
+    .filter((entry) => entry.id);
+}
+
+function normalizeRecentlyPlayed(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((entry) => entry && typeof entry.id === "string" && typeof entry.playedAt === "string" && !Number.isNaN(Date.parse(entry.playedAt)))
+    .map((entry) => ({ ...entry, id: entry.id.trim() }))
+    .filter((entry) => entry.id);
+}
+
+function latestActivityById(entries, timestampKey) {
+  const latest = new Map();
+  for (const entry of entries) {
+    const key = normalizeId(entry?.id).toLowerCase();
+    const timestamp = entry?.[timestampKey];
+    if (!key || typeof timestamp !== "string" || Number.isNaN(Date.parse(timestamp))) continue;
+    const current = latest.get(key);
+    if (!current || Date.parse(timestamp) > Date.parse(current)) latest.set(key, timestamp);
+  }
+  return latest;
+}
+
+function getRecencyPenalty(timestampValue, nowMs, maxPenalty, halfLifeDays) {
+  const timestamp = Date.parse(timestampValue);
+  if (Number.isNaN(timestamp) || timestamp > nowMs) return 0;
+  const ageDays = Math.max(0, (nowMs - timestamp) / 86400000);
+  return maxPenalty * Math.pow(0.5, ageDays / halfLifeDays);
 }
 
 function toIdSet(value) {
@@ -240,16 +376,15 @@ function toValueSet(value) {
   return new Set(values.filter((item) => typeof item === "string").map(normalizeValue).filter(Boolean));
 }
 
-function overlapRatio(left, right) {
-  const leftValues = toValueSet(left);
-  const rightValues = toValueSet(right);
+function overlapSetRatio(left, right) {
+  const leftValues = left instanceof Set ? left : toValueSet(left);
+  const rightValues = right instanceof Set ? right : toValueSet(right);
   if (leftValues.size === 0 || rightValues.size === 0) return 0;
-  const overlap = [...leftValues].filter((value) => rightValues.has(value)).length;
+  let overlap = 0;
+  for (const value of leftValues) {
+    if (rightValues.has(value)) overlap += 1;
+  }
   return overlap / Math.max(leftValues.size, rightValues.size);
-}
-
-function sameValue(left, right) {
-  return normalizeValue(left) !== "" && normalizeValue(left) === normalizeValue(right);
 }
 
 function normalizeValue(value) {
