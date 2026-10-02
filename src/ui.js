@@ -2,7 +2,7 @@ import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
 import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=5";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
-import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
+import { getNextPartySinger, getPartyStats } from "./party.js?v=2";
 import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs } from "./engagement.js?v=5";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 

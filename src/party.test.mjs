@@ -89,6 +89,41 @@ test("queue-before-singers and singers-before-queue both receive deterministic a
   assert.deepEqual(reconcilePartyQueue(singersFirst, queuedIds).assignments, { "sample-001": "a", "sample-002": "b", "sample-003": "a" });
 });
 
+test("adding singers after a queue exists rebalances automatic turns fairly", () => {
+  const session = createDefaultPartySession();
+  session.enabled = true;
+  const queue = ["sample-001", "sample-002", "sample-003", "sample-004", "sample-005"];
+
+  addPartySinger(session, "A", { idFactory: () => "a" });
+  let reconciled = reconcilePartyQueue(session, queue);
+  assert.deepEqual(queue.map((id) => reconciled.assignments[id]), ["a", "a", "a", "a", "a"]);
+
+  addPartySinger(reconciled, "B", { idFactory: () => "b" });
+  reconciled = reconcilePartyQueue(reconciled, queue);
+  assert.deepEqual(queue.map((id) => reconciled.assignments[id]), ["a", "b", "a", "b", "a"]);
+  assert.deepEqual(queue.map((id) => reconciled.assignmentSources[id]), ["auto", "auto", "auto", "auto", "auto"]);
+});
+
+test("explicit singer choices and completed turns survive automatic roster rebalancing", () => {
+  const session = createDefaultPartySession();
+  session.enabled = true;
+  const queue = ["sample-001", "sample-002", "sample-003", "sample-004"];
+  addPartySinger(session, "A", { idFactory: () => "a" });
+  addPartySinger(session, "B", { idFactory: () => "b" });
+  let reconciled = reconcilePartyQueue(session, queue);
+  assignPartySong(reconciled, "sample-002", "a");
+  recordPartyTurn(reconciled, "sample-001", "a", { completedAt: "2026-10-02T00:00:00.000Z" });
+
+  addPartySinger(reconciled, "C", { idFactory: () => "c" });
+  reconciled = reconcilePartyQueue(reconciled, queue);
+  assert.equal(reconciled.assignments["sample-001"], "a");
+  assert.equal(reconciled.assignments["sample-002"], "a");
+  assert.equal(reconciled.assignmentSources["sample-002"], "manual");
+  assert.equal(reconciled.assignments["sample-003"], "b");
+  assert.equal(reconciled.assignments["sample-004"], "c");
+  assert.equal(reconciled.turns[0].singerName, "A");
+});
+
 test("party queue keeps completed history stable while singer removal reassigns future queue turns", () => {
   const session = createDefaultPartySession();
   session.enabled = true;

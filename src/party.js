@@ -11,6 +11,10 @@ export function createDefaultPartySession() {
     singers: [],
     rotationIndex: 0,
     assignments: {},
+    // Assignment provenance lets automatic queue turns be rebalanced when a
+    // roster grows, while preserving a singer the user explicitly chose.
+    assignmentSources: {},
+    assignmentRoster: [],
     turns: []
   };
 }
@@ -20,11 +24,16 @@ export function normalizePartySession(value) {
   const singers = normalizeSingers(source.singers);
   const singerIds = new Set(singers.map((singer) => singer.id));
   const assignments = {};
+  const assignmentSources = {};
+  const rawSources = isPlainObject(source.assignmentSources) ? source.assignmentSources : {};
   if (isPlainObject(source.assignments)) {
     Object.entries(source.assignments).forEach(([songId, singerId]) => {
       const normalizedSongId = normalizeId(songId);
       const normalizedSingerId = normalizeId(singerId);
-      if (normalizedSongId && singerIds.has(normalizedSingerId)) assignments[normalizedSongId] = normalizedSingerId;
+      if (normalizedSongId && singerIds.has(normalizedSingerId)) {
+        assignments[normalizedSongId] = normalizedSingerId;
+        assignmentSources[normalizedSongId] = getAssignmentSource(rawSources, normalizedSongId);
+      }
     });
   }
 
@@ -35,6 +44,8 @@ export function normalizePartySession(value) {
       ? Math.max(0, source.rotationIndex) % singers.length
       : 0,
     assignments,
+    assignmentSources,
+    assignmentRoster: normalizeAssignmentRoster(source.assignmentRoster, singers),
     turns: normalizeTurns(source.turns)
   };
 }
@@ -70,9 +81,13 @@ export function removePartySinger(session, singerId) {
   const id = normalizeId(singerId);
   const index = session.singers.findIndex((singer) => singer.id === id);
   if (index < 0) return { ok: false, reason: "unknown-singer" };
+  ensureAssignmentMetadata(session);
   session.singers.splice(index, 1);
   Object.keys(session.assignments).forEach((songId) => {
-    if (session.assignments[songId] === id) delete session.assignments[songId];
+    if (session.assignments[songId] === id) {
+      delete session.assignments[songId];
+      delete session.assignmentSources[songId];
+    }
   });
   if (session.singers.length === 0) session.rotationIndex = 0;
   else if (index < session.rotationIndex) session.rotationIndex -= 1;
@@ -96,7 +111,9 @@ export function assignPartySong(session, songId, singerId = null) {
   if (!id) return { ok: false, reason: "invalid-song" };
   const singer = singerId ? findSinger(session, singerId) : getNextPartySinger(session);
   if (!singer) return { ok: false, reason: "no-singers" };
+  ensureAssignmentMetadata(session);
   session.assignments[id] = singer.id;
+  session.assignmentSources[id] = singerId ? "manual" : "auto";
   const singerIndex = session.singers.findIndex((item) => item.id === singer.id);
   session.rotationIndex = singerIndex >= 0 ? (singerIndex + 1) % session.singers.length : session.rotationIndex;
   return { ok: true, singer, suggested: !singerId };
@@ -105,13 +122,17 @@ export function assignPartySong(session, songId, singerId = null) {
 export function unassignPartySong(session, songId) {
   const id = normalizeId(songId);
   if (!id || !Object.prototype.hasOwnProperty.call(session.assignments, id)) return false;
+  ensureAssignmentMetadata(session);
   delete session.assignments[id];
+  delete session.assignmentSources[id];
   return true;
 }
 
 export function clearPartyAssignments(session) {
   const changed = Object.keys(session.assignments).length > 0;
   session.assignments = {};
+  session.assignmentSources = {};
+  session.assignmentRoster = session.singers.map((singer) => singer.id);
   return changed;
 }
 
@@ -165,8 +186,9 @@ export function getPartyQueueItems(queueSongs, session) {
 
 /**
  * Reconciles party assignments against the displayed queue without changing
- * completed turns. Existing assignments keep their singer; only unassigned
- * queue entries are filled in displayed order from the current rotation.
+ * completed turns. Explicit assignments keep their singer. Automatic turns
+ * are rebalanced in displayed order when the singer roster changes; otherwise
+ * only unassigned queue entries are filled from the current rotation.
  */
 export function reconcilePartyQueue(session, queueIds = []) {
   const normalized = normalizePartySession(session);
@@ -183,27 +205,46 @@ export function reconcilePartyQueue(session, queueIds = []) {
 
   const allowed = new Set(canonicalQueue.map((id) => id.toLowerCase()));
   const assignments = {};
+  const assignmentSources = {};
   const assignedKeys = new Set();
+  const currentRoster = normalized.singers.map((singer) => singer.id);
+  const rosterChanged = !sameIds(normalized.assignmentRoster, currentRoster);
+  const completedKeys = new Set(normalized.turns.map((turn) => turn.songId.toLowerCase()));
   Object.entries(normalized.assignments).forEach(([songId, singerId]) => {
     const key = songId.toLowerCase();
     if (allowed.has(key) && !assignedKeys.has(key)) {
       const canonicalId = canonicalQueue.find((id) => id.toLowerCase() === key) || songId;
-      assignments[canonicalId] = singerId;
-      assignedKeys.add(key);
+      const source = normalized.assignmentSources[songId] || "auto";
+      // Automatic assignments are safe to rebalance when the roster changes.
+      // Explicit choices and completed turns stay attached to their song.
+      if (!rosterChanged || source === "manual" || completedKeys.has(key)) {
+        assignments[canonicalId] = singerId;
+        assignmentSources[canonicalId] = source;
+        assignedKeys.add(key);
+      }
     }
   });
 
   let rotationIndex = normalized.rotationIndex;
-  canonicalQueue.forEach((songId) => {
-    if (assignedKeys.has(songId.toLowerCase())) return;
-    const singer = normalized.singers[rotationIndex % normalized.singers.length];
-    if (!singer) return;
-    assignments[songId] = singer.id;
-    assignedKeys.add(songId.toLowerCase());
-    rotationIndex = (rotationIndex + 1) % normalized.singers.length;
-  });
+  if (normalized.singers.length) {
+    canonicalQueue.forEach((songId) => {
+      if (assignedKeys.has(songId.toLowerCase())) return;
+      const singer = normalized.singers[rotationIndex % normalized.singers.length];
+      if (!singer) return;
+      assignments[songId] = singer.id;
+      assignmentSources[songId] = "auto";
+      assignedKeys.add(songId.toLowerCase());
+      rotationIndex = (rotationIndex + 1) % normalized.singers.length;
+    });
+  }
 
-  return { ...normalized, assignments, rotationIndex: normalized.singers.length ? rotationIndex % normalized.singers.length : 0 };
+  return {
+    ...normalized,
+    assignments,
+    assignmentSources,
+    assignmentRoster: currentRoster,
+    rotationIndex: normalized.singers.length ? rotationIndex % normalized.singers.length : 0
+  };
 }
 
 /**
@@ -267,6 +308,34 @@ function normalizeSingers(value) {
     singers.push({ id, name });
     return singers;
   }, []);
+}
+
+function normalizeAssignmentRoster(value, singers) {
+  if (!Array.isArray(value)) return [];
+  const singerIds = new Set(singers.map((singer) => singer.id));
+  const seen = new Set();
+  return value.reduce((roster, singerId) => {
+    const id = normalizeId(singerId);
+    if (id && singerIds.has(id) && !seen.has(id)) {
+      seen.add(id);
+      roster.push(id);
+    }
+    return roster;
+  }, []);
+}
+
+function getAssignmentSource(rawSources, songId) {
+  const source = Object.entries(rawSources).find(([key]) => key.toLowerCase() === songId.toLowerCase())?.[1];
+  return source === "manual" ? "manual" : "auto";
+}
+
+function ensureAssignmentMetadata(session) {
+  if (!isPlainObject(session.assignmentSources)) session.assignmentSources = {};
+  if (!Array.isArray(session.assignmentRoster)) session.assignmentRoster = [];
+}
+
+function sameIds(left, right) {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
 }
 
 function normalizeTurns(value) {

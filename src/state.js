@@ -1,5 +1,5 @@
 import { readStoredJson, writeStoredJson } from "./storage.js";
-import { createDefaultPartySession, getPartyQueueItems, normalizePartySession, reconcilePartyState } from "./party.js?v=1";
+import { createDefaultPartySession, getPartyQueueItems, normalizePartySession, reconcilePartyState } from "./party.js?v=2";
 import { getLocalDateKey, isValidDateKey } from "./daily-challenge.js?v=2";
 
 export const USER_STATE_VERSION = 4;
@@ -35,7 +35,10 @@ export const PREFERENCE_KEYS = [
  * - search text, selected filters, and other view-only values are not persisted.
  * - partySession is a separate nested local session under the same namespaced
  *   state record. Queue entries remain stable song IDs; singer assignments are
- *   a separate song-ID-to-singer-ID map so old queues need no migration.
+ *   a separate song-ID-to-singer-ID map. Automatic assignments also retain
+ *   lightweight provenance so a newly added singer can rebalance only turns
+ *   that were never explicitly assigned by the user; old queues need no
+ *   migration.
  * - songRequests and playbackFeedback are bounded local records. Requests keep
  *   title/artist text because they are not catalog songs; feedback keeps only a
  *   stable song ID, rating, optional controlled reason, and timestamp.

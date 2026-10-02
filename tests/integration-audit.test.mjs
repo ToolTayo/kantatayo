@@ -147,12 +147,14 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=29/);
-  assert.match(html, /app\.js\?v=37/);
+  assert.match(html, /main\.css\?v=31/);
+  assert.match(html, /app\.js\?v=38/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);
   assert.match(css, /\.app-sidebar \{ background:/);
+  assert.match(css, /\.party-panel \{ max-width: none; margin-left: 0; margin-right: 3rem; \}/);
+  assert.match(css, /\.party-grid \{ grid-template-columns: minmax\(13rem, \.9fr\) minmax\(18rem, 1\.35fr\) minmax\(14rem, 1fr\); \}/);
   assert.match(css, /\.mobile-nav \{ display: none !important; \}/);
   assert.match(css, /\.skip-link:focus \{ top:/);
   assert.match(ui, /song-more-menu/);
