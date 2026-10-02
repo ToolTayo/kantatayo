@@ -86,6 +86,18 @@ test("reload preserves bounded unfinished activity and ignores malformed or dele
   assert.equal(loadUserState({ storage: duplicateStorage }).recentlyPlayed[0].playedAt, "2026-09-25T04:00:00Z");
 });
 
+test("party completion provenance survives reload while legacy entries remain compatible", () => {
+  const state = createDefaultUserState();
+  markSung(state, songs[0].id, { now: "2026-09-25T01:00:00Z", source: "party" });
+  markSung(state, songs[1].id, { now: "2026-09-25T02:00:00Z" });
+  const storage = memoryStorage();
+  saveUserState(state, { storage });
+  const reloaded = loadUserState({ storage });
+
+  assert.equal(reloaded.sungHistory.find((entry) => entry.id === songs[0].id).source, "party");
+  assert.equal(Object.hasOwn(reloaded.sungHistory.find((entry) => entry.id === songs[1].id), "source"), false);
+});
+
 test("Continue Singing is hidden when empty and retains shared bounded card sizing", async () => {
   const [html, ui, css] = await Promise.all([
     readFile("index.html", "utf8"),

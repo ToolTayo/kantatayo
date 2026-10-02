@@ -93,6 +93,25 @@ test("latest sung timestamp wins even when legacy history is out of order", () =
   assert.ok(outOfOrder.score < oldOnly.score);
 });
 
+test("party completions suppress immediate repetition without becoming personal artist affinity", () => {
+  const personal = createDefaultUserState();
+  personal.sungHistory = [{ id: "sample-017", sungAt: "2026-09-21T00:00:00.000Z" }];
+  const party = createDefaultUserState();
+  party.sungHistory = [{ id: "sample-017", sungAt: "2026-09-21T00:00:00.000Z", source: "party" }];
+
+  const pairCatalog = [byId.get("sample-017"), byId.get("sample-018")];
+  const personalRelated = getRecommendations(pairCatalog, personal, { now: NOW, limit: pairCatalog.length })
+    .find((item) => item.song.id === "sample-018");
+  const partyRelated = getRecommendations(pairCatalog, party, { now: NOW, limit: pairCatalog.length })
+    .find((item) => item.song.id === "sample-018");
+
+  assert.ok(personalRelated);
+  assert.ok(partyRelated);
+  assert.equal(personalRelated.signals.artistAffinity.sung, true);
+  assert.equal(partyRelated.signals.artistAffinity.sung, false);
+  assert.ok(partyRelated.signals.recentSungPenalty >= 0);
+});
+
 test("stale optional state stays local and cannot make unavailable or unknown songs eligible", () => {
   const state = {
     preferences: null,
@@ -122,6 +141,22 @@ test("recommendation computation preserves catalog records", () => {
 
   assert.equal(results.length, 12);
   assert.equal(JSON.stringify(catalog), before);
+});
+
+test("recommendations remain safe with adversarially oversized local activity", () => {
+  const state = createDefaultUserState();
+  state.sungHistory = Array.from({ length: 1000 }, (_, index) => ({
+    id: catalog[index % catalog.length].id,
+    sungAt: new Date(NOW - index * 86400000).toISOString()
+  }));
+  state.recentlyPlayed = Array.from({ length: 1000 }, (_, index) => ({
+    id: catalog[index % catalog.length].id,
+    playedAt: new Date(NOW - index * 3600000).toISOString()
+  }));
+
+  const results = getRecommendations(catalog, state, { now: NOW, limit: 12 });
+  assert.equal(results.length, 12);
+  assert.ok(results.every((item) => item.song.youtubeVideoId));
 });
 
 test("popularity reasons require a supported demand tier", () => {

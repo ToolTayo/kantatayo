@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getQualifyingSungHistory, getRecentlyAddedSongs, getStreakStats } from "../src/engagement.js";
+import { CONTINUE_SINGING_MAX_AGE_DAYS, getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getQualifyingSungHistory, getRecentlyAddedSongs, getStreakStats } from "../src/engagement.js";
 import { completeDailyChallenge, createDefaultUserState, loadUserState, recordSongPlayed, saveUserState } from "../src/state.js";
 
 const songs = JSON.parse(await readFile(new URL("../data/songs.sample.json", import.meta.url), "utf8"));
@@ -40,6 +40,22 @@ test("continue singing combines recent plays and sung history without duplicate 
   assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[1].id, playable[0].id]);
   state.sungHistory.unshift({ id: playable[1].id, sungAt: "2026-09-25T03:00:00Z" });
   assert.deepEqual(getContinueSingingSongs(songs, state, 3).map((song) => song.id), [playable[0].id]);
+});
+
+test("continue singing suppresses stale and future activity without deleting local history", () => {
+  const state = createDefaultUserState();
+  const now = Date.parse("2026-09-25T12:00:00Z");
+  const old = new Date(now - (CONTINUE_SINGING_MAX_AGE_DAYS + 1) * 24 * 60 * 60 * 1000).toISOString();
+  const recent = new Date(now - 2 * 60 * 60 * 1000).toISOString();
+  const future = new Date(now + 60 * 60 * 1000).toISOString();
+  state.recentlyPlayed = [
+    { id: playable[0].id, playedAt: old },
+    { id: playable[1].id, playedAt: recent },
+    { id: playable[2].id, playedAt: future }
+  ];
+
+  assert.deepEqual(getContinueSingingSongs(songs, state, 10, { now }), [playable[1]]);
+  assert.equal(state.recentlyPlayed.length, 3, "suppression must not erase the underlying activity record");
 });
 
 test("recently added shelf follows appended catalog order and most-sung waits for real local activity", () => {

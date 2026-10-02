@@ -57,7 +57,7 @@ test("Home places the challenge before Continue Singing and hides Continue when 
   assert.ok(challengeIndex >= 0 && continueIndex > challengeIndex);
   assert.match(html, /data-section="continue"[^>]*hidden/);
   assert.match(ui, /homeSectionOrder = \["continue", "recommended"/);
-  assert.match(ui, /continue: \{ title: "Continue singing", lede: "Unfinished songs you opened recently\." \}/);
+  assert.match(ui, /continue: \{ title: "Continue singing", lede: `Unfinished songs you opened in the last \$\{CONTINUE_SINGING_MAX_AGE_DAYS\} days\.` \}/);
   assert.match(ui, /sectionElement\.hidden = isRecommended \? false : songs\.length === 0/);
 });
 

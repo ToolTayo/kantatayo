@@ -3,6 +3,12 @@ import { getDailyChallengeSelection, getLocalDateKey as getChallengeDateKey, isV
 
 export const getLocalDateKey = getChallengeDateKey;
 
+// Continue Singing is a resume aid, not a permanent archive of every song
+// ever opened. Keep the underlying activity for history/recommendations, but
+// stop presenting an unfinished item once it is too old to be useful.
+export const CONTINUE_SINGING_MAX_AGE_DAYS = 30;
+const CONTINUE_SINGING_MAX_AGE_MS = CONTINUE_SINGING_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
 /**
  * Local-only engagement helpers. These signals are deliberately transparent:
  * they use only the catalog and the user's persisted device state.
@@ -66,7 +72,11 @@ function normalizeId(value) {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
 
-export function getContinueSingingSongs(songs = [], userState = {}, limit = 4) {
+export function getContinueSingingSongs(songs = [], userState = {}, limit = 4, options = {}) {
+  const requestedNow = options.now instanceof Date ? options.now : new Date(options.now || Date.now());
+  const requestedNowMs = requestedNow.getTime();
+  const nowMs = Number.isFinite(requestedNowMs) ? requestedNowMs : Date.now();
+  const cutoffMs = nowMs - CONTINUE_SINGING_MAX_AGE_MS;
   const byId = new Map((Array.isArray(songs) ? songs : [])
     .filter((song) => typeof song?.id === "string")
     .map((song) => [song.id.toLowerCase(), song]));
@@ -84,7 +94,13 @@ export function getContinueSingingSongs(songs = [], userState = {}, limit = 4) {
       const playedAt = typeof entry?.playedAt === "string" ? Date.parse(entry.playedAt) : NaN;
       return { entry, index, key, playedAt };
     })
-    .filter(({ key, playedAt }) => key && !Number.isNaN(playedAt) && byId.has(key) && isPlayableSong(byId.get(key)) && playedAt > (latestSungAt.get(key) ?? -Infinity))
+    .filter(({ key, playedAt }) => key
+      && Number.isFinite(playedAt)
+      && playedAt <= nowMs
+      && playedAt >= cutoffMs
+      && byId.has(key)
+      && isPlayableSong(byId.get(key))
+      && playedAt > (latestSungAt.get(key) ?? -Infinity))
     .sort((left, right) => right.playedAt - left.playedAt || left.index - right.index)
     .map(({ key }) => byId.get(key))
     .filter((song, index, result) => result.findIndex((item) => item.id.toLowerCase() === song.id.toLowerCase()) === index)

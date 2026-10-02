@@ -2,6 +2,8 @@ import { isValidYouTubeVideoId } from "./youtube.js";
 
 export const RECOMMENDATION_LIMIT = 5;
 export const MAX_RECENT_RECOMMENDATIONS = 20;
+const MAX_RECOMMENDATION_HISTORY_ENTRIES = 50;
+const MAX_RECOMMENDATION_RECENT_ENTRIES = 8;
 
 /**
  * Transparent local ranking model. A playable song starts with +16, matching
@@ -80,7 +82,11 @@ export function getRecommendations(songs = [], userState = {}, options = {}) {
 
   const likedReferences = [...likedIds].map((id) => songsById.get(id)).filter(Boolean);
   const favoriteReferences = [...favoriteIds].map((id) => songsById.get(id)).filter(Boolean);
-  const sungReferences = history.map((entry) => songsById.get(entry.id.toLowerCase())).filter(Boolean);
+  // Party completions remain valid activity for recency suppression, but do
+  // not become a personal taste profile: guests should not silently steer the
+  // owner's long-term artist/metadata affinity.
+  const personalHistory = history.filter((entry) => entry.source !== "party");
+  const sungReferences = personalHistory.map((entry) => songsById.get(entry.id.toLowerCase())).filter(Boolean);
   const likedReferenceProfiles = likedReferences.map(createMetadataProfile);
   const favoriteReferenceProfiles = favoriteReferences.map(createMetadataProfile);
   const sungReferenceProfiles = sungReferences.map(createMetadataProfile);
@@ -351,7 +357,8 @@ function normalizeHistory(value) {
   return value
     .filter((entry) => entry && typeof entry.id === "string" && typeof entry.sungAt === "string" && !Number.isNaN(Date.parse(entry.sungAt)))
     .map((entry) => ({ ...entry, id: entry.id.trim() }))
-    .filter((entry) => entry.id);
+    .filter((entry) => entry.id)
+    .slice(0, MAX_RECOMMENDATION_HISTORY_ENTRIES);
 }
 
 function normalizeRecentlyPlayed(value) {
@@ -359,7 +366,8 @@ function normalizeRecentlyPlayed(value) {
   return value
     .filter((entry) => entry && typeof entry.id === "string" && typeof entry.playedAt === "string" && !Number.isNaN(Date.parse(entry.playedAt)))
     .map((entry) => ({ ...entry, id: entry.id.trim() }))
-    .filter((entry) => entry.id);
+    .filter((entry) => entry.id)
+    .slice(0, MAX_RECOMMENDATION_RECENT_ENTRIES);
 }
 
 function latestActivityById(entries, timestampKey) {

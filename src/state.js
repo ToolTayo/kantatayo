@@ -25,6 +25,8 @@ export const PREFERENCE_KEYS = [
  * Persistent state decisions:
  * - Collections contain stable song IDs, never full catalog records.
  * - sungHistory contains { id, sungAt } entries for future recency views.
+ *   Party-mode completions may also carry source: "party" so they remain
+ *   visible as real activity without becoming personal recommendation affinity.
  * - recentlyPlayed contains { id, playedAt } entries for the lightweight
  *   Continue Singing shelf without copying catalog records.
  * - dailyChallenge contains completed local date keys for streaks.
@@ -260,6 +262,7 @@ export function markSung(userState, songId, options = {}) {
   }
 
   const entry = { id, sungAt: new Date(nowMs).toISOString() };
+  if (options.source === "party") entry.source = "party";
   const maxHistory = options.maxHistory ?? MAX_SUNG_HISTORY;
   userState.sungHistory = [entry, ...userState.sungHistory].slice(0, maxHistory);
   return { added: true, entry };
@@ -423,7 +426,9 @@ function normalizeHistory(value) {
     if (!id || history.length >= MAX_SUNG_HISTORY) return history;
     const sungAt = typeof entry === "object" && entry !== null && typeof entry.sungAt === "string" && !Number.isNaN(Date.parse(entry.sungAt)) ? entry.sungAt : null;
     if (!sungAt) return history;
-    history.push({ id, sungAt });
+    const normalizedEntry = { id, sungAt };
+    if (typeof entry === "object" && entry !== null && entry.source === "party") normalizedEntry.source = "party";
+    history.push(normalizedEntry);
     return history;
   }, []);
 }

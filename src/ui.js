@@ -3,7 +3,7 @@ import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryP
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=2";
-import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs } from "./engagement.js?v=5";
+import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs, CONTINUE_SINGING_MAX_AGE_DAYS } from "./engagement.js?v=6";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
 
 const homeSectionOrder = ["continue", "recommended", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
@@ -82,7 +82,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
       ? { title: "Sing now", lede: "Your strongest next-song picks, tuned to your taste." }
       : { title: "Sing now", lede: "Playable picks to get your night moving." },
     madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
-    continue: { title: "Continue singing", lede: "Unfinished songs you opened recently." },
+    continue: { title: "Continue singing", lede: `Unfinished songs you opened in the last ${CONTINUE_SINGING_MAX_AGE_DAYS} days.` },
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
     popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
     recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
