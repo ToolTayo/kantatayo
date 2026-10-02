@@ -6,7 +6,7 @@ KantaCue uses YouTube's official embedded IFrame Player API for playback. KantaC
 
 YouTube IDs must be verified separately before they are added to the production catalog. A syntactically valid ID may still be unavailable, restricted, or non-embeddable. Made-for-Kids status must not be guessed and is part of that future catalog-verification process.
 
-The production sample catalog contains 661 records; 594 currently retain runtime-verified promoted IDs and 67 remain explicit `youtubeVideoId: null` records pending safe replacement. Defensive null-ID handling is part of normal catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
+The production sample catalog contains 1,067 records; 1,000 currently retain runtime-verified promoted IDs and 67 remain explicit `youtubeVideoId: null` records pending safe replacement. Defensive null-ID handling is part of normal catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
 
 ## Sharing, installation, and local popularity
 
@@ -210,7 +210,7 @@ The audit reads the catalog and ignored verification store without making networ
 
 ## Full real-playability audit
 
-The development-only full audit separates metadata preflight from actual player behavior. Build the ignored 661-entry manifest without an API call:
+The development-only full audit separates metadata preflight from actual player behavior. Build the ignored 1,067-entry manifest without an API call:
 
 ```text
 node tools/build-playability-audit.mjs
