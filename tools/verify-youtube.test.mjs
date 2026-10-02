@@ -153,8 +153,8 @@ test("production Party Tyme removals are catalog-only unassignments with preserv
     assert.match(record?.unassignmentReason || "", /Party Tyme presentation/);
     assert.equal(candidates.candidates.some((item) => item.songId === songId), false, songId);
   }
-  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 892);
-  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 892);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId !== null).length, 1000);
+  assert.equal(new Set(catalog.filter((song) => song.youtubeVideoId).map((song) => song.youtubeVideoId)).size, 1000);
 });
 
 test("unassigns only currently promoted Party Tyme records and preserves historical evidence", async () => {
@@ -281,8 +281,8 @@ test("requires a value for --query", () => {
 
 test("rejects an unknown song before making a search request", async () => {
   await assert.rejects(
-    () => searchCandidates({ catalog: "data/songs.sample.json", songId: "sample-999", query: "missing song karaoke", all: false, maxResults: 5, maxSongs: 10, offset: 0 }),
-    /Song ID "sample-999" was not found/
+    () => searchCandidates({ catalog: "data/songs.sample.json", songId: "sample-1999", query: "missing song karaoke", all: false, maxResults: 5, maxSongs: 10, offset: 0 }),
+    /Song ID "sample-1999" was not found/
   );
 });
 

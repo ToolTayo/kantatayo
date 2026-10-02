@@ -58,11 +58,11 @@ test("ambiguous metadata and title-only duplicates are rejected before runtime p
 });
 
 test("current catalog stays internally unique after KaraokeyTV additions", () => {
-  assert.equal(catalog.length, 959);
-  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 892);
+  assert.equal(catalog.length, 1067);
+  assert.equal(catalog.filter((song) => song.youtubeVideoId).length, 1000);
   assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
   assert.equal(new Set(catalog.map((song) => song.id)).size, catalog.length);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 892);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 1000);
   assert.equal(new Set(catalog.map((song) => songIdentityKey(song.title, song.artist))).size, catalog.length);
   assert.equal(catalog.find((song) => song.id === "sample-029")?.youtubeVideoId, "QBb9wO3Bj0k");
   assert.equal(catalog.filter((song) => song.tags.includes("karaokeytv")).length, 150);

@@ -10,14 +10,14 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 test("playability manifest covers the current catalog without claiming iframe playback", async () => {
   const catalogBefore = await read("data/songs.sample.json");
   const report = await buildPlayabilityAudit({ outputPath: null, generatedAt: "2026-09-27T00:00:00.000Z" });
-  assert.equal(report.catalogCount, 959);
-  assert.equal(report.entries.length, 959);
+  assert.equal(report.catalogCount, 1067);
+  assert.equal(report.entries.length, 1067);
   assert.equal(report.auditStatus, "PENDING_BROWSER_AUDIT");
   assert.equal(report.counts.confirmedPlayable, 0);
   assert.equal(report.counts.unavailable, 67);
   assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNAVAILABLE").length, 67);
-  assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNTESTED").length, 892);
-  assert.equal(new Set(report.entries.map((entry) => entry.songId)).size, 959);
+  assert.equal(report.entries.filter((entry) => entry.iframeStatus === "UNTESTED").length, 1000);
+  assert.equal(new Set(report.entries.map((entry) => entry.songId)).size, 1067);
   assert.equal(report.entries.find((entry) => entry.title === "Ere")?.videoId, null);
   assert.equal(await read("data/songs.sample.json"), catalogBefore);
 });

@@ -64,14 +64,14 @@ test("the first 311 production records retain their current integrity snapshot",
 
 test("expanded PRO catalog is valid, playable, unique, and keeps Exclusive removed", () => {
   const normalized = normalizeCatalog(catalog, { logger: { warn() {} } });
-  assert.equal(catalog.length, 959);
-  assert.equal(normalized.songs.length, 959);
+  assert.equal(catalog.length, 1067);
+  assert.equal(normalized.songs.length, 1067);
   assert.equal(normalized.rejectedRecords, 0);
   assert.deepEqual(normalized.warnings, []);
-  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 892);
+  assert.equal(catalog.filter((song) => /^[A-Za-z0-9_-]{11}$/.test(song.youtubeVideoId || "")).length, 1000);
   assert.equal(catalog.filter((song) => song.youtubeVideoId === null).length, 67);
-  assert.equal(new Set(catalog.map((song) => song.id)).size, 959);
-  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 892);
-  assert.equal(new Set(catalog.map(songKey)).size, 959);
+  assert.equal(new Set(catalog.map((song) => song.id)).size, 1067);
+  assert.equal(new Set(catalog.map((song) => song.youtubeVideoId).filter(Boolean)).size, 1000);
+  assert.equal(new Set(catalog.map(songKey)).size, 1067);
   assert.equal(fs.existsSync("data/songs.exclusive.json"), false);
 });

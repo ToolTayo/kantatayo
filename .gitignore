@@ -38,3 +38,7 @@ tools/kantacue-batch3-report.json
 tools/kantacue-batch3.runtime.json
 tools/kantacue-batch3.runtime.checkpoint.json
 tools/kantacue-batch3.runtime-manifest.json
+tools/kantacue-milestone-report.json
+tools/kantacue-milestone.runtime.json
+tools/kantacue-milestone.runtime.checkpoint.json
+tools/kantacue-milestone.runtime-manifest.json

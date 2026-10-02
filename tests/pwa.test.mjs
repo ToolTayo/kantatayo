@@ -73,7 +73,7 @@ test("service worker caches only the explicit first-party app shell", () => {
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
   assert.match(serviceWorker, /"\.\/src\/install\.js"/);
   assert.match(serviceWorker, /"\.\/src\/share\.js"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v68"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v69"/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);
@@ -94,10 +94,10 @@ test("app registers the service worker safely and keeps offline playback explici
 
 test("PWA boundaries preserve the local catalog and protected video assignments", async () => {
   const songs = JSON.parse(await readFile("data/songs.sample.json", "utf8"));
-    assert.equal(songs.length, 959);
-  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 892);
+    assert.equal(songs.length, 1067);
+  assert.equal(songs.filter((song) => song.youtubeVideoId !== null).length, 1000);
   assert.equal(songs.filter((song) => song.youtubeVideoId === null).length, 67);
-  assert.equal(new Set(songs.map((song) => song.id)).size, 959);
-  assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 959);
+  assert.equal(new Set(songs.map((song) => song.id)).size, 1067);
+  assert.equal(new Set(songs.map((song) => `${song.title.toLocaleLowerCase()}\u0000${song.artist.toLocaleLowerCase()}`)).size, 1067);
   assert.equal(songs.find((song) => song.id === "sample-029").youtubeVideoId, "QBb9wO3Bj0k");
 });
