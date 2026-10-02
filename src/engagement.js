@@ -1,4 +1,4 @@
-import { isPlayableSong } from "./discovery.js?v=4";
+import { isPlayableSong } from "./discovery.js?v=5";
 import { getDailyChallengeSelection, getLocalDateKey as getChallengeDateKey, isValidDateKey } from "./daily-challenge.js?v=2";
 
 export const getLocalDateKey = getChallengeDateKey;

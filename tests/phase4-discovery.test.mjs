@@ -26,6 +26,31 @@ test("search matches artist and metadata fields locally", () => {
   assert.ok(getDiscoverySongs(index, { query: "heartbreak" }).length > 0);
 });
 
+test("search ranks exact titles above weaker title matches and keeps multi-word matches together", () => {
+  const fixture = [
+    { id: "exact", title: "Dancing Queen", artist: "ABBA", genre: "Pop", language: "English", era: "1970s", performanceType: "group", mood: ["party"], tags: [], youtubeVideoId: "aaaaaaaaaaa" },
+    { id: "prefix", title: "Dancing in the Moonlight", artist: "Toploader", genre: "Pop", language: "English", era: "2000s", performanceType: "group", mood: ["party"], tags: [], youtubeVideoId: "bbbbbbbbbbb" },
+    { id: "scattered", title: "Take Me Home, Country Roads", artist: "John Denver", genre: "Country", language: "English", era: "1970s", performanceType: "solo", mood: ["feel-good"], tags: [], youtubeVideoId: "ccccccccccc" },
+    { id: "take-on", title: "Take On Me", artist: "a-ha", genre: "Pop", language: "English", era: "1980s", performanceType: "group", mood: ["upbeat"], tags: [], youtubeVideoId: "ddddddddddd" }
+  ];
+  const fixtureIndex = createSearchIndex(fixture);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "Dancing Queen" }).map((song) => song.id), ["exact"]);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "danc queen" }).map((song) => song.id), ["exact"]);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "Dancing Pop" }).map((song) => song.id), ["exact", "prefix"]);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "take on" }).map((song) => song.id), ["take-on"]);
+});
+
+test("search treats hyphenated names consistently without single-letter token noise", () => {
+  const fixture = [
+    { id: "aha", title: "Take On Me", artist: "a-ha", genre: "Pop", language: "English", era: "1980s", performanceType: "group", mood: [], tags: [], youtubeVideoId: "eeeeeeeeeee" },
+    { id: "noise", title: "A Million Dreams", artist: "Pink", genre: "Pop", language: "English", era: "2010s", performanceType: "solo", mood: [], tags: [], youtubeVideoId: "fffffffffff" }
+  ];
+  const fixtureIndex = createSearchIndex(fixture);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "a-ha" }).map((song) => song.id), ["aha"]);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "aha" }).map((song) => song.id), ["aha"]);
+  assert.deepEqual(getDiscoverySongs(fixtureIndex, { query: "x" }), []);
+});
+
 test("playable-only discovery excludes every unavailable catalog record", () => {
   const unavailable = catalog.filter((song) => !song.youtubeVideoId);
   const results = getDiscoverySongs(index, { filters: { availability: "playable" } });
@@ -121,6 +146,8 @@ test("discover UI exposes playable-only browsing, derived filters, sorting, rese
   assert.match(html, /value="popular"/);
   assert.match(html, /data-action="reset-discovery-filters"/);
   assert.match(html, /data-action="load-more-discover"/);
+  assert.match(html, /data-discover-empty-clear-search/);
+  assert.match(html, /data-discover-empty-reset-filters/);
 });
 
 test("legacy playable filter state safely falls back to public all", () => {

@@ -67,13 +67,13 @@ test("service worker caches only the explicit first-party app shell", () => {
   assert.match(serviceWorker, /"\.\/src\/view\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
-  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=4"/);
+  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=27"/);
   assert.match(serviceWorker, /"\.\/src\/state\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
   assert.match(serviceWorker, /"\.\/src\/install\.js"/);
   assert.match(serviceWorker, /"\.\/src\/share\.js"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v70"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v71"/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);

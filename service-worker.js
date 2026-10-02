@@ -1,6 +1,6 @@
 const CACHE_PREFIX = "kantacue-";
 const LEGACY_CACHE_PREFIX = "kantatayo-";
-const CACHE_NAME = "kantacue-shell-v70";
+const CACHE_NAME = "kantacue-shell-v71";
 const INDEX_URL = new URL("./index.html", self.location.href).href;
 const APP_SHELL_URLS = [
   "./",
@@ -12,7 +12,7 @@ const APP_SHELL_URLS = [
   "./src/catalog.js?v=3",
   "./src/catalog.js",
   "./src/discovery.js",
-  "./src/discovery.js?v=4",
+  "./src/discovery.js?v=5",
   "./src/engagement.js",
   "./src/engagement.js?v=5",
   "./src/daily-challenge.js?v=2",

@@ -190,6 +190,7 @@ h1 em { color: var(--accent); font-style: normal; }
 .empty-icon { align-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--accent-2); display: inline-flex; font-size: 1.2rem; height: 2.4rem; justify-content: center; min-width: 2.4rem; }
 .empty-state strong { color: var(--ink); display: block; font-size: .82rem; margin-bottom: .2rem; }
 .empty-state p { font-size: .75rem; line-height: 1.5; margin: 0; }
+.empty-state-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .7rem; margin-top: .75rem; }
 .no-results { margin-top: 2rem; }
 .queue-drawer { background: #101827; border-left: 1px solid var(--line); bottom: 0; box-shadow: -20px 0 70px rgba(0,0,0,.45); max-width: 420px; padding: 1.5rem; position: fixed; right: 0; top: 0; transform: translateX(105%); transition: transform .28s ease; width: min(90vw, 420px); z-index: 20; }
 .queue-drawer.is-open { transform: translateX(0); }

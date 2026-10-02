@@ -1,4 +1,4 @@
-import { isPlayableSong } from "./discovery.js?v=4";
+import { isPlayableSong } from "./discovery.js?v=5";
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const DAY_MS = 86400000;

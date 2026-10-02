@@ -1,5 +1,5 @@
 import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
-import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=4";
+import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=5";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=1";
@@ -204,8 +204,28 @@ function renderCatalogView(searchIndex, query, filter, sortBy, userState, intera
   if (remaining) remaining.textContent = page.hasMore ? `${songs.length - visibleSongs.length} more matches` : "";
   const emptyTitle = document.querySelector("[data-discover-empty-title]");
   const emptyCopy = document.querySelector("[data-discover-empty-copy]");
-  if (emptyTitle) emptyTitle.textContent = query.trim() || hasActiveDiscoveryFilters(filters) ? "No songs match those choices" : "No songs found";
-  if (emptyCopy) emptyCopy.textContent = query.trim() || hasActiveDiscoveryFilters(filters) ? "Clear a filter or try a different search." : "Try a different search or filter.";
+  const hasQuery = Boolean(normalizeQuery(query));
+  const hasFilters = hasActiveDiscoveryFilters(filters);
+  if (emptyTitle) emptyTitle.textContent = hasQuery && hasFilters
+    ? "No songs match this search and these filters"
+    : hasQuery
+      ? "No playable songs match that search"
+      : hasFilters
+        ? "No playable songs match these filters"
+        : "No playable songs are available";
+  if (emptyCopy) emptyCopy.textContent = hasQuery && hasFilters
+    ? "Try clearing the search or relaxing one of the active filters."
+    : hasQuery
+      ? "Check the spelling, or try a shorter title or artist search."
+      : hasFilters
+        ? "Reset the filters to browse every playable song."
+        : "The local catalog has no playable matches right now.";
+  const clearSearch = document.querySelector("[data-discover-empty-clear-search]");
+  const resetFilters = document.querySelector("[data-discover-empty-reset-filters]");
+  const resetAll = document.querySelector("[data-discover-empty-reset]");
+  if (clearSearch) clearSearch.hidden = !hasQuery;
+  if (resetFilters) resetFilters.hidden = !hasFilters;
+  if (resetAll) resetAll.hidden = !(hasQuery && hasFilters);
 }
 
 function renderDiscoveryFilterControls(songs, filters) {

@@ -35,7 +35,8 @@ export function createSearchIndex(songs) {
   return songs.map((song, index) => ({
     song,
     index,
-    searchText: buildSearchText(song)
+    searchText: buildSearchText(song),
+    searchFields: buildSearchFields(song)
   }));
 }
 
@@ -53,11 +54,12 @@ export function normalizeQuery(value = "") {
 export function getDiscoverySongs(index, options = {}) {
   const query = normalizeQuery(options.query);
   const tokens = query ? query.split(" ") : [];
+  const compactQuery = compactQueryValue(query);
   const filters = normalizeDiscoveryFilters(options.filters, options.filter);
   const favoriteIds = new Set((options.favoriteIds || []).map((id) => String(id).toLowerCase()));
   const filtered = index.filter((entry) => {
     if (!isPlayableSong(entry.song)) return false;
-    const matchesQuery = tokens.length === 0 || tokens.every((token) => entry.searchText.includes(token));
+    const matchesQuery = tokens.length === 0 || matchesSearchEntry(entry, tokens, compactQuery);
     return matchesQuery && matchesDiscoveryFilters(entry.song, filters, favoriteIds);
   });
 
@@ -283,38 +285,97 @@ function compareHomeSongs(left, right) {
 export function scoreSong(song, query) {
   const normalizedQuery = normalizeQuery(query);
   if (!normalizedQuery) return 0;
+  const tokens = normalizedQuery.split(" ").filter(Boolean);
+  const compactQuery = compactQueryValue(normalizedQuery);
+  const fields = buildSearchFields(song);
+  const title = fields.find((field) => field.kind === "title");
+  const artist = fields.find((field) => field.kind === "artist");
+  const metadata = fields.find((field) => field.kind === "metadata");
+  let score = 0;
 
-  const title = normalizeQuery(song.title);
-  const artist = normalizeQuery(song.artist);
-  const fields = [
-    title,
-    artist,
-    normalizeQuery(song.genre),
-    normalizeQuery(song.language),
-    normalizeQuery(song.era),
-    normalizeQuery(song.performanceType),
-    ...(song.mood || []).map(normalizeQuery),
-    ...(song.tags || []).map(normalizeQuery)
-  ];
-  let score = fields.reduce((total, field) => total + (field.includes(normalizedQuery) ? 1 : 0), 0);
-  if (title === normalizedQuery) score += 100;
-  else if (title.startsWith(normalizedQuery)) score += 60;
-  if (artist === normalizedQuery) score += 50;
-  else if (artist.startsWith(normalizedQuery)) score += 30;
+  if (title.normalized === normalizedQuery) score += 1000;
+  else if (title.compact === compactQuery && compactQuery.length >= 3) score += 920;
+  else if (title.normalized.startsWith(normalizedQuery)) score += 780;
+  else if (fieldMatchesTokens(title, tokens)) score += 600;
+
+  if (artist.normalized === normalizedQuery) score += 700;
+  else if (artist.compact === compactQuery && compactQuery.length >= 3) score += 660;
+  else if (artist.normalized.startsWith(normalizedQuery)) score += 500;
+  else if (fieldMatchesTokens(artist, tokens)) score += 420;
+
+  if (primaryFieldsCoverTokens([title, artist], tokens)) score += 300;
+  else if (fieldsCoverTokens([title, artist, metadata], tokens)) score += 220;
+  if (fieldMatchesTokens(metadata, tokens)) score += 160;
   return score;
 }
 
 function buildSearchText(song) {
-  return normalizeQuery([
-    song.title,
-    song.artist,
+  return buildSearchFields(song).map((field) => field.normalized).join(" ").trim();
+}
+
+function buildSearchFields(song) {
+  const metadata = [
     song.genre,
     song.language,
     song.era,
     song.performanceType,
     ...(song.mood || []),
     ...(song.tags || [])
-  ].join(" "));
+  ];
+  return [
+    createSearchField("title", song.title),
+    createSearchField("artist", song.artist),
+    createSearchField("metadata", metadata.join(" "))
+  ];
+}
+
+function createSearchField(kind, value) {
+  const normalized = normalizeQuery(value || "");
+  return {
+    kind,
+    normalized,
+    compact: compactQueryValue(normalized),
+    tokens: normalized ? normalized.split(" ").filter(Boolean) : []
+  };
+}
+
+function compactQueryValue(value) {
+  return normalizeQuery(value).replace(/\s+/g, "");
+}
+
+function fieldMatchesTokens(field, tokens) {
+  if (!field || !tokens.length) return false;
+  return tokens.every((token) => field.tokens.some((word) => fieldTokenMatches(word, token)));
+}
+
+function primaryFieldsCoverTokens(fields, tokens) {
+  return fieldsCoverTokens(fields, tokens);
+}
+
+function fieldsCoverTokens(fields, tokens) {
+  // A one-letter token is only useful as a complete word. Requiring that
+  // prevents punctuation-separated names such as “a-ha” from turning the
+  // common letter “a” into a broad catalog-wide match.
+  if (tokens.some((token) => token.length === 1)) return false;
+  return tokens.every((token) => fields.some((field) => field.tokens.some((word) => fieldTokenMatches(word, token))));
+}
+
+function fieldTokenMatches(word, token) {
+  return token.length === 1 ? word === token : word === token || word.startsWith(token);
+}
+
+function matchesSearchEntry(entry, tokens, compactQuery) {
+  const fields = Array.isArray(entry.searchFields) ? entry.searchFields : buildSearchFields(entry.song);
+  const title = fields.find((field) => field.kind === "title");
+  const artist = fields.find((field) => field.kind === "artist");
+  const metadata = fields.find((field) => field.kind === "metadata");
+  if (tokens.length > 1 && tokens.some((token) => token.length === 1)) {
+    return compactQuery.length >= 3 && (title.compact === compactQuery || artist.compact === compactQuery);
+  }
+  if (fieldMatchesTokens(title, tokens) || fieldMatchesTokens(artist, tokens) || fieldMatchesTokens(metadata, tokens)) return true;
+  if (fieldsCoverTokens([title, artist, metadata], tokens)) return true;
+  return compactQuery.length >= 3
+    && (title.compact === compactQuery || artist.compact === compactQuery);
 }
 
 function matchesDiscoveryFilters(song, filters, favoriteIds) {

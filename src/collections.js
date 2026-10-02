@@ -1,4 +1,4 @@
-import { isPlayableSong } from "./discovery.js?v=4";
+import { isPlayableSong } from "./discovery.js?v=5";
 
 export const LOCAL_COLLECTIONS = [
   { id: "friday-night", title: "Friday Night Karaoke", description: "Big choruses and room-ready picks.", matches: (song) => hasAny(song, ["party", "energetic", "celebratory"]) || ["Pop", "Pop Rock", "Rock"].includes(song.genre) },
