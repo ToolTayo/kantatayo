@@ -40,6 +40,8 @@ test("service worker caches only the explicit first-party app shell", () => {
     "./src/engagement.js",
     "./src/daily-challenge.js",
     "./src/collections.js",
+    "./src/medleys.js",
+    "./src/player-suggestions.js",
     "./src/preferences.js",
     "./src/recommendations.js",
     "./src/party.js",
@@ -50,6 +52,7 @@ test("service worker caches only the explicit first-party app shell", () => {
     "./src/view.js",
     "./src/youtube.js",
     "./data/songs.sample.json",
+    "./data/medleys.sample.json",
     "./manifest.webmanifest",
     "./assets/icon-192.png",
     "./assets/icon-512.png",
@@ -61,21 +64,24 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=31"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=39"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=34"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=51"/);
   assert.match(serviceWorker, /"\.\/src\/catalog\.js\?v=3"/);
-  assert.match(serviceWorker, /"\.\/src\/view\.js\?v=2"/);
+  assert.match(serviceWorker, /"\.\/src\/view\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=6"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=5"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=29"/);
-  assert.match(serviceWorker, /"\.\/src\/state\.js\?v=7"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=35"/);
+  assert.match(serviceWorker, /"\.\/src\/state\.js\?v=8"/);
+  assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=7"/);
+  assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=7"/);
   assert.match(serviceWorker, /"\.\/src\/party\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
   assert.match(serviceWorker, /"\.\/src\/install\.js"/);
   assert.match(serviceWorker, /"\.\/src\/share\.js"/);
   assert.match(serviceWorker, /"\.\/src\/session\.js\?v=1"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v79"/);
+  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=1"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v91"/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);

@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "medleys": [
+    {
+      "id": "medley-opm-freestyle-ibarra-001",
+      "title": "Karaoke - OPM Medley - Freestyle",
+      "provider": "Ibarra Music",
+      "videoId": "jfBGyW_JYp8",
+      "language": "Filipino",
+      "theme": "OPM love songs",
+      "includedSongs": [
+        { "title": "When I Met You", "artist": "Apo Hiking Society" },
+        { "title": "Bakit Ba Ganyan", "artist": "Dina Bonnevie" },
+        { "title": "I Think I'm in Love", "artist": "Kuh Ledesma" }
+      ],
+      "publicViews": 5611184,
+      "publishedAt": "2020-09-02",
+      "sourceUrl": "https://www.youtube.com/watch?v=jfBGyW_JYp8",
+      "provenance": "Public YouTube watch-page metadata and description captured 2026-10-02; description identifies the three arranged sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-02",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-air-supply-yenjohn-001",
+      "title": "Air Supply Medley (Karaoke Version)",
+      "provider": "YenJohn HD Karaoke",
+      "videoId": "fMT-OznyYRQ",
+      "language": "English",
+      "theme": "Classic love songs",
+      "includedSongs": [
+        { "title": "Here I Am", "artist": "Air Supply" },
+        { "title": "Goodbye", "artist": "Air Supply" },
+        { "title": "Having You Near Me", "artist": "Air Supply" }
+      ],
+      "publicViews": 44000000,
+      "publishedAt": null,
+      "sourceUrl": "https://www.youtube.com/watch?v=fMT-OznyYRQ",
+      "provenance": "Public YouTube search result captured 2026-10-02; displayed public view count was approximately 44M, and the result description listed the three sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-02",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-carpenters-conesstudio-001",
+      "title": "The Carpenters Medley | KARAOKE",
+      "provider": "ConesStudio Karaoke",
+      "videoId": "71mZANyGS64",
+      "language": "English",
+      "theme": "Classic pop",
+      "includedSongs": [
+        { "title": "I Won't Last a Day Without You", "artist": "Carpenters" },
+        { "title": "You", "artist": "Carpenters" },
+        { "title": "Yesterday Once More", "artist": "Carpenters" },
+        { "title": "I Need to Be in Love", "artist": "Carpenters" },
+        { "title": "Love Me for What I Am", "artist": "Carpenters" }
+      ],
+      "publicViews": 19000000,
+      "publishedAt": null,
+      "sourceUrl": "https://www.youtube.com/watch?v=71mZANyGS64",
+      "provenance": "Public YouTube search result captured 2026-10-02; displayed public view count was approximately 19M, the result exposed five chapter titles, and it showed a 4K marker.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-02",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-classic-male-love-ibarra-001",
+      "title": "Classic Male Love Songs Medley",
+      "provider": "Ibarra Music",
+      "videoId": "iY8TY7erCxg",
+      "language": "English",
+      "theme": "Classic love songs",
+      "includedSongs": [
+        { "title": "In Your Eyes", "artist": "George Benson" },
+        { "title": "Nothing's Gonna Change My Love for You", "artist": "George Benson" },
+        { "title": "Exchange of Hearts", "artist": "David Slater" }
+      ],
+      "publicViews": 16000000,
+      "publishedAt": null,
+      "sourceUrl": "https://www.youtube.com/watch?v=iY8TY7erCxg",
+      "provenance": "Public YouTube search result captured 2026-10-02; displayed public view count was approximately 16M and the description began listing the included songs.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-02",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-jim-brickman-clean-audio-001",
+      "title": "Jim Brickman Medley",
+      "provider": "Clean Audio",
+      "videoId": "3hFYuGiYyQM",
+      "language": "English",
+      "theme": "Piano love songs",
+      "includedSongs": [
+        { "title": "Your Love", "artist": "Jim Brickman" },
+        { "title": "Destiny", "artist": "Jim Brickman" },
+        { "title": "The Gift", "artist": "Jim Brickman" },
+        { "title": "My Valentine", "artist": "Jim Brickman" }
+      ],
+      "publicViews": 2600000,
+      "publishedAt": "2023-09-08",
+      "sourceUrl": "https://www.youtube.com/watch?v=3hFYuGiYyQM",
+      "provenance": "Public YouTube search result captured 2026-10-02; displayed public view count was approximately 2.6M and the description identified the four medley sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-02",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-karaokeytv-opm-001",
+      "title": "Opm Medley Hit song Karaoke",
+      "provider": "KaraokeyTV",
+      "videoId": "9AJt_0ZAtQc",
+      "language": "Filipino",
+      "theme": "OPM hits",
+      "includedSongs": [
+        { "title": "Di Lang Ikaw", "artist": "Juris" },
+        { "title": "Iingatan Ka", "artist": "Carol Banawa" },
+        { "title": "Gisingin Ang Puso", "artist": "Liezel Garcia" },
+        { "title": "On The Wings Of Love", "artist": "Regine V." }
+      ],
+      "publicViews": 2715757,
+      "publishedAt": "2025-03-29",
+      "sourceUrl": "https://www.youtube.com/watch?v=9AJt_0ZAtQc",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; title, channel, view count, and description identify four sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, and sustained local runtime observation for more than 15 seconds without an error callback at http://localhost:8765.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-karaokeytv-kitchie-001",
+      "title": "Kitchie Nadal Medley - (Karaoke)",
+      "provider": "KaraokeyTV",
+      "videoId": "2J0hjAh06T0",
+      "language": "Filipino",
+      "theme": "OPM love songs",
+      "includedSongs": [
+        { "title": "Bulong", "artist": "Kitchie Nadal" },
+        { "title": "Same Ground", "artist": "Kitchie Nadal" },
+        { "title": "Wag na wag", "artist": "Kitchie Nadal" }
+      ],
+      "publicViews": 38000130,
+      "publishedAt": "2023-05-11",
+      "sourceUrl": "https://www.youtube.com/watch?v=2J0hjAh06T0",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; title, channel, view count, and description identify three sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube playability controller; onReady, PLAYING, advancing currentTime, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-karaokeytv-freddie-001",
+      "title": "Freddie Aguilar Medley - Freddie Aguilar (Karaoke Version)",
+      "provider": "KaraokeyTV",
+      "videoId": "eFFlXBGs16w",
+      "language": "Filipino",
+      "theme": "OPM classics",
+      "includedSongs": [
+        { "title": "Kumusta Ka Aking Mahal", "artist": "Freddie Aguilar" },
+        { "title": "Alaala", "artist": "Freddie Aguilar" },
+        { "title": "Sa Kuko Ng Agila", "artist": "Freddie Aguilar" },
+        { "title": "Minamahal Kita", "artist": "Freddie Aguilar" }
+      ],
+      "publicViews": 24772767,
+      "publishedAt": "2024-06-22",
+      "sourceUrl": "https://www.youtube.com/watch?v=eFFlXBGs16w",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; title, channel, view count, and description identify four sections.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube playability controller; onReady, PLAYING, advancing currentTime, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-aegis-karaokeytv-001",
+      "title": "Aegis Medley - Aegis (Karaoke) Lyrics",
+      "provider": "KaraokeyTV",
+      "videoId": "iuDInJI-ZVw",
+      "language": "Filipino",
+      "theme": "OPM medley",
+      "sectionStatus": "unknown",
+      "medleyEvidence": "The public title identifies an Aegis medley karaoke performance; the accessible public description does not list individual sections.",
+      "includedSongs": [],
+      "publicViews": null,
+      "publishedAt": null,
+      "sourceUrl": "https://www.youtube.com/watch?v=iuDInJI-ZVw",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; title, channel, duration, and medley wording establish a multi-song karaoke upload. Individual sections are intentionally not inferred.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, advancing currentTime, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-jaya-karaokeytv-001",
+      "title": "Jaya Medley - Jaya (Karaoke)",
+      "provider": "KaraokeyTV",
+      "videoId": "kxZntA43YhE",
+      "language": "Filipino",
+      "theme": "OPM medley",
+      "sectionStatus": "unknown",
+      "medleyEvidence": "The public title identifies a Jaya medley karaoke performance; the public description confirms multiple Jaya songs but the full section list is not required for publication.",
+      "includedSongs": [],
+      "publicViews": null,
+      "publishedAt": "2023-05-17",
+      "sourceUrl": "https://www.youtube.com/watch?v=kxZntA43YhE",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; description names Wala Na Bang Pag-ibig, Dahil Tanging Ikaw, and Laging Naoon Ka. Runtime and provider were independently checked.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, advancing currentTime, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    },
+    {
+      "id": "medley-sarah-g-karaokeytv-001",
+      "title": "Sarah G. Medley Songs - Sarah Geronimo (Karaoke Version)",
+      "provider": "KaraokeyTV",
+      "videoId": "nDXOKcknAng",
+      "language": "Filipino",
+      "theme": "OPM medley",
+      "sectionStatus": "unknown",
+      "medleyEvidence": "The public title identifies a Sarah Geronimo medley karaoke performance; the accessible public description does not list individual sections.",
+      "includedSongs": [],
+      "publicViews": null,
+      "publishedAt": null,
+      "sourceUrl": "https://www.youtube.com/watch?v=nDXOKcknAng",
+      "provenance": "Public YouTube watch-page metadata captured 2026-10-03; title, channel, duration, and medley wording establish a multi-song karaoke upload. Individual sections are intentionally not inferred.",
+      "verification": {
+        "status": "technical-verified-pending-manual-quality-review",
+        "testedAt": "2026-10-03",
+        "method": "KantaCue official YouTube IFrame controller; onReady, PLAYING, advancing currentTime, and sustained local runtime observation for more than 15 seconds without an error callback.",
+        "manualQuality": "pending-listen"
+      }
+    }
+  ]
+}

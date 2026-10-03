@@ -44,6 +44,8 @@ export const PREFERENCE_KEYS = [
  * - songRequests and playbackFeedback are bounded local records. Requests keep
  *   title/artist text because they are not catalog songs; feedback keeps only a
  *   stable song ID, rating, optional controlled reason, and timestamp.
+ * - medleyQueue/currentMedleyId are separate stable medley references. Medleys
+ *   never enter song history, recommendations, favorites, or Party Mode.
  */
 export function createDefaultUserState() {
   return {
@@ -57,6 +59,9 @@ export function createDefaultUserState() {
     queue: [],
     currentSongId: null,
     queueFinished: false,
+    medleyQueue: [],
+    currentMedleyId: null,
+    medleyQueueFinished: false,
     recentRecommendations: [],
     dailyChallenge: { completedDates: [], lastCompletedDate: null, lastCompletedSongId: null },
     partySession: createDefaultPartySession(),
@@ -128,6 +133,94 @@ export function getQueueSnapshot(appState) {
     partyItems: getPartyQueueItems(songs, appState.user.partySession),
     partyModeEnabled: Boolean(appState.user.partySession.enabled)
   };
+}
+
+export function getMedleyQueueSnapshot(userState, medleys = []) {
+  const byId = new Map((Array.isArray(medleys) ? medleys : []).map((medley) => [medley.id.toLowerCase(), medley]));
+  const items = normalizeIdList(userState?.medleyQueue).map((id) => byId.get(id.toLowerCase())).filter(Boolean);
+  const currentMedleyId = normalizeId(userState?.currentMedleyId);
+  const currentIndex = currentMedleyId ? items.findIndex((item) => item.id.toLowerCase() === currentMedleyId.toLowerCase()) : -1;
+  return {
+    items,
+    currentMedleyId: currentIndex >= 0 ? items[currentIndex].id : null,
+    currentMedley: currentIndex >= 0 ? items[currentIndex] : null,
+    currentIndex,
+    position: currentIndex >= 0 ? currentIndex + 1 : 0,
+    total: items.length,
+    queueFinished: Boolean(userState?.medleyQueueFinished && items.length > 0)
+  };
+}
+
+export function addMedleyToQueue(userState, medleyId) {
+  const id = normalizeId(medleyId);
+  if (!id || userState.medleyQueue.some((item) => item.toLowerCase() === id.toLowerCase())) return false;
+  userState.medleyQueue.push(id);
+  userState.medleyQueueFinished = false;
+  return true;
+}
+
+export function removeMedleyFromQueue(userState, medleyId) {
+  const id = normalizeId(medleyId);
+  const removedIndex = userState.medleyQueue.findIndex((item) => item.toLowerCase() === id.toLowerCase());
+  if (removedIndex < 0) return false;
+  userState.medleyQueue = userState.medleyQueue.filter((item) => item.toLowerCase() !== id.toLowerCase());
+  if (userState.currentMedleyId?.toLowerCase() === id.toLowerCase()) {
+    userState.currentMedleyId = userState.medleyQueue[removedIndex] || userState.medleyQueue[removedIndex - 1] || null;
+    userState.medleyQueueFinished = false;
+  }
+  if (!userState.medleyQueue.length) {
+    userState.currentMedleyId = null;
+    userState.medleyQueueFinished = false;
+  }
+  return true;
+}
+
+export function clearMedleyQueue(userState) {
+  const changed = userState.medleyQueue.length > 0;
+  userState.medleyQueue = [];
+  userState.currentMedleyId = null;
+  userState.medleyQueueFinished = false;
+  return changed;
+}
+
+export function setCurrentMedley(userState, medleyId) {
+  const id = normalizeId(medleyId);
+  const canonicalId = userState.medleyQueue.find((item) => item.toLowerCase() === id.toLowerCase());
+  if (!id || !canonicalId) return false;
+  userState.currentMedleyId = canonicalId;
+  userState.currentSongId = null;
+  userState.medleyQueueFinished = false;
+  return true;
+}
+
+export function advanceMedleyQueue(userState) {
+  if (!userState.medleyQueue.length) return { status: "empty", currentMedleyId: null };
+  if (userState.medleyQueueFinished) return { status: "finished", currentMedleyId: null };
+  if (!userState.currentMedleyId) {
+    userState.currentMedleyId = userState.medleyQueue[0];
+    return { status: "started", currentMedleyId: userState.currentMedleyId };
+  }
+  const currentIndex = userState.medleyQueue.findIndex((item) => item.toLowerCase() === userState.currentMedleyId.toLowerCase());
+  if (currentIndex >= 0 && currentIndex < userState.medleyQueue.length - 1) {
+    userState.currentMedleyId = userState.medleyQueue[currentIndex + 1];
+    return { status: "advanced", currentMedleyId: userState.currentMedleyId };
+  }
+  userState.currentMedleyId = null;
+  userState.medleyQueueFinished = true;
+  return { status: "finished", currentMedleyId: null };
+}
+
+export function selectPreviousMedley(userState) {
+  if (!userState.medleyQueue.length) return { status: "empty", currentMedleyId: null };
+  if (userState.medleyQueueFinished || !userState.currentMedleyId) {
+    userState.currentMedleyId = userState.medleyQueue[userState.medleyQueue.length - 1];
+    userState.medleyQueueFinished = false;
+    return { status: "selected", currentMedleyId: userState.currentMedleyId };
+  }
+  const currentIndex = userState.medleyQueue.findIndex((item) => item.toLowerCase() === userState.currentMedleyId.toLowerCase());
+  if (currentIndex <= 0) return { status: "boundary", currentMedleyId: userState.currentMedleyId };
+  userState.currentMedleyId = userState.medleyQueue[currentIndex - 1];
+  return { status: "selected", currentMedleyId: userState.currentMedleyId };
 }
 
 export function addSongToQueue(userState, songId) {
@@ -374,6 +467,9 @@ export function validateUserState(value) {
     queue,
     currentSongId,
     queueFinished: Boolean(value.queueFinished && queue.length > 0 && !currentSongId),
+    medleyQueue: normalizeIdList(value.medleyQueue),
+    currentMedleyId: normalizeMedleyCurrentId(value.medleyQueue, value.currentMedleyId),
+    medleyQueueFinished: Boolean(value.medleyQueueFinished && normalizeIdList(value.medleyQueue).length > 0 && !normalizeMedleyCurrentId(value.medleyQueue, value.currentMedleyId)),
     recentRecommendations: normalizeIdList(value.recentRecommendations).slice(0, MAX_RECENT_RECOMMENDATIONS),
     dailyChallenge: normalizeDailyChallenge(value.dailyChallenge),
     partySession: normalizePartySession(value.partySession),
@@ -396,11 +492,20 @@ function migrateUserState(value) {
       dailyChallenge: value.dailyChallenge ?? { completedDates: [], lastCompletedDate: null, lastCompletedSongId: null },
       songRequests: value.songRequests ?? [],
       playbackFeedback: value.playbackFeedback ?? [],
+      medleyQueue: value.medleyQueue ?? [],
+      currentMedleyId: value.currentMedleyId ?? null,
+      medleyQueueFinished: Boolean(value.medleyQueueFinished),
       version: USER_STATE_VERSION
     };
   }
 
   throw new Error(`Unsupported stored KantaCue user-state version: ${value.version}`);
+}
+
+function normalizeMedleyCurrentId(queue, requestedId) {
+  const ids = normalizeIdList(queue);
+  const requested = normalizeId(requestedId);
+  return ids.find((id) => id.toLowerCase() === requested.toLowerCase()) || null;
 }
 
 function createDefaultPreferences() {

@@ -1,14 +1,14 @@
 const CACHE_PREFIX = "kantacue-";
 const LEGACY_CACHE_PREFIX = "kantatayo-";
-const CACHE_NAME = "kantacue-shell-v79";
+const CACHE_NAME = "kantacue-shell-v91";
 const INDEX_URL = new URL("./index.html", self.location.href).href;
 const APP_SHELL_URLS = [
   "./",
   "./index.html",
   "./styles/main.css",
-  "./styles/main.css?v=31",
+  "./styles/main.css?v=34",
   "./src/app.js",
-  "./src/app.js?v=39",
+  "./src/app.js?v=51",
   "./src/catalog.js?v=3",
   "./src/catalog.js",
   "./src/discovery.js",
@@ -25,9 +25,10 @@ const APP_SHELL_URLS = [
   "./src/party.js?v=2",
   "./src/state.js",
   "./src/state.js?v=7",
+  "./src/state.js?v=8",
   "./src/storage.js",
   "./src/ui.js",
-  "./src/ui.js?v=29",
+  "./src/ui.js?v=35",
   "./src/install.js",
   "./src/share.js",
   "./src/session.js?v=1",
@@ -36,9 +37,16 @@ const APP_SHELL_URLS = [
   "./src/utils.js",
   "./src/view.js",
   "./src/view.js?v=2",
+  "./src/view.js?v=4",
   "./src/youtube.js",
+  "./src/medleys.js",
+  "./src/medleys.js?v=7",
+  "./src/player-suggestions.js",
+  "./src/player-suggestions.js?v=1",
   "./data/songs.sample.json",
   "./data/songs.sample.json?v=14",
+  "./data/medleys.sample.json",
+  "./data/medleys.sample.json?v=7",
   "./manifest.webmanifest",
   "./assets/icon-192.png",
   "./assets/icon-512.png",

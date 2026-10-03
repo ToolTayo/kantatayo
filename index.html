@@ -20,8 +20,8 @@
     <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=31" />
-    <script type="module" src="src/app.js?v=39"></script>
+    <link rel="stylesheet" href="styles/main.css?v=34" />
+    <script type="module" src="src/app.js?v=51"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -62,6 +62,7 @@
           <nav class="primary-nav">
             <a class="nav-link is-active" href="#top" data-filter="all" aria-pressed="true" aria-current="page"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3.5 10.5 8.5-7 8.5 7"></path><path d="M5.5 9.5v10h13v-10M9.5 19.5v-5h5v5"></path></svg><span>Home</span></a>
             <a class="nav-link" href="#discovery" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="10.5" cy="10.5" r="6"></circle><path d="m15 15 5 5"></path></svg><span>Discover</span></a>
+            <a class="nav-link" href="#collections" data-view="collections" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M5 6.5h14v11H5z"></path><path d="m8 10 3 2.3L8 14.5M13.5 14.5H17"></path></svg><span>Collections</span></a>
 
             <a class="nav-link" href="#discovery" data-filter="favorites" aria-pressed="false"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M12 19.5S4.5 15.2 4.5 9.3A3.8 3.8 0 0 1 12 7.4a3.8 3.8 0 0 1 7.5 1.9c0 5.9-7.5 10.2-7.5 10.2Z"></path></svg><span>Favorites</span></a>
             <a class="nav-link" href="#recent-title"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M5 7.5A8 8 0 1 1 4 14"></path><path d="M5 4v3.5h3.5M12 8v4l2.8 1.7"></path></svg><span>Recently sung</span></a>
@@ -248,6 +249,15 @@
           <section class="content-area" id="favorites" aria-labelledby="favorites-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your collection</p><h2 id="favorites-view-title">Favorites</h2><p class="section-lede">Songs you want close at hand.</p></div><p class="view-count" data-favorites-count>0 songs</p></div><div class="song-grid catalog-grid" data-grid="favorites-view"></div><div class="empty-state" data-favorites-empty hidden><span class="empty-icon" aria-hidden="true">♡</span><div><strong>No favorites yet</strong><p>Save songs here for your next karaoke round.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
         </section>
 
+        <section class="view-panel collection-view collections-destination" data-view-panel="collections" hidden>
+          <section class="content-area" id="collections" aria-labelledby="collections-view-title">
+            <div class="section-heading view-heading"><div><p class="eyebrow">Curated karaoke sets</p><h2 id="collections-view-title">Collections</h2><p class="section-lede">Browse themed sets made for a full karaoke round. Medleys are one YouTube performance with several song sections.</p></div><p class="view-count" data-medley-count>0 medleys</p></div>
+            <section class="collection-landing-card" aria-labelledby="medleys-title"><div><p class="eyebrow">First collection</p><h3 id="medleys-title">Karaoke Medleys</h3><p class="utility-card-status">Keep the mic moving through a connected set of songs without changing videos.</p></div><span class="collection-status-note">Local metadata · YouTube playback</span></section>
+            <div class="song-grid medley-grid" data-medley-grid></div>
+            <div class="empty-state" data-medley-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No medleys are available right now</strong><p>Try the regular catalog while this collection is refreshed.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div>
+          </section>
+        </section>
+
         <section class="view-panel collection-view" data-view-panel="recent" hidden>
           <section class="content-area" id="recent" aria-labelledby="recent-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your history</p><h2 id="recent-view-title">Recently sung</h2><p class="section-lede">Pick up where your last round left off.</p></div><p class="view-count" data-recent-count>0 songs</p></div><div class="song-grid catalog-grid" data-grid="recent-view"></div><div class="empty-state" data-recent-view-empty hidden><span class="empty-icon" aria-hidden="true">↺</span><div><strong>No songs sung yet</strong><p>Mark a song as Sang it and it will appear here.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
         </section>
@@ -259,7 +269,7 @@
 
       <aside class="queue-drawer" id="queue-drawer" data-queue-drawer role="dialog" aria-modal="true" aria-labelledby="queue-title" aria-describedby="queue-description" aria-hidden="true">
         <div class="drawer-header"><div class="queue-heading"><span class="queue-heading-mark" aria-hidden="true">♫</span><div><p class="eyebrow">Up next</p><h2 id="queue-title">Your queue</h2><p class="queue-header-count" data-queue-header-count>0 songs ready</p></div></div><button class="icon-button" type="button" data-action="toggle-queue" aria-label="Close singing queue" title="Close singing queue">×</button></div>
-        <p class="sr-only" id="queue-description">Songs in the order they will play. Select a song to start singing, or use the reorder controls to change its place.</p>
+        <p class="sr-only" id="queue-description">Songs and medleys stay in separate queues. Select one to start singing, or use the reorder controls to change a song’s place.</p>
         <div class="queue-content" data-queue-content role="list" aria-label="Songs in your karaoke queue"></div>
         <div class="drawer-footer"><div class="queue-footer-copy"><strong data-queue-summary>0 songs ready</strong><span>Saved on this device</span></div><button class="text-button queue-clear-button" type="button" data-action="clear-queue" disabled>Clear queue</button></div>
       </aside>
@@ -285,8 +295,9 @@
             <div class="player-placeholder" data-player-placeholder><span class="mic-orb" aria-hidden="true">♫</span><p data-player-status role="status" aria-live="polite">Ready when you are.</p><small data-player-note>Playback is provided by YouTube when a verified video is available.</small></div>
           </div>
         </div>
-        <div class="player-actions" aria-label="Current song actions"><button class="add-button" type="button" data-action="toggle-favorite" data-player-favorite data-song-id="" aria-pressed="false">♡ Favorite</button><button class="add-button" type="button" data-action="mark-sung" data-player-sang data-song-id="">Sang it</button><button class="add-button" type="button" data-action="share-song" data-player-share data-song-id="">Share song</button><span class="player-queue-status" data-player-queue-status>In your queue</span></div>
+        <div class="player-actions" aria-label="Current song actions"><button class="add-button" type="button" data-player-song-action data-action="toggle-favorite" data-player-favorite data-song-id="" aria-pressed="false">♡ Favorite</button><button class="add-button" type="button" data-player-song-action data-action="mark-sung" data-player-sang data-song-id="">Sang it</button><button class="add-button" type="button" data-player-song-action data-action="share-song" data-player-share data-song-id="">Share song</button><span class="player-queue-status" data-player-queue-status>In your queue</span></div>
         <div class="player-up-next" data-player-up-next hidden aria-live="polite"><div><p class="eyebrow" data-player-next-label>Queued next</p><strong data-player-next-title></strong><span data-player-next-artist></span><small data-player-next-note></small></div><button class="play-button" type="button" data-action="player-next" aria-label="Sing next">Sing next</button></div>
+        <section class="player-suggestions" data-player-suggestions hidden aria-labelledby="player-suggestions-title"><div class="player-suggestions-heading"><div><p class="eyebrow" data-player-suggestion-eyebrow>Keep singing</p><h3 id="player-suggestions-title" data-player-suggestion-heading>More to sing</h3></div><p data-player-suggestion-note>Playable picks based on your karaoke signals.</p></div><div class="player-suggestions-grid" data-player-suggestion-grid></div></section>
         <div class="player-completion" data-player-completion hidden role="status" aria-live="polite"><strong data-player-completion-title>Song complete</strong><span data-player-completion-copy>Mark it as sung, then keep the queue moving.</span><div class="player-completion-actions"><button class="play-button" type="button" data-action="sang-again">Sing again</button><button class="add-button" type="button" data-action="player-next" aria-label="Sing next queued song">Next song</button><button class="add-button" type="button" data-action="toggle-favorite" data-player-completion-favorite data-song-id="" aria-pressed="false">♡ Favorite</button></div></div>
         <div class="player-feedback" data-player-feedback hidden aria-label="Playback feedback"><div><strong>How was this karaoke video?</strong><span class="feedback-help">Your note stays on this device.</span></div><div class="player-feedback-actions"><button class="feedback-button" type="button" data-action="feedback-good">👍 Good karaoke</button><button class="feedback-button" type="button" data-action="feedback-problem" aria-expanded="false">👎 Problem with video</button></div><div class="feedback-reasons" data-feedback-reasons hidden><span>What went wrong?</span><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="wrong-song">Wrong song</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="poor-quality">Poor quality</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="guide-vocals">Guide vocals</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="lyrics-timing">Lyrics / timing</button><button class="feedback-button" type="button" data-action="feedback-reason" data-feedback-reason="video-unavailable">Video unavailable</button></div><p class="form-status" data-feedback-status role="status" aria-live="polite"></p></div>
         <div class="player-controls"><button class="add-button" type="button" data-action="player-prev" aria-label="Select previous queued song">Previous</button><button class="play-button" type="button" data-action="player-next" aria-label="Sing next queued song">Sing next</button></div>
@@ -299,6 +310,7 @@
         <button type="button" data-action="install-app" class="mobile-install-action" hidden>Install KantaCue</button>
         <a href="#discovery" data-view="favorites"><span aria-hidden="true">♡</span><span>Favorites</span></a>
         <a href="#recent-title" data-view="recent"><span aria-hidden="true">↺</span><span>Recently sung</span></a>
+        <a href="#collections" data-view="collections"><span aria-hidden="true">▣</span><span>Collections</span></a>
         <a href="#preferences-panel" data-view="preferences"><span aria-hidden="true">☷</span><span>Preferences</span></a>
       </nav>
       <nav class="mobile-nav" aria-label="Quick navigation">

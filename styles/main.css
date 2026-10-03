@@ -900,6 +900,20 @@ body { line-height: 1.45; }
 .player-up-next span { color: var(--text-secondary); font-size: .72rem; margin-top: .12rem; }
 .player-up-next small { color: var(--text-muted); font-size: .64rem; line-height: 1.4; margin-top: .3rem; }
 .player-up-next .play-button { flex: 0 0 auto; white-space: nowrap; }
+.player-suggestions { border-top: 1px solid var(--border-subtle); margin-top: .9rem; padding-top: .85rem; }
+.player-suggestions-heading { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: .55rem; }
+.player-suggestions-heading h3 { font-size: .9rem; margin: .15rem 0 0; }
+.player-suggestions-heading p:last-child { color: var(--text-muted); font-size: .64rem; margin: 0; text-align: right; }
+.player-suggestions-grid { display: grid; gap: .55rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.player-suggestion { align-items: center; background: var(--bg-surface-1); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-primary); display: flex; gap: .55rem; justify-content: space-between; min-height: 4.25rem; min-width: 0; padding: .65rem .7rem; text-align: left; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.player-suggestion:hover, .player-suggestion:focus-visible { background: var(--brand-lime-soft); border-color: rgba(163,242,99,.38); }
+.player-suggestion:active { transform: translateY(1px); }
+.player-suggestion-copy { display: grid; gap: .15rem; min-width: 0; }
+.player-suggestion-copy strong, .player-suggestion-copy span, .player-suggestion-copy small { display: block; overflow-wrap: anywhere; }
+.player-suggestion-copy strong { font-size: .72rem; line-height: 1.25; }
+.player-suggestion-copy span { color: var(--text-secondary); font-size: .65rem; }
+.player-suggestion-copy small { color: var(--text-muted); font-size: .58rem; line-height: 1.35; }
+.player-suggestion-arrow { color: var(--brand-lime); flex: 0 0 auto; font-size: 1rem; }
 .player-completion { align-items: flex-start; background: var(--bg-surface-1); border-left: 3px solid var(--brand-lime); border-radius: var(--radius-sm); display: grid; gap: .16rem; margin-top: .85rem; padding: .7rem .8rem; }
 .player-completion strong { color: var(--brand-lime); font-size: .78rem; }
 .player-completion span { color: var(--text-secondary); font-size: .7rem; line-height: 1.45; }
@@ -916,6 +930,10 @@ body { line-height: 1.45; }
   .player-queue-status { flex: 1 1 100%; margin-left: 0; }
   .player-up-next { align-items: stretch; flex-direction: column; }
   .player-up-next .play-button { width: 100%; }
+  .player-suggestions-heading { align-items: start; flex-direction: column; gap: .2rem; }
+  .player-suggestions-heading p:last-child { text-align: left; }
+  .player-suggestions-grid { grid-template-columns: 1fr; }
+  .player-suggestion { min-height: 3.75rem; }
   .player-controls { display: grid; grid-template-columns: 1fr 1.35fr; }
 }
 
@@ -1672,6 +1690,37 @@ body { line-height: 1.45; }
 
 .danger-button:hover {
   filter: brightness(1.08);
+}
+
+/* Collections keep medleys visually distinct from single-song discovery. */
+.collection-landing-card {
+  align-items: center;
+  background: linear-gradient(135deg, rgba(163, 242, 99, .11), rgba(18, 27, 44, .82));
+  border: 1px solid rgba(163, 242, 99, .22);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  padding: 1rem 1.1rem;
+}
+.collection-landing-card h3 { font-size: 1.2rem; letter-spacing: -.03em; margin: .15rem 0 0; }
+.collection-status-note { color: var(--text-muted); font-size: .66rem; white-space: nowrap; }
+.medley-grid { align-items: start; }
+.medley-card { min-width: 0; }
+.medley-card-eyebrow { color: var(--brand-lime); margin: 0 0 .35rem; }
+.medley-thumbnail { position: relative; }
+.medley-count { align-items: center; background: var(--brand-lime-soft); border: 1px solid rgba(163, 242, 99, .3); border-radius: 999px; color: var(--brand-lime); display: inline-flex; font-size: .7rem; font-weight: 800; height: 1.8rem; justify-content: center; min-width: 1.8rem; padding: 0 .35rem; }
+.medley-count-unknown { font-size: .56rem; letter-spacing: .04em; min-width: auto; padding-inline: .45rem; }
+.medley-song-list { color: var(--text-muted); font-size: .67rem; line-height: 1.5; margin: .75rem 0 0; }
+.medley-song-list strong { color: var(--text-secondary); display: block; font-size: .65rem; margin-bottom: .15rem; text-transform: uppercase; letter-spacing: .08em; }
+.medley-song-list span { color: var(--text-secondary); }
+.medley-queue-item { border-left-color: rgba(163, 242, 99, .55); }
+.queue-subheading { border-top: 1px solid var(--border-subtle); color: var(--brand-lime); font-size: .62rem; font-weight: 800; letter-spacing: .12em; padding: .9rem 0 .25rem; text-transform: uppercase; }
+
+@media (max-width: 619px) {
+  .collection-landing-card { align-items: flex-start; flex-direction: column; }
+  .collection-status-note { white-space: normal; }
 }
 
 @media (max-width: 619px) {

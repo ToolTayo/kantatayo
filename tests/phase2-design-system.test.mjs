@@ -51,7 +51,7 @@ test("mobile player clears the tablet max-width and includes safe-area padding",
 });
 
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=31/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=31"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v79"/);
+  assert.match(index, /styles\/main\.css\?v=34/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=34"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v91"/);
 });

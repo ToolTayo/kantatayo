@@ -23,6 +23,41 @@ export function renderSongSections(searchIndex, query = "", filter = "all", sort
   if (view === "recent") renderCollectionView("recent", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
 }
 
+export function renderCollections(medleys = [], userState = {}) {
+  const grid = document.querySelector("[data-medley-grid]");
+  const empty = document.querySelector("[data-medley-empty]");
+  const count = document.querySelector("[data-medley-count]");
+  const items = Array.isArray(medleys) ? medleys : [];
+  if (count) count.textContent = `${items.length} medley${items.length === 1 ? "" : "s"}`;
+  if (grid) grid.innerHTML = items.map((medley) => renderMedleyCard(medley, userState)).join("");
+  if (grid) grid.hidden = items.length === 0;
+  if (empty) empty.hidden = items.length > 0;
+}
+
+export function renderMedleyCard(medley) {
+  const videoId = escapeHtml(medley.videoId);
+  const title = escapeHtml(medley.title);
+  const provider = escapeHtml(medley.provider);
+  const included = Array.isArray(medley.includedSongs) ? medley.includedSongs : [];
+  const songs = included.slice(0, 5).map((song) => `${escapeHtml(song.title)}${song.artist ? ` · ${escapeHtml(song.artist)}` : ""}`).join("<span aria-hidden=\"true\"> · </span>");
+  const extra = included.length > 5 ? ` <span>+${included.length - 5} more</span>` : "";
+  const sectionsKnown = medley.sectionStatus !== "unknown" && included.length > 0;
+  const sectionMarkup = sectionsKnown
+    ? `<strong>Sections</strong> ${songs}${extra}`
+    : "<strong>Format</strong> <span>Multiple-song medley · song list not listed</span>";
+  const countMarkup = sectionsKnown
+    ? `<span class="medley-count" aria-label="${included.length} song sections">${included.length}</span>`
+    : "<span class=\"medley-count medley-count-unknown\" aria-label=\"Multiple-song medley\">Multi</span>";
+  return `<article class="medley-card song-card">
+    <button class="song-thumbnail medley-thumbnail" type="button" data-action="play-medley" data-medley-id="${escapeHtml(medley.id)}" aria-label="Play medley: ${title}"><img class="song-thumbnail-image" data-song-thumbnail src="https://i.ytimg.com/vi/${encodeURIComponent(medley.videoId)}/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="strict-origin-when-cross-origin" /><span class="song-thumbnail-fallback" data-thumbnail-fallback hidden><span class="thumbnail-note-icon" aria-hidden="true">♫</span><span>Medley preview unavailable</span></span><span class="song-thumbnail-play" aria-hidden="true">▶</span></button>
+    <div class="song-card-body"><div class="song-card-top"><div><p class="eyebrow medley-card-eyebrow">Karaoke medley</p><h4>${title}</h4><p class="song-artist">${provider}</p></div>${countMarkup}</div>
+      <div class="song-meta"><span>${escapeHtml(medley.language)}</span><span>${escapeHtml(medley.theme)}</span></div>
+      <p class="medley-song-list">${sectionMarkup}</p>
+      <div class="song-card-actions"><button class="play-button" type="button" data-action="play-medley" data-medley-id="${escapeHtml(medley.id)}" aria-label="Play ${title}">Play medley</button><button class="add-button" type="button" data-action="add-medley-queue" data-medley-id="${escapeHtml(medley.id)}" aria-label="Add ${title} to medley queue">+ Queue</button></div>
+    </div>
+  </article>`;
+}
+
 function renderLocalCollections(allSongs, userState, interactionState, selectedCollectionId = "") {
   const target = document.querySelector("[data-collection-grid]");
   const tabs = document.querySelector("[data-collection-tabs]");
@@ -46,7 +81,7 @@ function updateViewPanels(view) {
   document.querySelectorAll("[data-view-panel]").forEach((panel) => { panel.hidden = panel.dataset.viewPanel !== view; });
   document.querySelectorAll(".primary-nav a, .mobile-nav a, .mobile-more-menu a, .brand, .sidebar-brand, a[data-view], [data-action=\"toggle-party-mode\"], [data-action=\"toggle-mobile-more\"]").forEach((link) => {
     const active = link.dataset.action === "toggle-mobile-more"
-      ? ["favorites", "recent", "preferences"].includes(view)
+      ? ["favorites", "recent", "collections", "preferences"].includes(view)
       : (link.dataset.view || legacyView(link)) === view;
     link.classList.toggle("is-active", active);
     if (link.hasAttribute("aria-pressed")) link.setAttribute("aria-pressed", String(active));
@@ -427,29 +462,41 @@ export function renderSongThumbnail(song, options = {}) {
   return `<button class="song-thumbnail" type="button" data-action="play" data-song-id="${songId}" aria-label="Play karaoke: ${title} by ${artist}">${image}<span class="song-thumbnail-fallback" data-thumbnail-fallback${thumbnailUrl ? " hidden" : ""}><span class="thumbnail-note-icon" aria-hidden="true">♫</span><span>Video coming soon</span></span><span class="song-thumbnail-play" aria-hidden="true">▶</span></button>`;
 }
 
-export function renderQueue(queueSnapshot, partySession = {}) {
+export function renderQueue(queueSnapshot, partySession = {}, medleySnapshot = {}) {
   const snapshot = Array.isArray(queueSnapshot) ? { songs: queueSnapshot, currentSongId: null, queueFinished: false } : queueSnapshot;
   const queue = snapshot?.songs || [];
   const currentSongId = snapshot?.currentSongId || null;
   const queueFinished = Boolean(snapshot?.queueFinished);
   const partyItems = snapshot?.partyItems || [];
+  const medleys = Array.isArray(medleySnapshot?.items) ? medleySnapshot.items : [];
+  const medleyCurrentId = medleySnapshot?.currentMedleyId?.toLowerCase() || "";
+  const medleyIsCurrent = Boolean(medleyCurrentId);
+  const totalQueueItems = queue.length + medleys.length;
   const target = document.querySelector("[data-queue-content]");
   const summary = document.querySelector("[data-queue-summary]");
   if (!target) return;
-  document.querySelectorAll("[data-queue-count]").forEach((item) => { item.textContent = queue.length; });
-  document.querySelectorAll("[data-queue-header-count]").forEach((item) => { item.textContent = `${queue.length} song${queue.length === 1 ? "" : "s"} ready`; });
+  document.querySelectorAll("[data-queue-count]").forEach((item) => { item.textContent = totalQueueItems; });
+  document.querySelectorAll("[data-queue-header-count]").forEach((item) => { item.textContent = `${totalQueueItems} item${totalQueueItems === 1 ? "" : "s"} ready`; });
   document.querySelectorAll('[data-action="clear-queue"]').forEach((button) => { button.disabled = queue.length === 0; });
+  if (medleys.length) document.querySelectorAll('[data-action="clear-queue"]').forEach((button) => { button.disabled = false; });
   const currentKey = currentSongId ? currentSongId.toLowerCase() : "";
   const currentIndex = currentKey ? queue.findIndex((song) => song.id.toLowerCase() === currentKey) : -1;
-  if (summary) summary.textContent = queueFinished ? `Queue finished · ${queue.length} song${queue.length === 1 ? "" : "s"}` : currentIndex >= 0 ? `Current · ${currentIndex + 1} of ${queue.length}` : `${queue.length} song${queue.length === 1 ? "" : "s"} ready`;
-  target.innerHTML = queue.length ? queue.map((song, index) => {
+  if (summary) summary.textContent = medleyIsCurrent
+    ? `Medley playing · ${totalQueueItems} item${totalQueueItems === 1 ? "" : "s"}`
+    : queueFinished ? `Queue finished · ${totalQueueItems} item${totalQueueItems === 1 ? "" : "s"}` : currentIndex >= 0 ? `Current · ${currentIndex + 1} of ${totalQueueItems}` : `${totalQueueItems} item${totalQueueItems === 1 ? "" : "s"} ready`;
+  const songMarkup = queue.map((song, index) => {
     const isCurrent = Boolean(currentKey) && song.id.toLowerCase() === currentKey;
-    const queueRole = isCurrent ? "Current song" : (currentIndex < 0 && index === 0) || (currentIndex >= 0 && index > currentIndex) ? "Up next" : "In queue";
+    const queueRole = medleyIsCurrent ? "Saved in song queue" : isCurrent ? "Current song" : (currentIndex < 0 && index === 0) || (currentIndex >= 0 && index > currentIndex) ? "Up next" : "In queue";
     return `<div class="queue-item${isCurrent ? " is-current" : ""}" role="listitem" aria-current="${isCurrent}">
       <div class="queue-item-main"><span class="queue-item-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><div class="queue-item-copy"><strong>${escapeHtml(song.title)}</strong><span>${escapeHtml(song.artist)}</span><span class="queue-item-state">${queueRole}</span>${snapshot?.partyModeEnabled ? `<label class="queue-singer-control"><span class="sr-only">Singer for ${escapeHtml(song.title)}</span><select data-action="assign-singer" data-song-id="${escapeHtml(song.id)}" aria-label="Singer for ${escapeHtml(song.title)}">${renderSingerOptions(partySession, partyItems[index]?.singer?.id || "")}</select></label>` : ""}</div></div>
       <div class="queue-item-controls"><button class="queue-select" type="button" data-action="select-queue" data-song-id="${escapeHtml(song.id)}" aria-pressed="${isCurrent}" aria-label="${isCurrent ? "Current song" : "Play"} ${escapeHtml(song.title)}" title="${isCurrent ? "Current song" : "Play this queued song"}"><span aria-hidden="true">${isCurrent ? "●" : "▶"}</span><span>${isCurrent ? "Playing" : "Sing"}</span></button><div class="queue-item-reorder" aria-label="Reorder ${escapeHtml(song.title)}"><button class="queue-control" type="button" data-action="move-up" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} up" title="Move up"${index === 0 ? " disabled" : ""}><span aria-hidden="true">↑</span><span class="queue-control-label">Up</span><span class="sr-only"> Move up</span></button><button class="queue-control" type="button" data-action="move-down" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} down" title="Move down"${index === queue.length - 1 ? " disabled" : ""}><span aria-hidden="true">↓</span><span class="queue-control-label">Down</span><span class="sr-only"> Move down</span></button>${index > 0 ? `<button class="queue-control queue-top-control" type="button" data-action="move-top" data-song-id="${escapeHtml(song.id)}" aria-label="Move ${escapeHtml(song.title)} to top" title="Move to top"><span aria-hidden="true">↟</span><span class="queue-control-label">Top</span></button>` : ""}</div><button class="remove-button" type="button" data-action="remove-queue" data-song-id="${escapeHtml(song.id)}" aria-label="Remove ${escapeHtml(song.title)} from queue" title="Remove from queue">×</button></div>
     </div>`;
-  }).join("") : `<div class="queue-empty"><span class="queue-empty-icon" aria-hidden="true">♫</span><strong>Your karaoke queue is empty.</strong><p>Add a few songs from discovery to get started.</p><a href="#top" class="queue-empty-link" data-action="close-queue">Browse songs</a></div>`;
+  }).join("");
+  const medleyMarkup = medleys.length ? `<div class="queue-subheading">Medley queue · separate from songs</div>${medleys.map((medley, index) => {
+    const current = medley.id.toLowerCase() === medleyCurrentId;
+    return `<div class="queue-item medley-queue-item${current ? " is-current" : ""}" role="listitem" aria-current="${current}"><div class="queue-item-main"><span class="queue-item-number" aria-hidden="true">M${index + 1}</span><div class="queue-item-copy"><strong>${escapeHtml(medley.title)}</strong><span>${escapeHtml(medley.provider)}</span><span class="queue-item-state">${current ? "Current medley" : "Medley in queue"}</span></div></div><div class="queue-item-controls"><button class="queue-select" type="button" data-action="select-medley" data-medley-id="${escapeHtml(medley.id)}" aria-pressed="${current}" aria-label="${current ? "Current" : "Play"} ${escapeHtml(medley.title)}"><span aria-hidden="true">${current ? "●" : "▶"}</span><span>${current ? "Playing" : "Play"}</span></button><button class="remove-button" type="button" data-action="remove-medley-queue" data-medley-id="${escapeHtml(medley.id)}" aria-label="Remove ${escapeHtml(medley.title)} from medley queue">×</button></div></div>`;
+  }).join("")}` : "";
+  target.innerHTML = totalQueueItems ? `${songMarkup}${medleyMarkup}` : `<div class="queue-empty"><span class="queue-empty-icon" aria-hidden="true">♫</span><strong>Your karaoke queue is empty.</strong><p>Add songs or medleys from discovery to get started.</p><a href="#top" class="queue-empty-link" data-action="close-queue">Browse songs</a></div>`;
 }
 
 export function showPlayer(song, metadata = {}) {
@@ -460,14 +507,16 @@ export function showPlayer(song, metadata = {}) {
   panel.querySelector("[data-player-title]").textContent = song.title;
   panel.querySelector("[data-player-artist]").textContent = song.artist;
   panel.querySelector("[data-player-position]").textContent = metadata.position && metadata.total ? `Song ${metadata.position} of ${metadata.total}` : "Current karaoke song";
-  panel.querySelector("[data-player-meta]").textContent = formatSongMeta(song).join(" · ");
+  panel.dataset.contentType = metadata.contentType || song.contentType || "song";
+  panel.querySelector("[data-player-meta]").textContent = metadata.metaText || formatSongMeta(song).join(" · ");
   panel.querySelector("[data-player-status]").textContent = "Ready when you are.";
   panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
   updateMiniPlayer(song);
+  setPlayerFeedback(false);
   updatePlayerActions(song, { favorites: metadata.isFavorite ? [song.id] : [], sungHistory: metadata.isSung ? [{ id: song.id }] : [] });
   updatePlayerNext(metadata.nextSong, metadata.nextType);
+  renderPlayerSuggestions(metadata.suggestions, metadata.contentType || song.contentType || "song");
   setPlayerCompletion(false);
-  setPlayerFeedback(false);
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = metadata.hasPrevious === false;
   panel.querySelector('[data-action="player-next"]').disabled = metadata.hasNext === false;
@@ -558,16 +607,19 @@ export function showQueueFinished(total) {
   setPlayerCompletion(true, "Queue finished", "Choose another song from discovery or add a new song to your queue.");
   setPlayerFeedback(false);
   updatePlayerNext(null);
+  renderPlayerSuggestions([]);
 }
 
-export function showPlayerFinished({ nextSong = null, nextType = "recommended" } = {}) {
+export function showPlayerFinished({ nextSong = null, nextType = "recommended", contentType = "song" } = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
   panel.querySelector("[data-player-status]").textContent = "Song complete. Your next choice is ready.";
   panel.querySelector("[data-player-note]").textContent = "KantaCue waits for your explicit choice before starting another video.";
   updateMiniPlayerStatus("Song complete");
   updatePlayerNext(nextSong, nextType);
-  setPlayerCompletion(true, "Nice one", nextSong ? "Mark it as sung, then keep the queue moving." : "Mark it as sung or choose another song from discovery.");
+  setPlayerCompletion(true, contentType === "medley" ? "Medley complete" : "Nice one", contentType === "medley"
+    ? (nextSong ? "That set is complete. Continue with the next medley when you’re ready." : "That set is complete. Choose another medley or return to the catalog.")
+    : (nextSong ? "Mark it as sung, then keep the queue moving." : "Mark it as sung or choose another song from discovery."));
   setPlayerFeedback(true);
   setPlayerEmbedVisible(panel, true);
 }
@@ -587,11 +639,18 @@ export function updatePlayerActions(song, userState = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel || !song) return;
   const songId = song.id.toLowerCase();
+  const isMedley = song.contentType === "medley";
   const isFavorite = (userState.favorites || []).some((id) => id.toLowerCase() === songId);
   const isSung = (userState.sungHistory || []).some((entry) => entry.id?.toLowerCase() === songId);
   const favorite = panel.querySelectorAll("[data-player-favorite], [data-player-completion-favorite]");
   const share = panel.querySelectorAll("[data-player-share]");
   const sang = panel.querySelector("[data-player-sang]");
+  panel.querySelectorAll('[data-action="toggle-favorite"], [data-action="mark-sung"], [data-action="share-song"]').forEach((element) => { element.hidden = isMedley; });
+  const feedback = panel.querySelector("[data-player-feedback]");
+  if (feedback && isMedley) feedback.hidden = true;
+  const queueStatus = panel.querySelector("[data-player-queue-status]");
+  if (queueStatus) queueStatus.textContent = isMedley ? "In your medley queue" : "In your queue";
+  if (isMedley) return;
   favorite.forEach((button) => {
     button.dataset.songId = song.id;
     button.setAttribute("aria-pressed", String(isFavorite));
@@ -698,6 +757,38 @@ function updatePlayerNext(song, type = "recommended") {
   target.querySelector("[data-player-next-artist]").textContent = song.artist;
   target.querySelector("[data-player-next-note]").textContent = `${formatSongMeta(song).join(" · ")} · ${type === "queued" ? "Already in your queue" : "Not added until you choose Sing next"}`;
   target.querySelector('[data-action="player-next"]').setAttribute("aria-label", `Sing next: ${song.title} by ${song.artist}`);
+}
+
+function renderPlayerSuggestions(suggestions = [], contentType = "song") {
+  const target = document.querySelector("[data-player-suggestions]");
+  const grid = target?.querySelector("[data-player-suggestion-grid]");
+  if (!target || !grid) return;
+  const safeSuggestions = Array.isArray(suggestions) ? suggestions.filter((suggestion) => suggestion && (suggestion.type === "song" ? suggestion.song : suggestion.medley)) : [];
+  if (safeSuggestions.length === 0) {
+    target.hidden = true;
+    grid.replaceChildren();
+    return;
+  }
+  const medleyMode = contentType === "medley";
+  target.hidden = false;
+  target.querySelector("[data-player-suggestion-eyebrow]").textContent = medleyMode ? "Stay with the set" : "Keep singing";
+  target.querySelector("[data-player-suggestion-heading]").textContent = medleyMode ? "More medleys" : "More to sing";
+  target.querySelector("[data-player-suggestion-note]").textContent = medleyMode ? "Verified public medleys with a similar feel." : "Playable picks based on your karaoke signals.";
+  grid.innerHTML = safeSuggestions.map((suggestion) => {
+    const isMedley = suggestion.type === "medley";
+    const item = isMedley ? suggestion.medley : suggestion.song;
+    const title = escapeHtml(item.title);
+    const artist = escapeHtml(isMedley ? item.provider : item.artist);
+    const meta = escapeHtml(isMedley
+      ? [item.language, item.theme].filter(Boolean).join(" · ")
+      : formatSongMeta(item).slice(0, 3).join(" · "));
+    const reason = escapeHtml(suggestion.reason || (isMedley ? "Another verified karaoke medley" : "A playable karaoke pick"));
+    const action = isMedley ? "player-suggestion-medley" : "player-suggestion-song";
+    const idAttribute = isMedley ? "data-medley-id" : "data-song-id";
+    const id = escapeHtml(item.id);
+    const aria = isMedley ? `Play suggested medley: ${title}` : `Play suggested song: ${title} by ${artist}`;
+    return `<button class="player-suggestion" type="button" data-action="${action}" ${idAttribute}="${id}" aria-label="${aria}"><span class="player-suggestion-copy"><strong>${title}</strong><span>${artist}</span><small>${meta} · ${reason}</small></span><span class="player-suggestion-arrow" aria-hidden="true">→</span></button>`;
+  }).join("");
 }
 
 function setPlayerCompletion(visible, title = "Song complete", copy = "") {
