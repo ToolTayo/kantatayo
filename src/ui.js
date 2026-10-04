@@ -19,23 +19,22 @@ export function renderSongSections(searchIndex, query = "", filter = "all", sort
   const dislikedIds = new Set((userState.dislikedSongs || []).map((id) => id.toLowerCase()));
 
   renderHomeEngagement(allSongs, userState);
-  const findSongResultIds = renderFindSongPanel(allSongs, userState, recommendations, sessionState, findSongModes, { favoriteIds, likedIds, dislikedIds }, findSongAnnouncement);
-  renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds }, findSongResultIds);
+  const findSongResults = renderFindSongPanel(allSongs, userState, recommendations, sessionState, findSongModes, findSongAnnouncement);
+  renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds }, findSongResults);
   renderLocalCollections(allSongs, userState, { favoriteIds, likedIds, dislikedIds }, selectedCollectionId);
   if (view === "discover") renderCatalogView(searchIndex, query, filter, sortBy, userState, { favoriteIds, likedIds, dislikedIds }, discoveryFilters, discoveryPage);
   if (view === "favorites") renderCollectionView("favorites", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
   if (view === "recent") renderCollectionView("recent", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
 }
 
-function renderFindSongPanel(allSongs, userState, recommendations, sessionState, selectedModes, interactionState, announcement = "") {
+function renderFindSongPanel(allSongs, userState, recommendations, sessionState, selectedModes, announcement = "") {
   const modesTarget = document.querySelector("[data-find-song-modes]");
-  const resultsTarget = document.querySelector("[data-find-song-results]");
   const emptyTarget = document.querySelector("[data-find-song-empty]");
   const clearButton = document.querySelector('[data-action="clear-find-song"]');
   const sessionTarget = document.querySelector("[data-find-song-session]");
   const resultStatusTarget = document.querySelector("[data-find-song-status]");
   const scrollHintTarget = document.querySelector("[data-find-song-scroll-hint]");
-  if (!modesTarget || !resultsTarget) return [];
+  if (!modesTarget) return [];
 
   const availableModes = getFindSongModeOptions(allSongs);
   const validModes = (Array.isArray(selectedModes) ? selectedModes : []).filter((id) => availableModes.some((mode) => mode.id === id));
@@ -57,8 +56,6 @@ function renderFindSongPanel(allSongs, userState, recommendations, sessionState,
     session: sessionState,
     baseline: recommendations
   });
-  resultsTarget.innerHTML = results.map((item) => renderSongCard(item.song, interactionState, { reason: item.reason })).join("");
-  resultsTarget.hidden = results.length === 0;
   if (scrollHintTarget) scrollHintTarget.hidden = results.length < 2;
   if (resultStatusTarget) {
     const labels = validModes.map((id) => availableModes.find((mode) => mode.id === id)?.label).filter(Boolean);
@@ -75,7 +72,7 @@ function renderFindSongPanel(allSongs, userState, recommendations, sessionState,
       ? "No fresh picks are available for those cues right now. Remove a choice or browse the playable catalog."
       : "No fresh recommendations are ready right now. Browse the playable catalog to keep singing.";
   }
-  return results.map((item) => item.song.id);
+  return results;
 }
 
 export function renderCollections(medleys = [], userState = {}) {
@@ -157,9 +154,10 @@ function legacyView(link) {
   return "";
 }
 
-function renderHomeSections(allSongs, userState, recommendations, interactionState, findSongResultIds = []) {
+function renderHomeSections(allSongs, userState, recommendations, interactionState, findSongResults = []) {
   const dailyChallenge = getDailyChallenge(allSongs, userState);
-  const findSongIds = Array.isArray(findSongResultIds) ? findSongResultIds.map((id) => String(id).toLowerCase()) : [];
+  const safeFindSongResults = Array.isArray(findSongResults) ? findSongResults.filter((item) => item?.song?.id) : [];
+  const findSongIds = safeFindSongResults.map((item) => String(item.song.id).toLowerCase());
   const reservedIds = [...findSongIds, ...(dailyChallenge.song ? [dailyChallenge.song.id] : [])];
   const reservedSet = new Set(reservedIds);
   const sections = getHomeShelves(allSongs, recommendations, userState, {
@@ -170,6 +168,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
   sections.recentlyAdded = withoutReservedPicks(getRecentlyAddedSongs(allSongs));
   sections.trending = withoutReservedPicks(getMostSungSongs(allSongs, userState));
   const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
+  const findSongReasons = new Map(safeFindSongResults.map((item) => [item.song.id.toLowerCase(), item.reason || ""]));
   const personalized = hasMeaningfulUserSignals(userState);
   const homeCopy = {
     recommended: personalized
@@ -193,23 +192,21 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
     const sectionElement = document.querySelector(`[data-section="${section}"]`);
     if (!grid || !sectionElement) return;
     const isRecommended = section === "recommended";
-    const songs = sections[section] || [];
+    const songs = isRecommended ? safeFindSongResults.map((item) => item.song) : sections[section] || [];
     const copy = homeCopy[section];
     sectionElement.hidden = isRecommended ? false : songs.length === 0;
     grid.hidden = songs.length === 0;
-    grid.innerHTML = songs.map((song) => renderSongCard(song, interactionState, { reason: recommendationReasons.get(song.id.toLowerCase()) || "" })).join("");
+    grid.innerHTML = songs.map((song) => renderSongCard(song, interactionState, {
+      reason: findSongReasons.get(song.id.toLowerCase()) || recommendationReasons.get(song.id.toLowerCase()) || ""
+    })).join("");
     const title = sectionElement.querySelector("[data-home-title]");
     const lede = sectionElement.querySelector("[data-home-lede]");
     if (title && copy) title.textContent = copy.title;
     if (lede && copy) lede.textContent = copy.lede;
-    if (isRecommended) {
-      const empty = sectionElement.querySelector("[data-section-empty]");
-      if (empty) empty.hidden = songs.length > 0;
-    }
   });
 
   const homeCount = document.querySelector("[data-home-count]");
-  if (homeCount) homeCount.textContent = `${sections.recommended.length} ready-to-sing pick${sections.recommended.length === 1 ? "" : "s"}`;
+  if (homeCount) homeCount.textContent = `${safeFindSongResults.length} ready-to-sing pick${safeFindSongResults.length === 1 ? "" : "s"}`;
   const resultsNote = document.querySelector("[data-results-note]");
   if (resultsNote) resultsNote.textContent = personalized ? "Fresh ideas based on what you like and sing." : "Playable picks to get your night moving.";
 }

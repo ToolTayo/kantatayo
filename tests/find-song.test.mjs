@@ -128,25 +128,32 @@ test("Find My Song picks do not repeat on another Home shelf", () => {
   assert.equal(new Set(otherHomeIds).size, otherHomeIds.length);
 });
 
-test("Home exposes the consolidated Find My Song surface without duplicate cards or a second player", async () => {
+test("Home uses one Sing now decision surface for Find My Song cues and results", async () => {
   const [html, app, ui, demand] = await Promise.all([
     readFile(new URL("../index.html", import.meta.url), "utf8"),
     readFile(new URL("../src/app.js", import.meta.url), "utf8"),
     readFile(new URL("../src/ui.js", import.meta.url), "utf8"),
     readFile(new URL("../data/song-demand.json", import.meta.url), "utf8")
   ]);
-  assert.match(html, /data-find-song/);
-  assert.match(html, /What feels right\?/);
-  assert.match(html, /data-find-song-guidance|id="find-song-guidance"/);
-  assert.match(html, /data-find-song-scroll-hint/);
-  assert.match(html, /role="region" aria-label="Find My Song picks"/);
+  const recommendedIndex = html.indexOf('data-section="recommended"');
+  const controlsIndex = html.indexOf("data-find-song");
+  const resultsIndex = html.indexOf('data-grid="recommended" data-find-song-results');
+  assert.ok(recommendedIndex >= 0 && controlsIndex > recommendedIndex && resultsIndex > controlsIndex);
+  assert.equal((html.match(/data-find-song-results/g) || []).length, 1);
+  assert.match(html, /Sing now recommendations/);
+  assert.match(html, /id="find-song-guidance"/);
+  assert.doesNotMatch(html, /What feels right\?|Find My Song picks/);
+  assert.match(html, /Swipe or tab through these three picks\./);
   assert.match(html, /data-find-song-status[^>]+role="status"[^>]+aria-live="polite"/);
-  assert.match(html, /Picks can match either cue; songs matching both get an extra boost\./);
+  assert.match(html, /choose up to two cues to shape these three playable picks/i);
   assert.match(app, /toggle-find-song-mode/);
   assert.match(app, /toggleFindSongModeSelection/);
+  assert.match(app, /action === "clear-find-song"[^\n]*document\.querySelector\("\[data-find-song-mode\]"\)\?\.focus\(\)/);
   assert.match(ui, /This session/);
   assert.doesNotMatch(ui, /Tonight ·/);
-  assert.match(ui, /findSongResultIds/);
+  assert.match(ui, /renderHomeSections\(allSongs, userState, recommendations, \{ favoriteIds, likedIds, dislikedIds \}, findSongResults\)/);
+  assert.match(ui, /safeFindSongResults\.map\(\(item\) => item\.song\)/);
+  assert.match(ui, /findSongIds/);
   assert.match(ui, /scrollHintTarget\.hidden = results\.length < 2/);
   assert.match(ui, /excludeIds: reservedIds/);
   assert.match(html, /Popular karaoke picks/);

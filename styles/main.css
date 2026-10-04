@@ -1339,48 +1339,31 @@ body { line-height: 1.45; }
   }
 }
 
-/* Find My Song is the signature decision surface: small, honest, and quick. */
+/* Find My Song cues now shape the single primary Sing now shelf. */
 .find-song-panel {
-  background: linear-gradient(145deg, rgba(24, 35, 55, .96), rgba(13, 18, 31, .98));
-  border: 1px solid rgba(163, 242, 99, .22);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
-  margin: 0 auto 1.35rem;
-  max-width: 1240px;
-  padding: 1rem;
+  margin: .7rem 0 .85rem;
+  min-width: 0;
 }
 
-.find-song-heading {
-  align-items: flex-start;
+.find-song-controls {
+  align-items: center;
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: .45rem .75rem;
   justify-content: space-between;
-}
-
-.find-song-heading h2 {
-  font-size: clamp(1.2rem, 3vw, 1.65rem);
-  letter-spacing: -.045em;
-  margin: .12rem 0 0;
-}
-
-.find-song-lede {
-  color: var(--text-secondary);
-  font-size: .72rem;
-  line-height: 1.45;
-  margin: .35rem 0 0;
-  max-width: 38rem;
 }
 
 .find-song-clear {
   flex: 0 0 auto;
-  margin-top: .1rem;
+  margin-left: auto;
 }
 
 .find-song-modes {
   display: flex;
+  flex: 1 1 34rem;
   flex-wrap: wrap;
-  gap: .45rem;
-  margin: .9rem 0 .35rem;
+  gap: .4rem;
+  min-width: 0;
 }
 
 .find-song-mode {
@@ -1389,14 +1372,15 @@ body { line-height: 1.45; }
 
 .find-song-guidance {
   color: var(--text-muted);
-  font-size: .72rem;
+  font-size: .7rem;
   line-height: 1.45;
-  margin: 0 0 .75rem;
+  margin: 0 0 .45rem;
 }
 
 .find-song-scroll-hint {
   color: var(--text-muted);
-  font-size: .72rem;
+  display: none;
+  font-size: .7rem;
   line-height: 1.4;
   margin: 0 0 .45rem;
 }
@@ -1406,16 +1390,8 @@ body { line-height: 1.45; }
   color: var(--brand-lime);
   font-size: .66rem;
   line-height: 1.4;
-  margin: 0 0 .8rem;
-  padding-top: .7rem;
-}
-
-.find-song-results {
-  margin-top: .2rem;
-}
-
-.find-song-results .song-card {
-  min-width: 0;
+  margin: .2rem 0 .75rem;
+  padding-top: .65rem;
 }
 
 .find-song-empty {
@@ -1428,33 +1404,17 @@ body { line-height: 1.45; }
   padding: .85rem;
 }
 
-@media (min-width: 760px) {
-  .find-song-panel {
-    padding: 1.2rem;
-  }
-
-  .find-song-panel .find-song-results {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+@media (max-width: 759px) {
+  .find-song-results .feedback-button { min-height: 44px; }
 }
 
-@media (max-width: 619px) {
-  .find-song-heading {
-    display: block;
-  }
-
-  .find-song-clear {
-    margin-top: .7rem;
-  }
-
-  .find-song-panel .find-song-results {
-    grid-template-columns: minmax(0, 1fr);
-  }
+@media (min-width: 760px) and (max-width: 799px) {
+  .find-song-results .feedback-button { min-height: 44px; }
 }
 
 @media (max-width: 759px) {
   .find-song-scroll-hint:not([hidden]) { display: block; }
-  .find-song-panel .find-song-results {
+  .song-section .find-song-results {
     grid-auto-columns: min(20rem, calc(100% - 2rem));
     grid-auto-flow: column;
     grid-template-columns: none;
@@ -1466,16 +1426,22 @@ body { line-height: 1.45; }
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;
   }
-  .find-song-panel .find-song-results > .song-card { scroll-snap-align: start; }
-  .find-song-results .feedback-button { min-height: 44px; }
+  .song-section .find-song-results > .song-card { scroll-snap-align: start; }
 }
 
-@media (min-width: 760px) and (max-width: 799px) {
-  .find-song-results .feedback-button { min-height: 44px; }
+@media (max-width: 619px) {
+  .find-song-controls {
+    align-items: flex-start;
+    display: block;
+  }
+
+  .find-song-clear {
+    margin: .35rem 0 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .find-song-panel .find-song-results { scroll-snap-type: none; }
+  .song-section .find-song-results { scroll-snap-type: none; }
 }
 
 /* Keep every song shelf card-sized, even when a shelf has only one result. */

@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=43";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=44";
 import { loadCatalog } from "./catalog.js?v=3";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
@@ -185,7 +185,7 @@ function bindEvents() {
     if (action === "reset-discovery") { state.query = ""; state.filter = "all"; state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
     if (action === "toggle-party-mode") { togglePartyMode(); return; }
     if (action === "toggle-find-song-mode") { toggleFindSongMode(actionTarget.dataset.findSongMode, actionTarget); return; }
-    if (action === "clear-find-song") { findSongModes = []; findSongSelectionAnnouncement = ""; render(); actionTarget.focus(); return; }
+    if (action === "clear-find-song") { findSongModes = []; findSongSelectionAnnouncement = ""; render(); document.querySelector("[data-find-song-mode]")?.focus(); return; }
     if (action === "remove-party-singer") { removePartySingerFromUi(actionTarget.dataset.singerId); return; }
     if (action === "clear-party-session") { clearPartySessionFromUi(); return; }
     if (action === "roll-roulette") { rollRoulette(); return; }

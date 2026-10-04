@@ -49,10 +49,15 @@ test("sparse shelves keep bounded card tracks and shared 16:9 media sizing", () 
   assert.match(css, /@media \(max-width: 619px\)[\s\S]*?\.song-card\s*\{[\s\S]*?max-width:\s*none/);
 });
 
-test("mobile Find My Song keeps its three choices in a bounded accessible swipe row", () => {
-  assert.match(css, /@media \(max-width: 759px\)[\s\S]*?\.find-song-panel \.find-song-results \{[\s\S]*?grid-auto-flow: column;[\s\S]*?overflow-x: auto;[\s\S]*?scroll-snap-type: x mandatory/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.find-song-panel \.find-song-results \{ scroll-snap-type: none; \}/);
-  assert.match(index, /Swipe or tab through all three picks\./);
+test("Home cues shape the single bounded Sing now shelf with a mobile swipe affordance", () => {
+  assert.match(index, /data-section="recommended"[\s\S]*?data-find-song-modes[\s\S]*?data-grid="recommended" data-find-song-results/);
+  assert.match(css, /\.find-song-mode\s*\{\s*min-height:\s*44px;/);
+  assert.match(css, /@media \(max-width: 759px\)[\s\S]*?\.song-section \.find-song-results \{[\s\S]*?grid-auto-flow: column;[\s\S]*?overflow-x: auto;[\s\S]*?scroll-snap-type: x mandatory/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.song-section \.find-song-results \{ scroll-snap-type: none; \}/);
+  assert.match(css, /\.find-song-scroll-hint\s*\{[^}]*display:\s*none/);
+  assert.match(css, /@media \(max-width: 759px\)[\s\S]*?\.find-song-scroll-hint:not\(\[hidden\]\) \{ display: block; \}/);
+  assert.match(css, /\.song-grid,\s*\.compact-grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(auto-fit, minmax\(min\(100%, 16rem\), 20rem\)\)/);
+  assert.match(index, /Swipe or tab through these three picks\./);
   assert.doesNotMatch(css, /body\s*\{[^}]*min-width:\s*320px/);
   assert.match(css, /\.app-shell \{[^}]*overflow: clip/);
 });
@@ -67,8 +72,11 @@ test("stage ambience uses CSS gradients without loading a heavy background image
   assert.doesNotMatch(serviceWorker, /kantatayo-stage-bg\.png/);
 });
 
-test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=46/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=46"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v106"/);
+test("shell cache version follows the stylesheet and module revisions", () => {
+  assert.match(index, /styles\/main\.css\?v=47/);
+  assert.match(index, /src\/app\.js\?v=60/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=47"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=60"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=44"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v107"/);
 });

@@ -123,7 +123,7 @@ test("Step 10 UI resilience hooks are present without changing catalog or player
   ]);
 
   assert.match(html, /data-catalog-loading/);
-  assert.match(html, /data-section-empty/);
+  assert.match(html, /data-find-song-empty/);
   assert.match(html, /data-discover-empty/);
   assert.match(html, /data-player-status/);
   assert.match(html, /role="dialog" aria-modal="true" aria-labelledby="queue-title" aria-describedby="queue-description"/);
@@ -147,8 +147,8 @@ test("directed product shell keeps desktop and mobile navigation structurally di
   assert.match(html, /class="mobile-nav"/);
   assert.match(html, /data-section="favorites"/);
   assert.match(html, /data-mini-player/);
-  assert.match(html, /main\.css\?v=46/);
-  assert.match(html, /app\.js\?v=59/);
+  assert.match(html, /main\.css\?v=47/);
+  assert.match(html, /app\.js\?v=60/);
   assert.match(html, /data-view-panel="home"/);
   assert.match(html, /data-view-panel="discover"/);
   assert.match(css, /\.app-sidebar \{ display: none !important; \}/);

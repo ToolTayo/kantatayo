@@ -23,8 +23,8 @@
     <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=46" />
-    <script type="module" src="src/app.js?v=59"></script>
+    <link rel="stylesheet" href="styles/main.css?v=47" />
+    <script type="module" src="src/app.js?v=60"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -86,23 +86,6 @@
             <h1 id="hero-title">Find your next <em>karaoke song.</em></h1>
             <p class="hero-description">Start with a song from the catalog, follow your taste, or search the full catalog when you already know what you want.</p>
           </div>
-        </section>
-        <section class="find-song-panel" data-find-song aria-labelledby="find-song-title">
-          <div class="find-song-heading">
-            <div>
-              <p class="eyebrow">Your next move</p>
-              <h2 id="find-song-title">What feels right?</h2>
-              <p class="find-song-lede">Choose a cue to shape three playable picks, or leave the choices clear for general recommendations.</p>
-            </div>
-            <button class="text-button find-song-clear" type="button" data-action="clear-find-song" hidden>Clear choices</button>
-          </div>
-          <div class="find-song-modes" data-find-song-modes role="group" aria-label="Choose what you feel like singing" aria-describedby="find-song-guidance"></div>
-          <p class="find-song-guidance" id="find-song-guidance">Choose up to two. Picks can match either cue; songs matching both get an extra boost.</p>
-          <p class="find-song-session" data-find-song-session role="status" aria-live="polite" hidden></p>
-          <p class="find-song-scroll-hint" data-find-song-scroll-hint hidden>Swipe or tab through all three picks.</p>
-          <div class="find-song-results song-grid compact-grid" data-find-song-results role="region" aria-label="Find My Song picks"></div>
-          <p class="sr-only" data-find-song-status role="status" aria-live="polite" aria-atomic="true"></p>
-          <div class="find-song-empty" data-find-song-empty hidden role="status" aria-live="polite">No fresh picks are available for those cues right now. Remove a choice or browse the playable catalog.</div>
         </section>
         </div>
 
@@ -173,8 +156,18 @@
             </section>
             <section class="song-section featured-section" data-section="recommended" aria-labelledby="recommended-title">
               <div class="section-heading home-section-heading"><div><h3 id="recommended-title" data-home-title>Sing now</h3><p class="section-lede" data-home-lede>Playable picks to get your night moving.</p></div><span class="section-rule"></span></div>
-              <div class="song-grid" data-grid="recommended"></div>
-              <div class="empty-state section-empty" data-section-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No playable recommendations yet</strong><p>Try adding a preference or exploring the catalog.</p></div></div>
+              <div class="find-song-panel" data-find-song>
+                <p class="find-song-guidance" id="find-song-guidance">Optional: choose up to two cues to shape these three playable picks. Leave clear for your general recommendations.</p>
+                <div class="find-song-controls">
+                  <div class="find-song-modes" data-find-song-modes role="group" aria-label="Choose what you feel like singing" aria-describedby="find-song-guidance"></div>
+                  <button class="text-button find-song-clear" type="button" data-action="clear-find-song" hidden>Clear choices</button>
+                </div>
+                <p class="find-song-session" data-find-song-session role="status" aria-live="polite" hidden></p>
+                <p class="find-song-scroll-hint" data-find-song-scroll-hint hidden>Swipe or tab through these three picks.</p>
+                <p class="sr-only" data-find-song-status role="status" aria-live="polite" aria-atomic="true"></p>
+              </div>
+              <div class="song-grid find-song-results" data-grid="recommended" data-find-song-results role="region" aria-label="Sing now recommendations"></div>
+              <div class="find-song-empty" data-find-song-empty hidden role="status" aria-live="polite">No fresh picks are available for those cues right now. Remove a choice or browse the playable catalog.</div>
             </section>
             <section class="song-section made-for-you-section" data-section="madeForYou" aria-labelledby="made-for-you-title" hidden>
               <div class="section-heading home-section-heading"><div><h3 id="made-for-you-title" data-home-title>Made for you</h3><p class="section-lede" data-home-lede>A few more picks shaped by your preferences and history.</p></div><a class="section-link" href="#preferences-panel" data-view="preferences">Tune your taste <span aria-hidden="true">→</span></a></div>
