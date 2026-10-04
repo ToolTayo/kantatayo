@@ -11,18 +11,16 @@ const css = await readFile(new URL("../styles/main.css", import.meta.url), "utf8
 const serviceWorker = await readFile(new URL("../service-worker.js", import.meta.url), "utf8");
 const songs = JSON.parse(await readFile(new URL("../data/songs.sample.json", import.meta.url), "utf8"));
 
-test("player shell presents Now Singing, metadata, actions, and an explicit Up Next distinction", () => {
+test("player shell presents Now Singing and keeps queue actions without the rejected recommendation card", () => {
   assert.match(html, /data-player-panel[^>]+role="region" aria-label="Now singing"/);
   assert.match(html, /data-player-meta/);
   assert.match(html, /data-player-favorite/);
   assert.match(html, /data-player-sang/);
-  assert.match(html, /data-player-up-next/);
+  assert.doesNotMatch(html, /data-player-up-next|data-player-next-label|data-player-next-title|data-player-next-artist|data-player-next-note/);
   assert.match(html, /data-action="sang-again"/);
   assert.match(html, /data-player-completion-favorite/);
-  assert.match(html, /data-player-next-label>Queued next/);
-  assert.match(html, /data-action="player-next"[^>]+[^>]*>Sing next/);
-  assert.match(ui, /Recommended next/);
-  assert.match(ui, /Not added until you choose Sing next/);
+  assert.match(html, /data-action="player-next"/);
+  assert.doesNotMatch(ui, /Recommended next|Not added until you choose Sing next|function updatePlayerNext/);
 });
 
 test("player preserves the official 16:9 embed and has real expanded/fullscreen hooks", () => {
@@ -40,7 +38,7 @@ test("video completion automatically advances queued songs but keeps recommendat
   assert.match(app, /if \(queuedNext\) \{[\s\S]*?advanceToNext\(\{ automatic: true \}\);/);
   assert.match(app, /const nextSong = getRecommendedNext\(snapshot\);/);
   assert.match(app, /showPlayerFinished\(\{ nextSong, nextType \}\)/);
-  assert.match(ui, /KantaCue waits for your explicit choice/);
+  assert.match(ui, /Choose another KantaCue pick or replay this performance/);
 });
 
 test("Sang It uses durable history and the existing duplicate guard", () => {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { createInstallController, isStandaloneDisplay } from "../src/install.js";
+import { createInstallController, isIOSDevice, isStandaloneDisplay } from "../src/install.js";
 import { createSongShareUrl, parseSongShareId, shareSong } from "../src/share.js";
 
 const song = { id: "sample-029", title: "Sa Aking Puso", artist: "Kaye Cal" };
@@ -77,6 +77,35 @@ test("install action is hidden in standalone mode and dismissed choices stay loc
   assert.equal(isStandaloneDisplay({ navigator: { standalone: true } }), true);
   const button = { hidden: false, disabled: false, addEventListener: () => {}, removeEventListener: () => {} };
   const windowRef = { navigator: { standalone: true }, matchMedia: () => ({ matches: true }), addEventListener: () => {}, removeEventListener: () => {} };
+  const controller = createInstallController({ windowRef, buttons: [button] });
+  assert.equal(button.hidden, true);
+  assert.equal(controller.isActionable(), false);
+  controller.dispose();
+});
+
+test("iPhone and iPad expose a manual Add to Home Screen path without prompting", async () => {
+  const listeners = new Map();
+  const button = { hidden: true, disabled: true, textContent: "Install app", setAttribute: () => {}, addEventListener: (name, handler) => listeners.set(name, handler), removeEventListener: () => {} };
+  const statuses = [];
+  const windowRef = {
+    navigator: { userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", platform: "iPhone", maxTouchPoints: 5 },
+    matchMedia: () => ({ matches: false }),
+    addEventListener: (name, handler) => listeners.set(`window:${name}`, handler),
+    removeEventListener: () => {}
+  };
+  assert.equal(isIOSDevice(windowRef), true);
+  const controller = createInstallController({ windowRef, buttons: [button], onStatus: (message) => statuses.push(message) });
+  assert.equal(button.hidden, false);
+  assert.equal(controller.isManualInstall(), true);
+  const result = await listeners.get("click")();
+  assert.equal(result.status, "manual");
+  assert.match(statuses.at(-1), /Share, then choose Add to Home Screen/);
+  controller.dispose();
+});
+
+test("unsupported browsers keep the install action hidden", () => {
+  const button = { hidden: true, disabled: true, addEventListener: () => {}, removeEventListener: () => {} };
+  const windowRef = { navigator: { userAgent: "Mozilla/5.0", platform: "Win32" }, matchMedia: () => ({ matches: false }), addEventListener: () => {}, removeEventListener: () => {} };
   const controller = createInstallController({ windowRef, buttons: [button] });
   assert.equal(button.hidden, true);
   assert.equal(controller.isActionable(), false);

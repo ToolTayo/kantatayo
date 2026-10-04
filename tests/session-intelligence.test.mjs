@@ -5,6 +5,7 @@ import { normalizeCatalog } from "../src/catalog.js";
 import { getRecommendations } from "../src/recommendations.js";
 import {
   createDefaultSessionState,
+  getSessionSummary,
   loadSessionState,
   persistSessionState,
   pruneSessionState,
@@ -55,6 +56,19 @@ test("session state survives reload through sessionStorage without changing dura
   assert.deepEqual(createDefaultUserState().favorites, []);
 });
 
+test("a new tab starts a fresh session while the existing tab can reload its own", () => {
+  const previousTabStorage = memoryStorage();
+  const previousTab = createDefaultSessionState(NOW);
+  recordSessionCompleted(previousTab, "sample-001", { now: NOW + 1 });
+  persistSessionState(previousTab, { storage: previousTabStorage });
+
+  const newTabStorage = memoryStorage();
+  const newTab = loadSessionState({ storage: newTabStorage, now: NOW + 2 });
+  assert.equal(newTab.startedAt, new Date(NOW + 2).toISOString());
+  assert.deepEqual(newTab.completed, []);
+  assert.equal(loadSessionState({ storage: previousTabStorage, now: NOW + 2 }).completed.length, 1);
+});
+
 test("malformed, stale, unavailable, and duplicate session records fail safely", () => {
   const storage = memoryStorage({
     [SESSION_STORAGE_KEY]: JSON.stringify({
@@ -99,6 +113,20 @@ test("session-aware recommendations suppress completed songs and soften artist s
   assert.equal(recommendations.some(({ song }) => song.artist === repeatedArtist), false);
   assert.ok(new Set(recommendations.map(({ song }) => song.artist)).size >= 4);
   assert.ok(recommendations.every(({ signals }) => signals.sessionArtistRepeatPenalty === 0));
+});
+
+test("session summary exposes only real completed metadata", () => {
+  const session = createDefaultSessionState(NOW);
+  recordSessionCompleted(session, "sample-001", { now: NOW });
+  recordSessionCompleted(session, "sample-019", { now: NOW + 1 });
+  recordSessionOpened(session, "missing", { now: NOW + 2 });
+
+  const summary = getSessionSummary(catalog, session);
+  assert.equal(summary.completedCount, 2);
+  assert.equal(summary.language, "OPM");
+  assert.ok(summary.descriptors.includes("OPM"));
+  assert.ok(summary.era);
+  assert.doesNotMatch(summary.descriptors.join(" "), /missing/i);
 });
 
 test("queue and current-song exclusions remain separate from session intelligence", () => {

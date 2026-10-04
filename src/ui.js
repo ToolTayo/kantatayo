@@ -1,14 +1,17 @@
 import { escapeHtml, formatSongMeta, titleCase } from "./utils.js";
-import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=5";
+import { createDefaultDiscoveryFilters, getDiscoveryFilterOptions, getDiscoveryPage, getDiscoverySongs, getHomeShelves, getRecentlySungSongs, hasActiveDiscoveryFilters, hasMeaningfulUserSignals, normalizeDiscoveryFilters, normalizeQuery } from "./discovery.js?v=6";
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { getCatalogPreferenceOptions, getPreferenceSummary, PREFERENCE_GROUPS, preferenceValueIsSelected } from "./preferences.js";
 import { getNextPartySinger, getPartyStats } from "./party.js?v=2";
 import { getContinueSingingSongs, getDailyChallenge, getLocalStats, getMostSungSongs, getRecentlyAddedSongs, CONTINUE_SINGING_MAX_AGE_DAYS } from "./engagement.js?v=6";
 import { getCollectionDefinition, getCollectionSongs, getFeaturedCollectionId, LOCAL_COLLECTIONS } from "./collections.js?v=1";
+import { getFindSongModeOptions, getFindSongRecommendations } from "./find-song.js?v=2";
+import { getSessionSummary } from "./session.js?v=2";
 
 const homeSectionOrder = ["continue", "recommended", "madeForYou", "favorites", "popular", "recentlyAdded", "trending", "opm", "international", "easy", "duets", "recent"];
+let activePlayerSuggestions = [];
 
-export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1, selectedCollectionId = "") {
+export function renderSongSections(searchIndex, query = "", filter = "all", sortBy = "relevance", userState = {}, recommendations = [], view = "home", discoveryFilters = createDefaultDiscoveryFilters(), discoveryPage = 1, selectedCollectionId = "", sessionState = {}, findSongModes = [], findSongAnnouncement = "") {
   updateViewPanels(view);
   const allSongs = searchIndex.map((entry) => entry.song);
   const favoriteIds = new Set((userState.favorites || []).map((id) => id.toLowerCase()));
@@ -16,11 +19,63 @@ export function renderSongSections(searchIndex, query = "", filter = "all", sort
   const dislikedIds = new Set((userState.dislikedSongs || []).map((id) => id.toLowerCase()));
 
   renderHomeEngagement(allSongs, userState);
-  renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds });
+  const findSongResultIds = renderFindSongPanel(allSongs, userState, recommendations, sessionState, findSongModes, { favoriteIds, likedIds, dislikedIds }, findSongAnnouncement);
+  renderHomeSections(allSongs, userState, recommendations, { favoriteIds, likedIds, dislikedIds }, findSongResultIds);
   renderLocalCollections(allSongs, userState, { favoriteIds, likedIds, dislikedIds }, selectedCollectionId);
   if (view === "discover") renderCatalogView(searchIndex, query, filter, sortBy, userState, { favoriteIds, likedIds, dislikedIds }, discoveryFilters, discoveryPage);
   if (view === "favorites") renderCollectionView("favorites", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
   if (view === "recent") renderCollectionView("recent", allSongs, userState, { favoriteIds, likedIds, dislikedIds });
+}
+
+function renderFindSongPanel(allSongs, userState, recommendations, sessionState, selectedModes, interactionState, announcement = "") {
+  const modesTarget = document.querySelector("[data-find-song-modes]");
+  const resultsTarget = document.querySelector("[data-find-song-results]");
+  const emptyTarget = document.querySelector("[data-find-song-empty]");
+  const clearButton = document.querySelector('[data-action="clear-find-song"]');
+  const sessionTarget = document.querySelector("[data-find-song-session]");
+  const resultStatusTarget = document.querySelector("[data-find-song-status]");
+  const scrollHintTarget = document.querySelector("[data-find-song-scroll-hint]");
+  if (!modesTarget || !resultsTarget) return [];
+
+  const availableModes = getFindSongModeOptions(allSongs);
+  const validModes = (Array.isArray(selectedModes) ? selectedModes : []).filter((id) => availableModes.some((mode) => mode.id === id));
+  modesTarget.setAttribute("aria-describedby", "find-song-guidance");
+  modesTarget.innerHTML = availableModes.map((mode) => `<button class="chip find-song-mode${validModes.includes(mode.id) ? " is-active" : ""}" type="button" data-action="toggle-find-song-mode" data-find-song-mode="${escapeHtml(mode.id)}" aria-pressed="${validModes.includes(mode.id)}" aria-label="${escapeHtml(`${mode.label}: ${mode.description}; ${mode.count} playable songs`)}" title="${escapeHtml(`${mode.description} · ${mode.count} playable songs`)}">${escapeHtml(mode.label)}</button>`).join("");
+  if (clearButton) clearButton.hidden = validModes.length === 0;
+
+  const summary = getSessionSummary(allSongs, sessionState);
+  if (sessionTarget) {
+    sessionTarget.hidden = summary.completedCount === 0;
+    sessionTarget.textContent = summary.completedCount > 0
+      ? `This session · ${summary.completedCount} song${summary.completedCount === 1 ? "" : "s"} sung${summary.descriptors.length ? ` · mostly ${summary.descriptors.join(" · ")}` : ""}`
+      : "";
+  }
+
+  const results = getFindSongRecommendations(allSongs, userState, {
+    modes: validModes,
+    limit: 3,
+    session: sessionState,
+    baseline: recommendations
+  });
+  resultsTarget.innerHTML = results.map((item) => renderSongCard(item.song, interactionState, { reason: item.reason })).join("");
+  resultsTarget.hidden = results.length === 0;
+  if (scrollHintTarget) scrollHintTarget.hidden = results.length < 2;
+  if (resultStatusTarget) {
+    const labels = validModes.map((id) => availableModes.find((mode) => mode.id === id)?.label).filter(Boolean);
+    const cueText = labels.length === 2 ? `${labels[0]} and ${labels[1]}` : labels[0] || "your recommendations";
+    resultStatusTarget.textContent = announcement || (labels.length
+      ? results.length
+        ? `${results.length} playable picks for ${cueText}. Picks matching both cues receive an extra boost.`
+        : `No fresh picks are available for ${cueText} right now.`
+      : `${results.length} recommended playable pick${results.length === 1 ? "" : "s"} ready.`);
+  }
+  if (emptyTarget) {
+    emptyTarget.hidden = results.length > 0;
+    emptyTarget.textContent = validModes.length
+      ? "No fresh picks are available for those cues right now. Remove a choice or browse the playable catalog."
+      : "No fresh recommendations are ready right now. Browse the playable catalog to keep singing.";
+  }
+  return results.map((item) => item.song.id);
 }
 
 export function renderCollections(medleys = [], userState = {}) {
@@ -102,14 +157,18 @@ function legacyView(link) {
   return "";
 }
 
-function renderHomeSections(allSongs, userState, recommendations, interactionState) {
+function renderHomeSections(allSongs, userState, recommendations, interactionState, findSongResultIds = []) {
   const dailyChallenge = getDailyChallenge(allSongs, userState);
+  const findSongIds = Array.isArray(findSongResultIds) ? findSongResultIds.map((id) => String(id).toLowerCase()) : [];
+  const reservedIds = [...findSongIds, ...(dailyChallenge.song ? [dailyChallenge.song.id] : [])];
+  const reservedSet = new Set(reservedIds);
   const sections = getHomeShelves(allSongs, recommendations, userState, {
-    excludeIds: dailyChallenge.song ? [dailyChallenge.song.id] : []
+    excludeIds: reservedIds
   });
-  sections.continue = getContinueSingingSongs(allSongs, userState);
-  sections.recentlyAdded = getRecentlyAddedSongs(allSongs);
-  sections.trending = getMostSungSongs(allSongs, userState);
+  const withoutReservedPicks = (songs) => songs.filter((song) => !reservedSet.has(song.id.toLowerCase()));
+  sections.continue = withoutReservedPicks(getContinueSingingSongs(allSongs, userState));
+  sections.recentlyAdded = withoutReservedPicks(getRecentlyAddedSongs(allSongs));
+  sections.trending = withoutReservedPicks(getMostSungSongs(allSongs, userState));
   const recommendationReasons = new Map((Array.isArray(recommendations) ? recommendations : []).map((item) => [item.song?.id?.toLowerCase(), item.reason || ""]));
   const personalized = hasMeaningfulUserSignals(userState);
   const homeCopy = {
@@ -119,7 +178,7 @@ function renderHomeSections(allSongs, userState, recommendations, interactionSta
     madeForYou: { title: "Made for you", lede: "A few more picks shaped by your preferences and history." },
     continue: { title: "Continue singing", lede: `Unfinished songs you opened in the last ${CONTINUE_SINGING_MAX_AGE_DAYS} days.` },
     favorites: { title: "Your favorites", lede: "The songs you want close at hand." },
-    popular: { title: "Crowd favorites", lede: "Established karaoke picks with real demand evidence." },
+    popular: { title: "Popular karaoke picks", lede: "Ranked by karaoke use or provider video views." },
     recentlyAdded: { title: "Recently added", lede: "Fresh catalog additions, ready for a first spin." },
     trending: { title: "Most sung on this device", lede: "Based on Sang It completions saved on this device." },
     opm: { title: "OPM picks", lede: "Filipino songs for the next round." },
@@ -503,6 +562,8 @@ export function showPlayer(song, metadata = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
   panel.hidden = false;
+  setPlayerFinishedLayout(panel, false);
+  setPlayerEndScreenVisible(panel, false);
   setPlayerExpanded(panel, panel.classList.contains("is-expanded"));
   panel.querySelector("[data-player-title]").textContent = song.title;
   panel.querySelector("[data-player-artist]").textContent = song.artist;
@@ -514,8 +575,8 @@ export function showPlayer(song, metadata = {}) {
   updateMiniPlayer(song);
   setPlayerFeedback(false);
   updatePlayerActions(song, { favorites: metadata.isFavorite ? [song.id] : [], sungHistory: metadata.isSung ? [{ id: song.id }] : [] });
-  updatePlayerNext(metadata.nextSong, metadata.nextType);
   renderPlayerSuggestions(metadata.suggestions, metadata.contentType || song.contentType || "song");
+  setPlayerPreEndVisible(false);
   setPlayerCompletion(false);
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = metadata.hasPrevious === false;
@@ -557,6 +618,8 @@ export function showPlayerUnavailable() {
   panel.querySelector("[data-player-status]").textContent = "Karaoke video isn't available for this song yet.";
   panel.querySelector("[data-player-note]").textContent = "Choose another queued song or return to discovery.";
   updateMiniPlayerStatus("Video unavailable");
+  setPlayerPreEndVisible(false);
+  setPlayerEndScreenVisible(panel, false);
   setPlayerEmbedVisible(panel, false);
 }
 
@@ -566,6 +629,8 @@ export function showPlayerOffline() {
   panel.querySelector("[data-player-status]").textContent = "You’re offline. Karaoke videos need an internet connection.";
   panel.querySelector("[data-player-note]").textContent = "Your catalog, queue, and preferences still work on this device.";
   updateMiniPlayerStatus("Offline");
+  setPlayerPreEndVisible(false);
+  setPlayerEndScreenVisible(panel, false);
   setPlayerEmbedVisible(panel, false);
 }
 
@@ -585,6 +650,9 @@ export function showPlayerError({ code = null, development = false } = {}) {
   if (status) status.textContent = message;
   if (note) note.textContent = detail;
   updateMiniPlayerStatus(numericCode === 100 ? "Video unavailable" : "Couldn’t play video");
+  setPlayerFinishedLayout(panel, false);
+  setPlayerPreEndVisible(false);
+  setPlayerEndScreenVisible(panel, false);
   setPlayerEmbedVisible(panel, false);
 }
 
@@ -600,13 +668,15 @@ export function showQueueFinished(total) {
   panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
   panel.classList.add("is-expanded");
   setPlayerExpanded(panel, true);
+  setPlayerFinishedLayout(panel, false);
+  setPlayerEndScreenVisible(panel, false);
+  setPlayerPreEndVisible(false);
   document.querySelector("[data-mini-player]")?.setAttribute("hidden", "");
   setPlayerEmbedVisible(panel, false);
   panel.querySelector('[data-action="player-prev"]').disabled = total === 0;
   panel.querySelector('[data-action="player-next"]').disabled = true;
   setPlayerCompletion(true, "Queue finished", "Choose another song from discovery or add a new song to your queue.");
   setPlayerFeedback(false);
-  updatePlayerNext(null);
   renderPlayerSuggestions([]);
 }
 
@@ -614,14 +684,13 @@ export function showPlayerFinished({ nextSong = null, nextType = "recommended", 
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
   panel.querySelector("[data-player-status]").textContent = "Song complete. Your next choice is ready.";
-  panel.querySelector("[data-player-note]").textContent = "KantaCue waits for your explicit choice before starting another video.";
+  panel.querySelector("[data-player-note]").textContent = "Choose another KantaCue pick or replay this performance.";
   updateMiniPlayerStatus("Song complete");
-  updatePlayerNext(nextSong, nextType);
-  setPlayerCompletion(true, contentType === "medley" ? "Medley complete" : "Nice one", contentType === "medley"
-    ? (nextSong ? "That set is complete. Continue with the next medley when you’re ready." : "That set is complete. Choose another medley or return to the catalog.")
-    : (nextSong ? "Mark it as sung, then keep the queue moving." : "Mark it as sung or choose another song from discovery."));
+  setPlayerFinishedLayout(panel, true);
+  setPlayerPreEndVisible(false);
+  renderPlayerEndScreen(nextSong, nextType, contentType);
   setPlayerFeedback(true);
-  setPlayerEmbedVisible(panel, true);
+  setPlayerEndScreenVisible(panel, true);
 }
 
 export function showPlayerSangIt() {
@@ -642,9 +711,9 @@ export function updatePlayerActions(song, userState = {}) {
   const isMedley = song.contentType === "medley";
   const isFavorite = (userState.favorites || []).some((id) => id.toLowerCase() === songId);
   const isSung = (userState.sungHistory || []).some((entry) => entry.id?.toLowerCase() === songId);
-  const favorite = panel.querySelectorAll("[data-player-favorite], [data-player-completion-favorite]");
+  const favorite = panel.querySelectorAll("[data-player-favorite], [data-player-completion-favorite], [data-player-end-favorite]");
   const share = panel.querySelectorAll("[data-player-share]");
-  const sang = panel.querySelector("[data-player-sang]");
+  const sang = panel.querySelectorAll("[data-player-sang], [data-player-end-sang]");
   panel.querySelectorAll('[data-action="toggle-favorite"], [data-action="mark-sung"], [data-action="share-song"]').forEach((element) => { element.hidden = isMedley; });
   const feedback = panel.querySelector("[data-player-feedback]");
   if (feedback && isMedley) feedback.hidden = true;
@@ -657,11 +726,11 @@ export function updatePlayerActions(song, userState = {}) {
     button.textContent = isFavorite ? "♥ Favorite" : "♡ Favorite";
     button.setAttribute("aria-label", isFavorite ? `Remove ${song.title} from favorites` : `Add ${song.title} to favorites`);
   });
-  if (sang) {
-    sang.dataset.songId = song.id;
-    sang.textContent = isSung ? "Sang it ✓" : "Sang it";
-    sang.setAttribute("aria-label", isSung ? `${song.title} is already in sung history` : `Mark ${song.title} as sung`);
-  }
+  sang.forEach((button) => {
+    button.dataset.songId = song.id;
+    button.textContent = isSung ? "Sang it ✓" : "Sang it";
+    button.setAttribute("aria-label", isSung ? `${song.title} is already in sung history` : `Mark ${song.title} as sung`);
+  });
   share.forEach((button) => {
     button.dataset.songId = song.id;
     button.setAttribute("aria-label", `Share ${song.title} by ${song.artist} on KantaCue`);
@@ -744,51 +813,83 @@ export function setPlayerExpanded(panel, expanded) {
   }
 }
 
-function updatePlayerNext(song, type = "recommended") {
-  const target = document.querySelector("[data-player-up-next]");
-  if (!target) return;
-  if (!song) {
-    target.hidden = true;
-    return;
-  }
-  target.hidden = false;
-  target.querySelector("[data-player-next-label]").textContent = type === "queued" ? "Queued next" : "Recommended next";
-  target.querySelector("[data-player-next-title]").textContent = song.title;
-  target.querySelector("[data-player-next-artist]").textContent = song.artist;
-  target.querySelector("[data-player-next-note]").textContent = `${formatSongMeta(song).join(" · ")} · ${type === "queued" ? "Already in your queue" : "Not added until you choose Sing next"}`;
-  target.querySelector('[data-action="player-next"]').setAttribute("aria-label", `Sing next: ${song.title} by ${song.artist}`);
+function renderPlayerSuggestions(suggestions = []) {
+  const safeSuggestions = Array.isArray(suggestions) ? suggestions.filter((suggestion) => suggestion && (suggestion.type === "song" ? suggestion.song : suggestion.medley)) : [];
+  activePlayerSuggestions = safeSuggestions;
 }
 
-function renderPlayerSuggestions(suggestions = [], contentType = "song") {
-  const target = document.querySelector("[data-player-suggestions]");
-  const grid = target?.querySelector("[data-player-suggestion-grid]");
-  if (!target || !grid) return;
-  const safeSuggestions = Array.isArray(suggestions) ? suggestions.filter((suggestion) => suggestion && (suggestion.type === "song" ? suggestion.song : suggestion.medley)) : [];
-  if (safeSuggestions.length === 0) {
-    target.hidden = true;
-    grid.replaceChildren();
-    return;
-  }
-  const medleyMode = contentType === "medley";
-  target.hidden = false;
-  target.querySelector("[data-player-suggestion-eyebrow]").textContent = medleyMode ? "Stay with the set" : "Keep singing";
-  target.querySelector("[data-player-suggestion-heading]").textContent = medleyMode ? "More medleys" : "More to sing";
-  target.querySelector("[data-player-suggestion-note]").textContent = medleyMode ? "Verified public medleys with a similar feel." : "Playable picks based on your karaoke signals.";
-  grid.innerHTML = safeSuggestions.map((suggestion) => {
+function renderSuggestionCards(suggestions, extraClass = "") {
+  return suggestions.map((suggestion, index) => {
     const isMedley = suggestion.type === "medley";
     const item = isMedley ? suggestion.medley : suggestion.song;
     const title = escapeHtml(item.title);
     const artist = escapeHtml(isMedley ? item.provider : item.artist);
     const meta = escapeHtml(isMedley
       ? [item.language, item.theme].filter(Boolean).join(" · ")
-      : formatSongMeta(item).slice(0, 3).join(" · "));
-    const reason = escapeHtml(suggestion.reason || (isMedley ? "Another verified karaoke medley" : "A playable karaoke pick"));
+      : [item.language, item.difficulty, item.performanceType].filter(Boolean).join(" · "));
     const action = isMedley ? "player-suggestion-medley" : "player-suggestion-song";
     const idAttribute = isMedley ? "data-medley-id" : "data-song-id";
     const id = escapeHtml(item.id);
     const aria = isMedley ? `Play suggested medley: ${title}` : `Play suggested song: ${title} by ${artist}`;
-    return `<button class="player-suggestion" type="button" data-action="${action}" ${idAttribute}="${id}" aria-label="${aria}"><span class="player-suggestion-copy"><strong>${title}</strong><span>${artist}</span><small>${meta} · ${reason}</small></span><span class="player-suggestion-arrow" aria-hidden="true">→</span></button>`;
+    const actionLabel = isMedley ? "Sing set" : "Sing";
+    const tone = getPlayerCardTone(item, index);
+    const kind = isMedley ? "Verified medley" : "Karaoke song";
+    return `<button class="player-end-card${extraClass ? ` ${extraClass}` : ""} player-end-card-tone-${tone}" type="button" data-action="${action}" ${idAttribute}="${id}" aria-label="${aria}"><span class="player-end-card-art" aria-hidden="true"><span class="player-end-card-art-mark">${isMedley ? "SET" : "♫"}</span><span class="player-end-card-art-label">${escapeHtml(item.era || item.theme || item.language || "KantaCue")}</span></span><span class="player-end-card-body"><span class="player-end-card-kind">${kind}</span><strong>${title}</strong><span class="player-end-card-artist">${artist}</span><span class="player-end-card-meta">${meta}</span></span><span class="player-end-card-action">${actionLabel}</span></button>`;
   }).join("");
+}
+
+function getPlayerCardTone(item, index) {
+  const seed = `${item?.id || "pick"}|${item?.language || ""}|${item?.genre || item?.theme || ""}`;
+  let hash = 0;
+  for (const character of seed) hash = ((hash << 5) - hash + character.charCodeAt(0)) | 0;
+  return Math.abs(hash + index) % 4 + 1;
+}
+
+export function setPlayerPreEndVisible(visible) {
+  const target = document.querySelector("[data-player-pre-end-status]");
+  if (!target) return;
+  const shouldShow = Boolean(visible && activePlayerSuggestions.length > 0);
+  target.hidden = !shouldShow;
+  target.setAttribute("aria-hidden", String(!shouldShow));
+}
+
+function renderPlayerEndScreen(nextSong, nextType, contentType) {
+  const panel = document.querySelector("[data-player-panel]");
+  const screen = panel?.querySelector("[data-player-end-screen]");
+  const grid = screen?.querySelector("[data-player-end-screen-grid]");
+  if (!screen || !grid) return;
+  const isMedley = contentType === "medley";
+  screen.querySelector("[data-player-end-screen-note]").textContent = isMedley
+    ? "Keep the set moving with another verified medley or playable song."
+    : "More karaoke available in KantaCue. Choose a song when you’re ready.";
+  grid.innerHTML = activePlayerSuggestions.length
+    ? renderSuggestionCards(activePlayerSuggestions, "player-end-suggestion")
+    : `<p class="player-end-screen-empty">No more personalized picks right now. Browse the catalog to keep singing.</p>`;
+  const nextButton = screen.querySelector("[data-player-end-next]");
+  if (nextButton) {
+    nextButton.hidden = !nextSong;
+    nextButton.textContent = nextSong ? (nextType === "queued" ? "Sing queued next" : "Sing next") : "Sing next";
+    if (nextSong) nextButton.setAttribute("aria-label", `Sing next: ${nextSong.title} by ${nextSong.artist}`);
+  }
+  const favoriteButton = screen.querySelector("[data-player-end-favorite]");
+  if (favoriteButton) favoriteButton.hidden = isMedley;
+}
+
+function setPlayerEndScreenVisible(panel, visible) {
+  const screen = panel?.querySelector("[data-player-end-screen]");
+  const shell = panel?.querySelector("[data-youtube-shell]");
+  if (screen) screen.hidden = !visible;
+  if (screen) screen.setAttribute("aria-hidden", String(!visible));
+  if (shell) shell.hidden = Boolean(visible);
+}
+
+function setPlayerFinishedLayout(panel, finished) {
+  if (!panel) return;
+  panel.classList.toggle("is-finished", Boolean(finished));
+  [".player-actions", "[data-player-completion]", ".player-controls"].forEach((selector) => {
+    const element = panel.querySelector(selector);
+    if (element) element.hidden = Boolean(finished);
+  });
 }
 
 function setPlayerCompletion(visible, title = "Song complete", copy = "") {

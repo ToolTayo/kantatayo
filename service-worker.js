@@ -1,18 +1,19 @@
 const CACHE_PREFIX = "kantacue-";
 const LEGACY_CACHE_PREFIX = "kantatayo-";
-const CACHE_NAME = "kantacue-shell-v91";
+const CACHE_NAME = "kantacue-shell-v106";
 const INDEX_URL = new URL("./index.html", self.location.href).href;
 const APP_SHELL_URLS = [
   "./",
   "./index.html",
   "./styles/main.css",
-  "./styles/main.css?v=34",
+  "./styles/main.css?v=46",
   "./src/app.js",
-  "./src/app.js?v=51",
+  "./src/app.js?v=59",
   "./src/catalog.js?v=3",
   "./src/catalog.js",
   "./src/discovery.js",
   "./src/discovery.js?v=5",
+  "./src/discovery.js?v=6",
   "./src/engagement.js",
   "./src/engagement.js?v=6",
   "./src/daily-challenge.js?v=2",
@@ -28,11 +29,13 @@ const APP_SHELL_URLS = [
   "./src/state.js?v=8",
   "./src/storage.js",
   "./src/ui.js",
-  "./src/ui.js?v=35",
+  "./src/ui.js?v=43",
   "./src/install.js",
   "./src/share.js",
-  "./src/session.js?v=1",
+  "./src/session.js?v=2",
   "./src/session.js",
+  "./src/find-song.js",
+  "./src/find-song.js?v=2",
   "./src/focus.js",
   "./src/utils.js",
   "./src/view.js",
@@ -42,7 +45,9 @@ const APP_SHELL_URLS = [
   "./src/medleys.js",
   "./src/medleys.js?v=7",
   "./src/player-suggestions.js",
-  "./src/player-suggestions.js?v=1",
+  "./src/player-suggestions.js?v=3",
+  "./src/player-timing.js",
+  "./src/player-timing.js?v=1",
   "./data/songs.sample.json",
   "./data/songs.sample.json?v=14",
   "./data/medleys.sample.json",
@@ -55,7 +60,6 @@ const APP_SHELL_URLS = [
   "./assets/brand/kantacue-mark.svg",
   "./assets/brand/kantacue-mark-small.svg",
   "./assets/brand/kantacue-logo.svg",
-  "./assets/kantatayo-stage-bg.png"
 ];
 const APP_SHELL_PATHS = new Set(APP_SHELL_URLS.map((path) => new URL(path, self.location.href).pathname));
 

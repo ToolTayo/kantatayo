@@ -1,6 +1,6 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=35";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=43";
 import { loadCatalog } from "./catalog.js?v=3";
-import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=5";
+import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
 import { getRecommendations } from "./recommendations.js";
 import { createYouTubePlayerController, isValidYouTubeVideoId, YOUTUBE_PLAYER_STATE } from "./youtube.js";
@@ -11,9 +11,11 @@ import { getDailyChallenge } from "./engagement.js?v=6";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
 import { createInstallController } from "./install.js";
 import { parseSongShareId, shareSong } from "./share.js";
-import { createDefaultSessionState, loadSessionState, persistSessionState, pruneSessionState, recordSessionCompleted, recordSessionOpened } from "./session.js?v=1";
+import { createDefaultSessionState, loadSessionState, persistSessionState, pruneSessionState, recordSessionCompleted, recordSessionOpened } from "./session.js?v=2";
 import { getMedleyById, loadMedleys, medleyToPlayerItem, reconcileMedleyState } from "./medleys.js?v=7";
-import { getMedleyPlayerSuggestions, getSongPlayerSuggestions } from "./player-suggestions.js?v=1";
+import { getMedleyPlayerSuggestions, getSongPlayerSuggestions } from "./player-suggestions.js?v=3";
+import { getPlaybackWindowState } from "./player-timing.js?v=1";
+import { FIND_SONG_MODES, toggleFindSongModeSelection } from "./find-song.js?v=2";
 
 const state = createAppState();
 let youtubeController = null;
@@ -33,6 +35,35 @@ let queueConfirmReturnFocus = null;
 let lastPlaybackErrorSongId = null;
 let sessionState = createDefaultSessionState();
 let medleys = [];
+let playerTimePollTimer = null;
+let playerPlaybackHasStarted = false;
+let findSongModes = [];
+let findSongSelectionAnnouncement = "";
+
+const PLAYER_TIME_POLL_MS = 1000;
+
+function stopPlayerTimePolling() {
+  if (playerTimePollTimer !== null) {
+    window.clearInterval(playerTimePollTimer);
+    playerTimePollTimer = null;
+  }
+  setPlayerPreEndVisible(false);
+}
+
+function updatePlayerPreEndWindow() {
+  if (!youtubeController || playerFinishedSongId || !playerPlaybackHasStarted) {
+    setPlayerPreEndVisible(false);
+    return;
+  }
+  const phase = getPlaybackWindowState(youtubeController.getCurrentTime?.(), youtubeController.getDuration?.());
+  setPlayerPreEndVisible(phase === "pre-end");
+}
+
+function startPlayerTimePolling() {
+  if (playerTimePollTimer !== null) window.clearInterval(playerTimePollTimer);
+  updatePlayerPreEndWindow();
+  playerTimePollTimer = window.setInterval(updatePlayerPreEndWindow, PLAYER_TIME_POLL_MS);
+}
 
 async function startApp() {
   try {
@@ -80,7 +111,8 @@ function render({ refreshRecommendations = false } = {}) {
   const loading = document.querySelector("[data-catalog-loading]");
   if (loading) loading.hidden = true;
   renderPreferences(state.songs, state.user.preferences);
-  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId);
+  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId, sessionState, findSongModes, findSongSelectionAnnouncement);
+  findSongSelectionAnnouncement = "";
   renderSongRequests(state.user);
   const searchInput = document.querySelector("#song-search");
   if (searchInput && searchInput.value !== state.query) searchInput.value = state.query;
@@ -152,6 +184,8 @@ function bindEvents() {
     if (action === "reset-discovery-filters") { state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); return; }
     if (action === "reset-discovery") { state.query = ""; state.filter = "all"; state.discoveryFilters = createDefaultDiscoveryFilters(); state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
     if (action === "toggle-party-mode") { togglePartyMode(); return; }
+    if (action === "toggle-find-song-mode") { toggleFindSongMode(actionTarget.dataset.findSongMode, actionTarget); return; }
+    if (action === "clear-find-song") { findSongModes = []; findSongSelectionAnnouncement = ""; render(); actionTarget.focus(); return; }
     if (action === "remove-party-singer") { removePartySingerFromUi(actionTarget.dataset.singerId); return; }
     if (action === "clear-party-session") { clearPartySessionFromUi(); return; }
     if (action === "roll-roulette") { rollRoulette(); return; }
@@ -224,6 +258,11 @@ function bindEvents() {
     }
     if (action === "fullscreen-player") { void togglePlayerFullscreen(); return; }
     if (action === "sang-again") { replayCurrentSong(); return; }
+    if (action === "player-browse-more") {
+      closePlayer();
+      navigateToView("discover", { discoveryFilter: "playable" });
+      return;
+    }
     const song = state.songs.find((item) => item.id === actionTarget.dataset.songId);
     if (action === "add-queue" && song) addToQueue(song);
     if (action === "remove-queue") removeFromQueue(actionTarget.dataset.songId);
@@ -685,6 +724,22 @@ function clearRouletteFilters() {
   document.querySelector('[data-action="roll-roulette"]')?.focus();
 }
 
+function toggleFindSongMode(modeId, sourceButton = null) {
+  if (!modeId) return;
+  const selection = toggleFindSongModeSelection(findSongModes, modeId);
+  findSongModes = selection.modes;
+  if (selection.replacedModeId) {
+    const removedLabel = FIND_SONG_MODES.find((mode) => mode.id === selection.replacedModeId)?.label || "A cue";
+    const activeLabels = findSongModes.map((id) => FIND_SONG_MODES.find((mode) => mode.id === id)?.label).filter(Boolean);
+    findSongSelectionAnnouncement = `${removedLabel} was replaced. ${activeLabels.join(" and ")} are now selected.`;
+  } else {
+    findSongSelectionAnnouncement = "";
+  }
+  render();
+  const nextButton = [...document.querySelectorAll("[data-find-song-mode]")].find((button) => button.dataset.findSongMode === modeId);
+  (nextButton || sourceButton)?.focus?.();
+}
+
 function viewRouletteSong() {
   const song = rouletteResult?.song;
   if (!song) return;
@@ -755,6 +810,8 @@ function removeFromQueue(songId) {
 
 function startSong(song, launcher = null) {
   rememberPlayerLauncher(launcher);
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   playerFinishedSongId = null;
   lastPlaybackErrorSongId = null;
   addSongToQueue(state.user, song.id);
@@ -780,6 +837,8 @@ function startMedley(medley, launcher = null) {
   const item = medleyToPlayerItem(medley);
   if (!item) return;
   rememberPlayerLauncher(launcher);
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   playerFinishedSongId = null;
   lastPlaybackErrorSongId = null;
   addMedleyToQueue(state.user, medley.id);
@@ -826,6 +885,8 @@ function reorderQueue(action, song) {
 }
 
 function replayCurrentSong() {
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   if (getMedleyQueueSnapshot(state.user, medleys).currentMedley) {
     playerFinishedSongId = null;
     lastPlaybackErrorSongId = null;
@@ -903,6 +964,7 @@ function confirmClearQueue() {
 }
 
 function advanceMedleyToNext({ automatic = false } = {}) {
+  stopPlayerTimePolling();
   const result = advanceMedleyQueue(state.user);
   playerFinishedSongId = null;
   persistAppState(state);
@@ -925,6 +987,7 @@ function selectPreviousMedleyFromUi() {
 }
 
 function advanceToNext({ automatic = false } = {}) {
+  stopPlayerTimePolling();
   if (getMedleyQueueSnapshot(state.user, medleys).currentMedley) {
     advanceMedleyToNext({ automatic });
     return;
@@ -958,6 +1021,7 @@ function advanceToNext({ automatic = false } = {}) {
 }
 
 function selectPrevious() {
+  stopPlayerTimePolling();
   if (getMedleyQueueSnapshot(state.user, medleys).currentMedley) {
     selectPreviousMedleyFromUi();
     return;
@@ -995,7 +1059,8 @@ function syncPlayer(snapshot, { reloadVideo = true } = {}) {
   const suggestions = getSongPlayerSuggestions(recommendationSnapshot, {
     currentId: snapshot.currentSong.id,
     queuedIds: snapshot.songs.map((song) => song.id),
-    excludeIds: nextSong ? [nextSong.id] : []
+    excludeIds: nextSong ? [nextSong.id] : [],
+    catalogSongs: state.songs
   });
   if (playerFinishedSongId && playerFinishedSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) playerFinishedSongId = null;
   if (lastPlaybackErrorSongId && lastPlaybackErrorSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) lastPlaybackErrorSongId = null;
@@ -1004,8 +1069,6 @@ function syncPlayer(snapshot, { reloadVideo = true } = {}) {
     total: snapshot.total,
     hasPrevious: snapshot.position > 1,
     hasNext: Boolean(nextSong),
-    nextSong,
-    nextType,
     suggestions,
     isFavorite: state.user.favorites.some((id) => id.toLowerCase() === snapshot.currentSong.id.toLowerCase()),
     isSung: state.user.sungHistory.some((entry) => entry.id.toLowerCase() === snapshot.currentSong.id.toLowerCase())
@@ -1022,9 +1085,16 @@ function syncMedleyPlayer(snapshot, { reloadVideo = true } = {}) {
   const item = medleyToPlayerItem(snapshot.currentMedley);
   if (!item) return;
   const nextMedley = snapshot.items[snapshot.currentIndex + 1] || null;
-  const suggestions = getMedleyPlayerSuggestions(snapshot.currentMedley, medleys, {
+  const medleySuggestions = getMedleyPlayerSuggestions(snapshot.currentMedley, medleys, {
     excludeIds: snapshot.items.map((medley) => medley.id)
   });
+  const songSuggestions = getSongPlayerSuggestions(recommendationSnapshot, {
+    currentId: state.user.currentSongId,
+    queuedIds: getQueueSnapshot(state).songs.map((song) => song.id),
+    catalogSongs: state.songs,
+    excludeVideoIds: medleys.map((medley) => medley.videoId)
+  });
+  const suggestions = [...medleySuggestions, ...songSuggestions].slice(0, 4);
   const panel = document.querySelector("[data-player-panel]");
   if (playerFinishedSongId && playerFinishedSongId.toLowerCase() !== item.id.toLowerCase()) playerFinishedSongId = null;
   showPlayer(item, {
@@ -1033,8 +1103,6 @@ function syncMedleyPlayer(snapshot, { reloadVideo = true } = {}) {
     total: snapshot.total,
     hasPrevious: snapshot.position > 1,
     hasNext: Boolean(nextMedley),
-    nextSong: nextMedley ? medleyToPlayerItem(nextMedley) : null,
-    nextType: "medley",
     suggestions,
     metaText: `${item.language} · ${snapshot.currentMedley.theme} · ${snapshot.currentMedley.sectionStatus === "unknown" ? "Multiple-song medley · song list not listed" : `${snapshot.currentMedley.includedSongs.length} song sections`}`
   });
@@ -1081,6 +1149,7 @@ function registerServiceWorker() {
 
 function handleYouTubeStateChange(event) {
   if (event.ended || event.state === "ended") {
+    stopPlayerTimePolling();
     handleVideoEnded(event.videoId);
     return;
   }
@@ -1091,9 +1160,19 @@ function handleYouTubeStateChange(event) {
     [YOUTUBE_PLAYER_STATE.CUED]: "cued"
   };
   if (states[event.state]) showPlayerPlaybackState(states[event.state]);
+  if (event.state === YOUTUBE_PLAYER_STATE.PLAYING) {
+    playerPlaybackHasStarted = true;
+    startPlayerTimePolling();
+  }
+  else {
+    stopPlayerTimePolling();
+    updatePlayerPreEndWindow();
+  }
 }
 
 function handleVideoEnded(videoId) {
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   const medleySnapshot = getMedleyQueueSnapshot(state.user, medleys);
   if (medleySnapshot.currentMedley?.videoId === videoId) {
     if (medleySnapshot.items[medleySnapshot.currentIndex + 1]) advanceMedleyToNext({ automatic: true });
@@ -1114,6 +1193,8 @@ function handleVideoEnded(videoId) {
 }
 
 function handleYouTubeError(details) {
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   console.warn("[KantaCue YouTube] Playback error", details.code, details.videoId);
   const medleySnapshot = getMedleyQueueSnapshot(state.user, medleys);
   if (medleySnapshot.currentMedley?.videoId === details.videoId) {
@@ -1199,6 +1280,8 @@ function rememberPlayerLauncher(launcher = null) {
 }
 
 function closePlayer({ restoreFocus = true } = {}) {
+  stopPlayerTimePolling();
+  playerPlaybackHasStarted = false;
   youtubeController?.stop();
   hidePlayer();
   if (!restoreFocus) {

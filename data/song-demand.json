@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "methodology": "Demand tiers are conservative labels derived from reported karaoke-play rankings, not general streaming popularity. very-high covers ranks 1-10, high covers ranks 11-36, and established covers later ranked entries. Source metadata is kept outside the runtime catalog; a song is never promoted because of demand alone.",
+  "methodology": "Demand tiers are conservative labels derived from reported karaoke-app play rankings or public karaoke-provider video-view rankings, not general music-streaming popularity. very-high covers ranks 1-10, high covers ranks 11-36, and established covers later ranked entries. Source metadata is kept outside the runtime catalog; a song is never promoted because of demand alone.",
   "capturedAt": "2026-09-22",
   "sources": [
     {

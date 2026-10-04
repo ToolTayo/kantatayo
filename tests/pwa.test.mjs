@@ -6,10 +6,13 @@ const manifest = JSON.parse(await readFile("manifest.webmanifest", "utf8"));
 const serviceWorker = await readFile("service-worker.js", "utf8");
 const app = await readFile("src/app.js", "utf8");
 const ui = await readFile("src/ui.js", "utf8");
+const vercel = JSON.parse(await readFile("vercel.json", "utf8"));
 
 test("manifest is installable and references existing original icons", async () => {
   assert.equal(manifest.name, "KantaCue");
   assert.equal(manifest.short_name, "KantaCue");
+  assert.equal(manifest.id, "./");
+  assert.equal(manifest.lang, "en");
   assert.equal(manifest.start_url, "./");
   assert.equal(manifest.scope, "./");
   assert.equal(manifest.display, "standalone");
@@ -27,6 +30,17 @@ test("manifest is installable and references existing original icons", async () 
       assert.deepEqual([...iconBuffer.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
     }
   }
+});
+
+test("deployment headers keep the shell first-party and explicitly allow only YouTube playback", () => {
+  const headers = vercel.headers?.[0]?.headers || [];
+  const values = new Map(headers.map((header) => [header.key, header.value]));
+  assert.equal(values.get("Referrer-Policy"), "strict-origin-when-cross-origin");
+  assert.equal(values.get("X-Content-Type-Options"), "nosniff");
+  assert.match(values.get("Content-Security-Policy") || "", /script-src 'self' https:\/\/www\.youtube\.com/);
+  assert.match(values.get("Content-Security-Policy") || "", /frame-src https:\/\/www\.youtube-nocookie\.com https:\/\/www\.youtube\.com/);
+  assert.match(values.get("Permissions-Policy") || "", /camera=\(\)/);
+  assert.match(values.get("Permissions-Policy") || "", /microphone=\(\)/);
 });
 
 test("service worker caches only the explicit first-party app shell", () => {
@@ -48,6 +62,8 @@ test("service worker caches only the explicit first-party app shell", () => {
     "./src/state.js",
     "./src/storage.js",
     "./src/ui.js",
+    "./src/player-timing.js",
+    "./src/find-song.js",
     "./src/utils.js",
     "./src/view.js",
     "./src/youtube.js",
@@ -64,14 +80,15 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=34"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=51"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=46"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=59"/);
   assert.match(serviceWorker, /"\.\/src\/catalog\.js\?v=3"/);
   assert.match(serviceWorker, /"\.\/src\/view\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=6"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=5"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=35"/);
+  assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=6"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=43"/);
   assert.match(serviceWorker, /"\.\/src\/state\.js\?v=8"/);
   assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=7"/);
   assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=7"/);
@@ -79,9 +96,12 @@ test("service worker caches only the explicit first-party app shell", () => {
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
   assert.match(serviceWorker, /"\.\/src\/install\.js"/);
   assert.match(serviceWorker, /"\.\/src\/share\.js"/);
-  assert.match(serviceWorker, /"\.\/src\/session\.js\?v=1"/);
-  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=1"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v91"/);
+  assert.match(serviceWorker, /"\.\/src\/session\.js\?v=2"/);
+  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=3"/);
+  assert.match(serviceWorker, /"\.\/src\/player-timing\.js\?v=1"/);
+  assert.match(serviceWorker, /"\.\/src\/find-song\.js\?v=2"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v106"/);
+  assert.doesNotMatch(serviceWorker, /kantatayo-stage-bg\.png/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);
   assert.match(serviceWorker, /url\.origin !== self\.location\.origin/);

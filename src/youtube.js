@@ -200,6 +200,14 @@ export function createYouTubePlayerController({
       } catch {
         return null;
       }
+    },
+    getDuration: () => {
+      try {
+        const value = player?.getDuration?.();
+        return Number.isFinite(value) && value > 0 ? value : null;
+      } catch {
+        return null;
+      }
     }
   };
 

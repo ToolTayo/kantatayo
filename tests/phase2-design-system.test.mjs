@@ -21,6 +21,9 @@ test("song and catalog grids use content-aware responsive sizing", () => {
 
 test("shared controls expose consistent touch sizing and focus styling", () => {
   assert.match(css, /\.queue-button, \.topbar-search-submit, \.chip, \.party-toggle,[\s\S]*?min-height: var\(--control-height\)/);
+  assert.match(css, /\.find-song-mode\s*\{\s*min-height:\s*44px;/);
+  assert.match(css, /\.find-song-results \.feedback-button \{ min-height: 44px; \}/);
+  assert.match(css, /@media \(min-width: 760px\) and \(max-width: 799px\)[\s\S]*?\.find-song-results \.feedback-button \{ min-height: 44px; \}/);
   assert.match(css, /button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
@@ -46,12 +49,26 @@ test("sparse shelves keep bounded card tracks and shared 16:9 media sizing", () 
   assert.match(css, /@media \(max-width: 619px\)[\s\S]*?\.song-card\s*\{[\s\S]*?max-width:\s*none/);
 });
 
+test("mobile Find My Song keeps its three choices in a bounded accessible swipe row", () => {
+  assert.match(css, /@media \(max-width: 759px\)[\s\S]*?\.find-song-panel \.find-song-results \{[\s\S]*?grid-auto-flow: column;[\s\S]*?overflow-x: auto;[\s\S]*?scroll-snap-type: x mandatory/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.find-song-panel \.find-song-results \{ scroll-snap-type: none; \}/);
+  assert.match(index, /Swipe or tab through all three picks\./);
+  assert.doesNotMatch(css, /body\s*\{[^}]*min-width:\s*320px/);
+  assert.match(css, /\.app-shell \{[^}]*overflow: clip/);
+});
+
 test("mobile player clears the tablet max-width and includes safe-area padding", () => {
   assert.match(css, /@media \(max-width: 799px\)[\s\S]*?\.player-panel \{[\s\S]*?max-width:\s*none;[\s\S]*?padding:[^;]*env\(safe-area-inset-bottom\)[^;]*;[\s\S]*?width:\s*100%;/);
 });
 
+test("stage ambience uses CSS gradients without loading a heavy background image", () => {
+  assert.match(css, /\.app-shell::before\s*\{[\s\S]*?radial-gradient\([\s\S]*?pointer-events:\s*none/);
+  assert.doesNotMatch(css, /kantatayo-stage-bg\.png/);
+  assert.doesNotMatch(serviceWorker, /kantatayo-stage-bg\.png/);
+});
+
 test("shell cache version follows the stylesheet revision", () => {
-  assert.match(index, /styles\/main\.css\?v=34/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=34"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v91"/);
+  assert.match(index, /styles\/main\.css\?v=46/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=46"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v106"/);
 });

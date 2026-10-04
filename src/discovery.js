@@ -172,11 +172,11 @@ export function getHomeShelves(songs = [], recommendations = [], userState = {},
   const madeForYou = personalized
     ? recommendationSongs.filter((song) => !recommendedIds.has(song.id.toLowerCase())).slice(0, HOME_SHELF_LIMITS.madeForYou)
     : [];
-  const usedIds = new Set([...recommendedIds, ...madeForYou.map((song) => song.id.toLowerCase())]);
+  const usedIds = new Set([...excludedIds, ...recommendedIds, ...madeForYou.map((song) => song.id.toLowerCase())]);
   const favoriteIds = new Set((userState.favorites || []).map((id) => String(id).toLowerCase()));
   const recentSongs = getRecentlySungSongs(catalog, userState.sungHistory || []).filter(isPlayableSong);
   const favorites = catalog
-    .filter((song) => favoriteIds.has(song.id.toLowerCase()) && isPlayableSong(song))
+    .filter((song) => favoriteIds.has(song.id.toLowerCase()) && !excludedIds.has(song.id.toLowerCase()) && isPlayableSong(song))
     .slice(0, HOME_SHELF_LIMITS.favorites);
   favorites.forEach((song) => usedIds.add(song.id.toLowerCase()));
 
@@ -189,7 +189,7 @@ export function getHomeShelves(songs = [], recommendations = [], userState = {},
     international: selectHomeShelf(catalog, (song) => isInternationalSong(song), HOME_SHELF_LIMITS.international, usedIds),
     easy: selectHomeShelf(catalog, (song) => song.difficulty === "easy", HOME_SHELF_LIMITS.easy, usedIds),
     duets: selectHomeShelf(catalog, (song) => song.performanceType === "duet", HOME_SHELF_LIMITS.duets, usedIds),
-    recent: recentSongs.slice(0, HOME_SHELF_LIMITS.recent)
+    recent: recentSongs.filter((song) => !excludedIds.has(song.id.toLowerCase())).slice(0, HOME_SHELF_LIMITS.recent)
   };
 
   return shelves;

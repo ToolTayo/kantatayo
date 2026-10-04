@@ -64,6 +64,32 @@ export function recordSessionCompleted(sessionState, songId, { now = Date.now() 
   return upsertSessionEvent(sessionState, "completed", "completedAt", MAX_SESSION_COMPLETED, songId, now);
 }
 
+/**
+ * Returns a compact, truthful summary of the current tab's karaoke session.
+ * It intentionally uses completed events only: opening a song is useful for
+ * resume behavior, but is not the same as singing it.
+ */
+export function getSessionSummary(songs = [], sessionState = {}) {
+  const byId = new Map((Array.isArray(songs) ? songs : [])
+    .filter((song) => song && typeof song.id === "string")
+    .map((song) => [song.id.trim().toLowerCase(), song]));
+  const completed = (Array.isArray(sessionState?.completed) ? sessionState.completed : [])
+    .map((entry) => byId.get(typeof entry?.id === "string" ? entry.id.trim().toLowerCase() : ""))
+    .filter((song) => song && typeof song.title === "string" && typeof song.artist === "string");
+  const language = mostCommon(completed.map((song) => song.language));
+  const era = mostCommon(completed.map((song) => song.era));
+  const mood = mostCommon(completed.flatMap((song) => Array.isArray(song.mood) ? song.mood : []));
+  const artist = mostCommon(completed.map((song) => song.artist));
+  return {
+    completedCount: completed.length,
+    language: language === "Filipino" ? "OPM" : language,
+    era,
+    mood: mood ? titleCase(mood) : "",
+    topArtist: artist,
+    descriptors: [language === "Filipino" ? "OPM" : language, era, mood ? titleCase(mood) : ""].filter(Boolean).slice(0, 2)
+  };
+}
+
 export function pruneSessionState(sessionState, songs = []) {
   if (!sessionState || !Array.isArray(songs)) return false;
   const playableIds = new Set(
@@ -127,4 +153,18 @@ function getSessionStorage() {
   } catch {
     return null;
   }
+}
+
+function mostCommon(values) {
+  const counts = new Map();
+  for (const value of values) {
+    if (typeof value !== "string" || !value.trim()) continue;
+    const normalized = value.trim();
+    counts.set(normalized, (counts.get(normalized) || 0) + 1);
+  }
+  return [...counts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))[0]?.[0] || "";
+}
+
+function titleCase(value) {
+  return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

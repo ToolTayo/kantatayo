@@ -1,6 +1,8 @@
 {
   "name": "KantaCue",
   "short_name": "KantaCue",
+  "id": "./",
+  "lang": "en",
   "description": "Discover your next karaoke song and keep your queue moving.",
   "start_url": "./",
   "scope": "./",

@@ -1,12 +1,14 @@
 import { isValidYouTubeVideoId } from "./youtube.js";
 import { isPlayableMedley } from "./medleys.js";
 
-export const PLAYER_SUGGESTION_LIMIT = 3;
+export const PLAYER_SUGGESTION_LIMIT = 4;
 
 /**
  * Keep player suggestions as a presentation-level slice of the existing
  * recommendation snapshot. The scoring, preference signals, and exclusions
- * remain owned by recommendations.js.
+ * remain owned by recommendations.js. When catalogSongs is supplied, the
+ * returned object is always the canonical validated catalog record rather
+ * than a stale snapshot copy.
  */
 export function getSongPlayerSuggestions(recommendations = [], options = {}) {
   const limit = normalizeLimit(options.limit);
@@ -15,15 +17,24 @@ export function getSongPlayerSuggestions(recommendations = [], options = {}) {
     ...(Array.isArray(options.queuedIds) ? options.queuedIds : []),
     ...(Array.isArray(options.excludeIds) ? options.excludeIds : [])
   ]);
+  const excludedVideoIds = toKeySet(options.excludeVideoIds);
+  const hasCatalog = Array.isArray(options.catalogSongs);
+  const catalogById = hasCatalog
+    ? new Map(options.catalogSongs
+      .filter((song) => song && typeof song.id === "string")
+      .map((song) => [normalizeKey(song.id), song]))
+    : null;
   const seenIds = new Set();
   const seenVideoIds = new Set();
   const suggestions = [];
 
   for (const recommendation of Array.isArray(recommendations) ? recommendations : []) {
-    const song = recommendation?.song;
+    const candidateSong = recommendation?.song;
+    const candidateId = normalizeKey(candidateSong?.id);
+    const song = hasCatalog ? catalogById.get(candidateId) : candidateSong;
     const id = normalizeKey(song?.id);
     const videoId = normalizeKey(song?.youtubeVideoId);
-    if (!id || excludedIds.has(id) || !isValidYouTubeVideoId(song?.youtubeVideoId)) continue;
+    if (!id || !song || excludedIds.has(id) || excludedVideoIds.has(videoId) || !isValidYouTubeVideoId(song.youtubeVideoId)) continue;
     if (seenIds.has(id) || seenVideoIds.has(videoId)) continue;
     seenIds.add(id);
     seenVideoIds.add(videoId);
