@@ -558,24 +558,37 @@ export function renderQueue(queueSnapshot, partySession = {}, medleySnapshot = {
 export function showPlayer(song, metadata = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (!panel) return;
+  const preservePlayback = Boolean(metadata.preservePlayback && !panel.hidden);
+  const preEndStatus = panel.querySelector("[data-player-pre-end-status]");
+  const preEndWasVisible = Boolean(preEndStatus && !preEndStatus.hidden);
   panel.hidden = false;
-  setPlayerFinishedLayout(panel, false);
-  setPlayerEndScreenVisible(panel, false);
+  if (!preservePlayback) {
+    setPlayerFinishedLayout(panel, false);
+    setPlayerEndScreenVisible(panel, false);
+  }
   setPlayerExpanded(panel, panel.classList.contains("is-expanded"));
   panel.querySelector("[data-player-title]").textContent = song.title;
   panel.querySelector("[data-player-artist]").textContent = song.artist;
   panel.querySelector("[data-player-position]").textContent = metadata.position && metadata.total ? `Song ${metadata.position} of ${metadata.total}` : "Current karaoke song";
   panel.dataset.contentType = metadata.contentType || song.contentType || "song";
   panel.querySelector("[data-player-meta]").textContent = metadata.metaText || formatSongMeta(song).join(" · ");
-  panel.querySelector("[data-player-status]").textContent = "Ready when you are.";
-  panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
-  updateMiniPlayer(song);
-  setPlayerFeedback(false);
+  if (!preservePlayback) {
+    panel.querySelector("[data-player-status]").textContent = "Ready when you are.";
+    panel.querySelector("[data-player-note]").textContent = "Playback is provided by YouTube when a verified video is available.";
+    updateMiniPlayer(song);
+    setPlayerFeedback(false);
+  }
   updatePlayerActions(song, { favorites: metadata.isFavorite ? [song.id] : [], sungHistory: metadata.isSung ? [{ id: song.id }] : [] });
   renderPlayerSuggestions(metadata.suggestions, metadata.contentType || song.contentType || "song");
-  setPlayerPreEndVisible(false);
-  setPlayerCompletion(false);
-  setPlayerEmbedVisible(panel, false);
+  if (preservePlayback) {
+    setPlayerPreEndVisible(preEndWasVisible);
+    const endScreen = panel.querySelector("[data-player-end-screen]");
+    if (endScreen && !endScreen.hidden) renderPlayerEndScreen(metadata.nextSong || null, metadata.nextType || "recommended", metadata.contentType || song.contentType || "song");
+  } else {
+    setPlayerPreEndVisible(false);
+    setPlayerCompletion(false);
+    setPlayerEmbedVisible(panel, false);
+  }
   panel.querySelector('[data-action="player-prev"]').disabled = metadata.hasPrevious === false;
   panel.querySelector('[data-action="player-next"]').disabled = metadata.hasNext === false;
 }

@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=44";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=45";
 import { loadCatalog } from "./catalog.js?v=3";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
@@ -1065,6 +1065,9 @@ function syncPlayer(snapshot, { reloadVideo = true } = {}) {
   if (playerFinishedSongId && playerFinishedSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) playerFinishedSongId = null;
   if (lastPlaybackErrorSongId && lastPlaybackErrorSongId.toLowerCase() !== snapshot.currentSong.id.toLowerCase()) lastPlaybackErrorSongId = null;
   showPlayer(snapshot.currentSong, {
+    preservePlayback: !reloadVideo,
+    nextSong,
+    nextType,
     position: snapshot.position,
     total: snapshot.total,
     hasPrevious: snapshot.position > 1,
@@ -1098,6 +1101,9 @@ function syncMedleyPlayer(snapshot, { reloadVideo = true } = {}) {
   const panel = document.querySelector("[data-player-panel]");
   if (playerFinishedSongId && playerFinishedSongId.toLowerCase() !== item.id.toLowerCase()) playerFinishedSongId = null;
   showPlayer(item, {
+    preservePlayback: !reloadVideo,
+    nextSong: nextMedley ? medleyToPlayerItem(nextMedley) : null,
+    nextType: nextMedley ? "queued" : "recommended",
     contentType: "medley",
     position: snapshot.position,
     total: snapshot.total,

@@ -41,6 +41,19 @@ test("video completion automatically advances queued songs but keeps recommendat
   assert.match(ui, /Choose another KantaCue pick or replay this performance/);
 });
 
+test("queue reorder refreshes queue context without hiding or resetting active playback", () => {
+  const showPlayer = ui.match(/export function showPlayer\(song, metadata = \{\}\) \{([\s\S]*?)\n\}\n\nexport function showPlayerLoading/)?.[1] || "";
+  const preserveBranch = showPlayer.match(/if \(preservePlayback\) \{([\s\S]*?)\n  \} else \{/)?.[1] || "";
+  const resetBranch = showPlayer.match(/\n  \} else \{([\s\S]*?)\n  \}\n  panel\.querySelector\('\[data-action="player-prev"\]'/)?.[1] || "";
+
+  assert.match(app, /function reorderQueue\([\s\S]*?syncPlayer\(getQueueSnapshot\(state\), \{ reloadVideo: false \}\)/);
+  assert.match(app, /preservePlayback: !reloadVideo/);
+  assert.match(preserveBranch, /setPlayerPreEndVisible\(preEndWasVisible\)/);
+  assert.doesNotMatch(preserveBranch, /setPlayerEmbedVisible\(panel, false\)|setPlayerFeedback\(false\)|setPlayerCompletion\(false\)/);
+  assert.match(resetBranch, /setPlayerEmbedVisible\(panel, false\)/);
+  assert.match(resetBranch, /setPlayerCompletion\(false\)/);
+});
+
 test("Sang It uses durable history and the existing duplicate guard", () => {
   const state = createDefaultUserState();
   const first = markSung(state, "sample-001", { now: 10_000 });
