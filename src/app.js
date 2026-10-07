@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=45";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=46";
 import { loadCatalog } from "./catalog.js?v=3";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
@@ -10,7 +10,7 @@ import { containFocus } from "./focus.js";
 import { getDailyChallenge } from "./engagement.js?v=6";
 import { getFeaturedCollectionId } from "./collections.js?v=1";
 import { createInstallController } from "./install.js";
-import { parseSongShareId, shareSong } from "./share.js";
+import { parseMedleyShareId, parseSongShareId, shareMedley, shareSong } from "./share.js";
 import { createDefaultSessionState, loadSessionState, persistSessionState, pruneSessionState, recordSessionCompleted, recordSessionOpened } from "./session.js?v=2";
 import { getMedleyById, loadMedleys, medleyToPlayerItem, reconcileMedleyState } from "./medleys.js?v=7";
 import { getMedleyPlayerSuggestions, getSongPlayerSuggestions } from "./player-suggestions.js?v=3";
@@ -97,7 +97,7 @@ async function startApp() {
     render();
     bindEvents();
     registerServiceWorker();
-    handleIncomingSongLink();
+    handleIncomingSharedLink();
   } catch (error) {
     console.error(error);
     document.querySelector("[data-catalog-loading]")?.remove();
@@ -230,6 +230,11 @@ function bindEvents() {
     if (action === "share-song") {
       const song = state.songs.find((item) => item.id === actionTarget.dataset.songId);
       void shareCurrentSong(song, actionTarget);
+      return;
+    }
+    if (action === "share-medley") {
+      const medley = getMedleyById(medleys, actionTarget.dataset.medleyId);
+      void shareCurrentMedley(medley, actionTarget);
       return;
     }
     if (action === "clear-search") {
@@ -499,6 +504,14 @@ function getLegacyNavView(target) {
   return "";
 }
 
+function handleIncomingSharedLink() {
+  if (parseSongShareId(window.location)) {
+    handleIncomingSongLink();
+    return;
+  }
+  handleIncomingMedleyLink();
+}
+
 function handleIncomingSongLink() {
   const sharedId = parseSongShareId(window.location);
   if (!sharedId) return;
@@ -523,6 +536,36 @@ function handleIncomingSongLink() {
 function removeSongShareParam(view) {
   const url = new URL(window.location.href);
   url.searchParams.delete("song");
+  url.searchParams.delete("medley");
+  url.hash = viewHash(view);
+  window.history.replaceState(null, "", url.toString());
+  setViewHash(view);
+}
+
+function handleIncomingMedleyLink() {
+  const sharedId = parseMedleyShareId(window.location);
+  if (!sharedId) return;
+  const medley = medleys.find((item) => item.id.toLowerCase() === sharedId.toLowerCase());
+  if (!medley) {
+    removeMedleyShareParam(currentView);
+    showToast("That shared collection is no longer available.");
+    return;
+  }
+  currentView = "collections";
+  removeMedleyShareParam(currentView);
+  render();
+  window.requestAnimationFrame?.(() => {
+    const playButton = Array.from(document.querySelectorAll('[data-action="play-medley"]'))
+      .find((button) => button.dataset.medleyId?.toLowerCase() === medley.id.toLowerCase());
+    playButton?.focus();
+  });
+  showToast(`${medley.title} is ready to play`);
+}
+
+function removeMedleyShareParam(view) {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("medley");
+  url.searchParams.delete("song");
   url.hash = viewHash(view);
   window.history.replaceState(null, "", url.toString());
   setViewHash(view);
@@ -539,6 +582,19 @@ async function shareCurrentSong(song, button) {
   else if (result.status === "cancelled") showToast("Share cancelled");
   else if (result.status === "unavailable") showToast("Sharing is not available on this browser");
   else if (result.status === "failed") showToast("Could not copy the song link");
+}
+
+async function shareCurrentMedley(medley, button) {
+  if (!medley) return;
+  button.disabled = true;
+  const result = await shareMedley(medley, { navigatorRef: window.navigator, locationRef: window.location });
+  button.disabled = false;
+  button.focus();
+  if (result.status === "shared") showToast("Share sheet opened");
+  else if (result.status === "copied") showToast("KantaCue medley link copied");
+  else if (result.status === "cancelled") showToast("Share cancelled");
+  else if (result.status === "unavailable") showToast("Sharing is not available on this browser");
+  else if (result.status === "failed") showToast("Could not copy the medley link");
 }
 
 function handleSongAction(action, song, { fromPlayer = false } = {}) {

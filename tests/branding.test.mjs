@@ -17,7 +17,7 @@ test("KantaCue uses the original A2 soundmark in both navigation brands", () => 
   assert.match(html, /Kanta<span>Cue<\/span>/);
   assert.doesNotMatch(html, /KantaTayo|KANTA TAYO/i);
   assert.doesNotMatch(manifest, /KantaTayo|KANTA TAYO/i);
-  assert.doesNotMatch(html, /https?:\/\/[^"']+\.(png|jpg|svg)/i);
+  assert.doesNotMatch(html, /https?:\/\/(?!kantacue\.vercel\.app\/)[^"']+\.(png|jpg|svg)/i);
 });
 
 test("KantaCue exposes accurate production share metadata", () => {

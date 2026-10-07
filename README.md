@@ -8,11 +8,13 @@ YouTube IDs must be verified separately before they are added to the production 
 
 The production sample catalog contains 1,067 records; 1,000 currently retain runtime-verified promoted IDs and 67 remain explicit `youtubeVideoId: null` records pending safe replacement. Defensive null-ID handling is part of normal catalog maintenance. Technical player testing should use a clearly separate development-only ID, never a production karaoke catalog entry.
 
-## Sharing, installation, and local popularity
+## Discoverability, sharing, installation, and local popularity
 
-The player’s Share song action creates a same-origin KantaCue deep link such as `?song=sample-029#top`. It uses the browser Web Share API when available and copies the link to the clipboard otherwise. Shared links contain only the stable internal song ID, never a YouTube video ID. A valid link surfaces the song without counting it as played until the user explicitly opens it.
+The homepage is the only indexable public route for now. `robots.txt` points crawlers to a one-URL sitemap; app hashes and user-specific state are not published as SEO landing pages. The canonical homepage and social metadata describe supported YouTube playback accurately and use KantaCue’s existing first-party app icon as a preview image. No ratings, lyrics, or popularity claims are synthesized for structured data.
 
-KantaCue captures `beforeinstallprompt` only when the browser exposes an actionable install flow. The Install app action stays hidden in browsers that cannot install the PWA and in standalone mode; installation is never triggered automatically. iOS-specific instructions are intentionally omitted because browser detection is not reliable enough to present them truthfully.
+The player’s Share song action creates a same-origin KantaCue deep link such as `?song=sample-029#top`. Medley cards can also be shared as `?medley=<stable-id>#collections`. Both use the browser Web Share API when available and copy the link to the clipboard otherwise. Shared links contain only a stable internal content ID, never a YouTube video ID or local queue/history/preferences. A valid song link surfaces the song without counting it as played until the user explicitly opens it; a medley link opens Collections and focuses its Play action.
+
+KantaCue captures `beforeinstallprompt` only when the browser exposes an actionable install flow. The Install app action stays hidden in browsers that cannot install the PWA and in standalone mode; installation is never triggered automatically. On supported iPhone/iPad browsers, the action provides the manual Share → Add to Home Screen path.
 
 The public brand is KantaCue, but the existing `kantatayo:user-state` localStorage key is intentionally retained for backward compatibility. Existing user queues, favorites, history, preferences, party sessions, and other local data must remain readable after the rebrand. The service worker now uses a KantaCue cache namespace and removes prior KantaTayo app-shell caches during activation; the repository directory and the stage-background asset filename remain unchanged for compatibility.
 

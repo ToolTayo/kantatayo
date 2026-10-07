@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { createInstallController, isIOSDevice, isStandaloneDisplay } from "../src/install.js";
-import { createSongShareUrl, parseSongShareId, shareSong } from "../src/share.js";
+import { createMedleyShareUrl, createSongShareUrl, parseMedleyShareId, parseSongShareId, shareMedley, shareSong } from "../src/share.js";
 
 const song = { id: "sample-029", title: "Sa Aking Puso", artist: "Kaye Cal" };
+const medley = { id: "medley-opm-freestyle-ibarra-001", title: "Karaoke - OPM Medley - Freestyle", provider: "Ibarra Music", videoId: "jfBGyW_JYp8" };
 
 test("share URLs use a stable KantaCue song ID and never expose the video ID", () => {
   const url = createSongShareUrl(song.id, { href: "https://kantacue.example/#top" });
@@ -16,6 +17,34 @@ test("share URLs use a stable KantaCue song ID and never expose the video ID", (
 test("malformed deep-link values are ignored while unknown IDs remain safely identifiable", () => {
   assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=not%20safe#top" }), "");
   assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=missing-id#top" }), "missing-id");
+});
+
+test("medley deep links contain only the stable collection ID and open Collections", () => {
+  const url = createMedleyShareUrl(medley.id, { href: "https://kantacue.example/#top" });
+  assert.equal(url, "https://kantacue.example/?medley=medley-opm-freestyle-ibarra-001#collections");
+  assert.equal(parseMedleyShareId({ href: url }), medley.id);
+  assert.doesNotMatch(url, /jfBGyW_JYp8/);
+  assert.equal(createMedleyShareUrl("medley&video=secret", { href: "https://kantacue.example/" }), "");
+  assert.equal(parseMedleyShareId({ href: "https://kantacue.example/?medley=bad%20id#collections" }), "");
+});
+
+test("medley sharing uses native share and safe clipboard fallback", async () => {
+  let nativeData;
+  const native = await shareMedley(medley, {
+    navigatorRef: { share: async (data) => { nativeData = data; } },
+    locationRef: { href: "https://kantacue.example/#top" }
+  });
+  assert.equal(native.status, "shared");
+  assert.equal(nativeData.url, "https://kantacue.example/?medley=medley-opm-freestyle-ibarra-001#collections");
+  assert.match(nativeData.text, /karaoke medley from Ibarra Music/);
+
+  let copied = "";
+  const fallback = await shareMedley(medley, {
+    navigatorRef: { clipboard: { writeText: async (value) => { copied = value; } } },
+    locationRef: { href: "https://kantacue.example/#top" }
+  });
+  assert.equal(fallback.status, "copied");
+  assert.equal(copied, fallback.url);
 });
 
 test("native share is used when available and cancellation is quiet", async () => {
@@ -118,4 +147,14 @@ test("deep-link parsing is separate from playback engagement recording", async (
   assert.equal(parseSongShareId({ href: "https://kantacue.example/?song=sample-029#discover" }), "sample-029");
   assert.match(handler, /if \(!song\)/);
   assert.doesNotMatch(handler, /recordSongPlayed/);
+});
+
+test("medley deep links validate against loaded collections and focus Play without auto-starting", async () => {
+  const app = await readFile(new URL("../src/app.js", import.meta.url), "utf8");
+  const handler = app.match(/function handleIncomingMedleyLink\(\)[\s\S]*?\n}\n\nfunction removeMedleyShareParam/)?.[0] || "";
+  assert.match(app, /function handleIncomingSharedLink\(\)[\s\S]*?parseSongShareId[\s\S]*?handleIncomingMedleyLink\(\)/);
+  assert.match(handler, /medleys\.find/);
+  assert.match(handler, /currentView = "collections"/);
+  assert.match(handler, /playButton\?\.focus\(\)/);
+  assert.doesNotMatch(handler, /startMedley\(/);
 });

@@ -105,7 +105,7 @@ export function renderMedleyCard(medley) {
     <div class="song-card-body"><div class="song-card-top"><div><p class="eyebrow medley-card-eyebrow">Karaoke medley</p><h4>${title}</h4><p class="song-artist">${provider}</p></div>${countMarkup}</div>
       <div class="song-meta"><span>${escapeHtml(medley.language)}</span><span>${escapeHtml(medley.theme)}</span></div>
       <p class="medley-song-list">${sectionMarkup}</p>
-      <div class="song-card-actions"><button class="play-button" type="button" data-action="play-medley" data-medley-id="${escapeHtml(medley.id)}" aria-label="Play ${title}">Play medley</button><button class="add-button" type="button" data-action="add-medley-queue" data-medley-id="${escapeHtml(medley.id)}" aria-label="Add ${title} to medley queue">+ Queue</button></div>
+      <div class="song-card-actions"><button class="play-button" type="button" data-action="play-medley" data-medley-id="${escapeHtml(medley.id)}" aria-label="Play ${title}">Play medley</button><button class="add-button" type="button" data-action="add-medley-queue" data-medley-id="${escapeHtml(medley.id)}" aria-label="Add ${title} to medley queue">+ Queue</button><button class="add-button" type="button" data-action="share-medley" data-medley-id="${escapeHtml(medley.id)}" aria-label="Share ${title}">Share</button></div>
     </div>
   </article>`;
 }
