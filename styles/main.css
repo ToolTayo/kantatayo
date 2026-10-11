@@ -928,7 +928,7 @@ body { line-height: 1.45; }
 .player-controls button { min-height: var(--control-height); }
 
 @media (min-width: 800px) {
-  .player-panel.is-expanded { bottom: 1rem; left: calc(15rem + 1.5rem); max-width: none; right: 1.5rem; }
+  .player-panel.is-expanded { bottom: 1rem; left: calc(15rem + 1.5rem); max-width: none; right: 1.5rem; width: auto; }
 }
 
 @media (max-width: 619px) {
@@ -1832,6 +1832,7 @@ body { line-height: 1.45; }
 .medley-song-list { color: var(--text-muted); font-size: .67rem; line-height: 1.5; margin: .75rem 0 0; }
 .medley-song-list strong { color: var(--text-secondary); display: block; font-size: .65rem; margin-bottom: .15rem; text-transform: uppercase; letter-spacing: .08em; }
 .medley-song-list span { color: var(--text-secondary); }
+.medley-provisional-note { border-left: 2px solid var(--brand-lime); color: var(--text-muted); font-size: .68rem; line-height: 1.45; margin: .65rem 0 0; padding-left: .55rem; }
 .medley-queue-item { border-left-color: rgba(163, 242, 99, .55); }
 .queue-subheading { border-top: 1px solid var(--border-subtle); color: var(--brand-lime); font-size: .62rem; font-weight: 800; letter-spacing: .12em; padding: .9rem 0 .25rem; text-transform: uppercase; }
 
@@ -1996,4 +1997,45 @@ body { line-height: 1.45; }
   .search-clear {
     transition: none !important;
   }
+}
+/* Focused product browsing: shared controls, no new visual language or motion. */
+.home-start-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-top: 1.2rem; }
+.home-start-actions a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.home-start-actions .play-button { display: inline-flex; align-items: center; gap: 1.5rem; }
+.home-catalog-summary { color: var(--text-muted); font-size: .8rem; line-height: 1.6; margin: .85rem 0 0; }
+.home-start-actions .text-button { min-height: 2.75rem; padding: .5rem; }
+.home-utility-grid:has(.local-stats-card[hidden]) { grid-template-columns: minmax(0, 42rem); }
+.collections-destination .collection-landing-card { padding: .85rem 1rem; margin-bottom: 1rem; }
+.collections-destination .collection-status-note { display: none; }
+.browse-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: .8rem; margin: 1.25rem 0 .9rem; padding: 1rem; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-surface-1); }
+.browse-toolbar[hidden] { display: none; }
+.browse-toolbar label { display: grid; gap: .45rem; flex: 1 1 11rem; min-width: 0; }
+.browse-toolbar .browse-search { flex: 2 1 16rem; }
+.browse-toolbar label > span { color: var(--text-secondary); font-size: .8rem; font-weight: 600; }
+.browse-toolbar input, .browse-toolbar select { width: 100%; min-width: 0; min-height: 2.75rem; padding: .6rem .75rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--bg-base); color: var(--text-primary); font: inherit; font-size: 1rem; }
+.browse-toolbar input:focus-visible, .browse-toolbar select:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.browse-toolbar .add-button { min-height: 2.75rem; }
+.browse-categories, .active-filter-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0 1.25rem; }
+.browse-categories .chip, .active-filter-list .chip { min-height: 2.75rem; }
+.active-filter-list[hidden], .browse-note[hidden] { display: none; }
+.active-filter-list .chip { border-color: rgba(163, 242, 99, .35); color: var(--brand-lime); gap: .75rem; display: inline-flex; align-items: center; }
+.browse-note { color: var(--text-secondary); font-size: .8rem; line-height: 1.6; margin: 0 0 1rem; }
+.add-button.is-queued { background: var(--brand-lime-soft); color: var(--brand-lime); border-color: rgba(163, 242, 99, .25); }
+.medley-card .medley-provisional-note { font-size: .78rem; line-height: 1.55; }
+/* Offset hash destinations beneath the persistent header, including shared links. */
+.app-main, .content-area, .song-section, .party-panel { scroll-margin-top: 6rem; }
+@media (max-width: 719px) {
+  .app-main, .content-area, .song-section, .party-panel { scroll-margin-top: 10rem; }
+  .home-start-actions { gap: .6rem; }
+  .home-start-actions .play-button, .home-start-actions .add-button { flex: 1 1 auto; }
+  .browse-toolbar { padding: .8rem; gap: .7rem; }
+  .browse-toolbar .browse-search { flex-basis: 100%; }
+  .browse-toolbar label { flex: 1 1 calc(50% - .7rem); }
+  .library-toolbar > button { width: 100%; }
+  .collections-destination .collection-landing-card .utility-card-status { display: none; }
+  .home-view .intro-heading .discovery-tools { display: none; }
+  .daily-challenge-layout { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); align-items: start; gap: .75rem; }
+  .daily-challenge-copy .eyebrow { letter-spacing: .12em; font-size: .65rem; }
+  .daily-challenge-copy .play-button { width: 100%; white-space: normal; min-height: 2.75rem; }
+  .daily-challenge-card { padding: .85rem; }
 }

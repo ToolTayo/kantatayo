@@ -1,0 +1,251 @@
+{
+  "reportVersion": 5,
+  "generatedAt": "2026-10-08",
+  "project": "KantaCue Collections V2 medley expansion Phase 2",
+  "decision": "NO PRODUCTION MEDLEY CHANGES — continue human quality review of the technical-pass pool",
+  "executiveSummary": {
+    "researchUniverse": 85,
+    "runtimeTestedUniqueCandidates": 51,
+    "runtimePassTechnicalOnly": 22,
+    "error150": 28,
+    "inconclusive": 1,
+    "notRuntimeTestedOrDeferred": 34,
+    "productionMedleysAdded": 0,
+    "productionMedleyCount": 11,
+    "reason": "All 22 runtime passes still lack reliable human confirmation of audio, key, vocals, lyric timing, transitions, completeness, and presentation. They remain C-tier review candidates; runtime playback alone is not enough for S/A/B or production inclusion."
+  },
+  "baseline": {
+    "primarySongs": 1067,
+    "playable": 1000,
+    "unavailable": 67,
+    "productionMedleys": 11,
+    "sample029": "QBb9wO3Bj0k",
+    "primaryCatalogSemanticSha256": "547796d68ab2b7d09c3bddb8fb3fbd0285323fd913d2e070357352eff132e5b7",
+    "primaryCatalogModified": false,
+    "productionMedleysModified": false
+  },
+  "reconciledUniverse": {
+    "priorReport": "tools/medley-expansion-research-v4.json",
+    "priorReportedDistinctCandidates": 69,
+    "newDistinctExactVideoIdsInPostV4Manifests": 16,
+    "currentReportedDistinctCandidates": 85,
+    "calculation": "69 prior distinct candidates + 16 new exact video IDs first appearing in persisted v6-v11 candidate manifests = 85. The v5 Donna Cruz and Men Oppose IDs were already in the prior 69; their runtime state was corrected from pending to PASS using tools/medley-expansion-runtime-v5.json.",
+    "runtimePassesInPriorReport": 12,
+    "additionalTechnicalPassesSincePriorReport": 10,
+    "sourceOfTruth": [
+      "tools/medley-expansion-research-v2.json",
+      "tools/medley-expansion-research-v3.json",
+      "tools/medley-expansion-research-v4.json",
+      "tools/medley-expansion-runtime-ledger.json",
+      "tools/medley-expansion-runtime-v3.json",
+      "tools/medley-expansion-runtime-v4.json",
+      "tools/medley-expansion-runtime-v5.json",
+      "tools/medley-expansion-runtime-v6.json",
+      "tools/medley-expansion-runtime-v7.json",
+      "tools/medley-expansion-runtime-v8.json",
+      "tools/medley-expansion-runtime-v10.json",
+      "tools/medley-expansion-runtime-v11.json",
+      "tools/medley-expansion-runtime-v13.json"
+    ]
+  },
+  "verifier": {
+    "rootCause": "The audit page treated a long initial YouTube BUFFERING state as a probable autoplay-policy failure after a 12-second grace period. In v9 sample-029 reached onReady and buffering, but PLAYING arrived only after the cutoff in two independent runs. The third run did play and passed. This made the control gate too sensitive to delayed startup, not evidence that candidate videos were playable.",
+    "correction": [
+      "Classify startup from the observed official player state: buffering, paused, ended, or not-started; do not infer autoplay policy from the absence of PLAYING alone.",
+      "Increase startup grace from 12 to 20 seconds and default per-song timeout from 45 to 60 seconds.",
+      "Keep the PASS rule unchanged: matching video identity, onReady, PLAYING, and at least 15 seconds of sustained currentTime progression with qualifying advancing samples. READY or PLAYING without progression is never PASS."
+    ],
+    "proof": {
+      "focusedRegressionTest": "tests/playability-audit.test.mjs covers buffering not being mislabeled as autoplay failure.",
+      "validCandidateBatches": ["v3", "v4", "v5", "v6", "v7", "v8", "v9 rerun as runtime-v10", "v10 as runtime-v11", "v11 rerun as runtime-v13"],
+      "controlsAcrossValidCandidateBatches": "27/27 independent sample-029 runs passed the three-run gate.",
+      "allPersistedControlRuns": "31 PASS / 2 CONTROL FAILURE across 33 recorded control runs; the two failures are the original v9 short-grace attempts."
+    },
+    "invalidAttemptsPreserved": [
+      {
+        "artifact": "tools/medley-expansion-runtime-v9.json",
+        "reason": "Two controls did not reach PLAYING within the old 12-second startup grace; the batch stopped before candidate tests."
+      },
+      {
+        "artifact": "tools/medley-expansion-runtime-v12.json",
+        "reason": "The runner had the candidate manifest, but its local browser page was not given --page-manifest and therefore showed the default production report. Candidate rows were absent; no candidate result is valid. The corrected v13 run loaded the candidate manifest and tested both candidates."
+      }
+    ]
+  },
+  "runtimeResults": {
+    "uniqueCandidatesTested": 51,
+    "PASS": 22,
+    "ERROR_150": 28,
+    "INCONCLUSIVE": 1,
+    "ERROR_100": 0,
+    "ERROR_101": 0,
+    "ERROR_153": 0,
+    "timeouts": 0,
+    "otherErrors": 0,
+    "environmentFailuresDuringValidRuns": 0,
+    "productionAdditions": 0,
+    "passDefinition": "Actual KantaCue player/controller, loaded identity matched, onReady, PLAYING, sustained currentTime advancement >=15 seconds."
+  },
+  "latestBatch": {
+    "manifest": "tools/medley-expansion-runtime-manifest-v11.json",
+    "runtimeReport": "tools/medley-expansion-runtime-v13.json",
+    "sample029Control": "3/3 independent sustained-playback passes",
+    "candidates": [
+      {
+        "videoId": "QR5ymy9v-o8",
+        "title": "Celine Dion (Medley Karaoke)",
+        "provider": "LoveNotes Medley",
+        "publicViewsSnapshot": 2465985,
+        "publishedAt": "2025-11-09",
+        "runtime": "ERROR 150",
+        "decision": "Reject; do not retest or attempt to bypass embedding restrictions."
+      },
+      {
+        "videoId": "pXe4l-M1MkM",
+        "title": "Queen - The Queen Medley 3 - Karaoke Version from Zoom Karaoke",
+        "provider": "Zoom Karaoke Official",
+        "publicViewsSnapshot": 61983,
+        "publishedAt": "2020-10-09",
+        "runtime": "PASS — 17 samples over 15.006 seconds, 15 seconds of currentTime advancement",
+        "decision": "C-tier manual review candidate only. The supplier/title are corroborated by public catalog evidence, but the YouTube video's presentation/audio/arrangement remain unlistened and sectionStatus stays unknown."
+      }
+    ]
+  },
+  "additionalTechnicalPasses": [
+    {"title":"Karaoke - Donna Cruz Medley","artist":"Donna Cruz","provider":"Ibarra Music","videoId":"-IVoCF2v2KI","publicViewsSnapshot":3880997,"publishedAt":"2021-02-23","sections":["Rain","Only Me and You","Kapag Tumibok ang Puso"],"runtimeReport":"tools/medley-expansion-runtime-v5.json","qualityTier":"C — listen/presentation review required","note":"The v4 narrative labeled this pending because its original runner invocation failed; the preserved v5 report shows the real 3/3 control gate and candidate PASS."},
+    {"title":"Men Oppose Medley","artist":"Men Oppose","provider":"OPM Karaoke Cover","videoId":"0M6EJNL3hTs","publicViewsSnapshot":2206429,"publishedAt":"2023-12-19","sections":["Kasalanan Ba","Pag-Ibig Ko Sayo’y Di Magbabago","Sabi Mo Ako Lamang","Sabihin Mong Lagi"],"runtimeReport":"tools/medley-expansion-runtime-v5.json","qualityTier":"C — listen/presentation review required","note":"The v4 narrative labeled this pending because its original runner invocation failed; the preserved v5 report shows the real 3/3 control gate and candidate PASS."},
+    {"title":"April Boy Regino Medley - Karaoke","artist":"April Boy Regino","provider":"ConesStudio Karaoke","videoId":"-D1irYqKIog","publicViewsSnapshot":6596599,"publishedAt":"2024-10-19","sections":[],"runtimeReport":"tools/medley-expansion-runtime-v6.json","qualityTier":"C — listen/presentation and track-overlap review required","note":"A second April Boy medley passed technically, but it must be compared against the 16.0M-view Agaw Music version; do not count both as distinct value without checking their section/experience overlap."},
+    {"title":"Bee Gees Medley Karaoke Version","artist":"Bee Gees","provider":"Singing Bees","videoId":"rewX8w9pw9E","publicViewsSnapshot":3656429,"publishedAt":"2020-08-17","sections":[],"runtimeReport":"tools/medley-expansion-runtime-v6.json","qualityTier":"C — listen/presentation review required"},
+    {"title":"Regine Velasquez Medley (On The Wings Of Love, Kung Maibabalik Ko Lang)","artist":"Regine Velasquez","provider":"Amaze Sing Karaoke Channel","videoId":"pZP5_icIQas","publicViewsSnapshot":253535,"publishedAt":"2025-11-24","sections":[],"runtimeReport":"tools/medley-expansion-runtime-v7.json","qualityTier":"C — listen/presentation review required"},
+    {"title":"Karaoke - Classic OPM Love Songs Medley","artist":"Multiple OPM artists","provider":"Ibarra Music","videoId":"I8ruYoUTetw","publicViewsSnapshot":12635679,"publishedAt":"2020-02-01","sections":["Don’t Know What To Do, Don’t Know What To Say — Ric Segreto","Getting to Know Each Other — Ariel Rivera","Closer You and I — Gino Padilla"],"runtimeReport":"tools/medley-expansion-runtime-v10.json","qualityTier":"C — listen/presentation review required"},
+    {"title":"Parokya ni Edgar Medley - karaoke (Aggar Karaoke version)","artist":"Parokya ni Edgar","provider":"Aggar Karaoke tv","videoId":"ENw6M-yV6Uo","publicViewsSnapshot":37082,"publishedAt":"2024-06-10","sections":["Buloy","Para Sayo","Your Song","Alumni Homecoming","One Hit Combo"],"runtimeReport":"tools/medley-expansion-runtime-v10.json","qualityTier":"C — listen/presentation review required","note":"Strong artist fit and technical pass, but the captured public reach is comparatively small; popularity does not support high-demand positioning."},
+    {"title":"Celine Dion Medley Karaoke","artist":"Celine Dion","provider":"TVMO Channel","videoId":"8ToBsPKxlko","publicViewsSnapshot":6760320,"publishedAt":"2020-08-04","sections":["It’s All Coming Back to Me Now","Because You Love(d) Me","To Love You More"],"runtimeReport":"tools/medley-expansion-runtime-v11.json","qualityTier":"C — listen/presentation review required"},
+    {"title":"ABBA - The Abba Medley (Karaoke Version) with Lyrics On Screen","artist":"ABBA","provider":"Zoom Karaoke Official","videoId":"Act7Q1l7HG4","publicViewsSnapshot":313084,"publishedAt":"2020-11-27","sections":[],"runtimeReport":"tools/medley-expansion-runtime-v11.json","qualityTier":"C — listen/presentation review required","note":"Distinct medley candidate and reputable commercial karaoke provider; no exact section list/audio/presentation inspection is claimed."},
+    {"title":"Queen - The Queen Medley 3 - Karaoke Version from Zoom Karaoke","artist":"Queen","provider":"Zoom Karaoke Official","videoId":"pXe4l-M1MkM","publicViewsSnapshot":61983,"publishedAt":"2020-10-09","sections":[],"runtimeReport":"tools/medley-expansion-runtime-v13.json","qualityTier":"C — listen/presentation review required","note":"Official Zoom catalogue and a karaoke retailer corroborate the product title; section list remains unknown in the video evidence."}
+  ],
+  "strongestTechnicalPassPoolByDemandSnapshot": [
+    {"rank":"high reach","title":"Michael Learns To Rock (MLTR) Medley","provider":"ConesStudio Karaoke","videoId":"BIvD7IJQyME","views":22307154,"publishedAt":"2023-07-08","quality":"C — human review"},
+    {"rank":"high reach","title":"April Boy Regino Medley (HQ Karaoke Version with Lyrics)","provider":"Agaw Music Karaoke","videoId":"L2Y5wnhyfNI","views":16021148,"publishedAt":"2023-11-16","quality":"C — human review; compare against second April Boy version"},
+    {"rank":"high reach","title":"Pangako, Maging Sino Ka Man, Kung Kailangan Mo Ako — Rey Valera Medley","provider":"OPM Karaoke Cover","videoId":"WO-ZTFltK9A","views":14405223,"publishedAt":"2023-11-09","quality":"C — human review"},
+    {"rank":"high reach","title":"Rivermaya Medley (Karaoke HQ Version)","provider":"APMusic","videoId":"OHIFuGAaod4","views":13203616,"publishedAt":"2021-10-31","quality":"C — human review"},
+    {"rank":"high reach","title":"Karaoke - Classic OPM Love Songs Medley","provider":"Ibarra Music","videoId":"I8ruYoUTetw","views":12635679,"publishedAt":"2020-02-01","quality":"C — human review"},
+    {"rank":"strong recent reach","title":"Scorpions Medley Karaoke","provider":"LoveNotes Medley","videoId":"JdoBsqrN5W4","views":9413485,"publishedAt":"2025-09-11","quality":"C — human review; no reliable sections captured"},
+    {"rank":"established","title":"Celine Dion Medley Karaoke","provider":"TVMO Channel","videoId":"8ToBsPKxlko","views":6760320,"publishedAt":"2020-08-04","quality":"C — human review"},
+    {"rank":"established","title":"April Boy Regino Medley - Karaoke","provider":"ConesStudio Karaoke","videoId":"-D1irYqKIog","views":6596599,"publishedAt":"2024-10-19","quality":"C — human review and duplicate/track comparison"},
+    {"rank":"established","title":"Mahal Kita, Remember Me — Renz Verano Medley","provider":"OPM Karaoke Cover","videoId":"xC7jpW9PYB0","views":6450000,"publishedAt":null,"quality":"C — human review; publication date unavailable"},
+    {"rank":"established","title":"Karaoke - Donna Cruz Medley","provider":"Ibarra Music","videoId":"-IVoCF2v2KI","views":3880997,"publishedAt":"2021-02-23","quality":"C — human review"},
+    {"rank":"established","title":"Renz Verano Medley (Karaoke)","provider":"ConesStudio Karaoke","videoId":"5lqlYpJ03qo","views":3769370,"publishedAt":"2024-12-24","quality":"C — human review and compare against second Renz Verano entry"},
+    {"rank":"established","title":"Bee Gees Medley Karaoke Version","provider":"Singing Bees","videoId":"rewX8w9pw9E","views":3656429,"publishedAt":"2020-08-17","quality":"C — human review"},
+    {"rank":"established","title":"J Brothers Medley (Karaoke)","provider":"Harana Karaoke","videoId":"Y_U22TnRqwM","views":3302530,"publishedAt":"2025-12-31","quality":"C — human review and compare with same artist candidates"},
+    {"rank":"established","title":"Men Oppose Medley","provider":"OPM Karaoke Cover","videoId":"0M6EJNL3hTs","views":2206429,"publishedAt":"2023-12-19","quality":"C — human review"},
+    {"rank":"moderate","title":"2005 OPM Hits Medley Karaoke","provider":"KaraOcraze","videoId":"77eQoouxahI","views":996835,"publishedAt":"2024-04-12","quality":"C — human review; distinguish decade-theme from current catalog"},
+    {"rank":"moderate","title":"Freddie Aguilar Nonstop Medley","provider":"OPM Karaoke Cover","videoId":"EtQeS3ThW14","views":660537,"publishedAt":"2023-12-21","quality":"C — human review and overlap review"},
+    {"rank":"moderate / newer","title":"ABBA - The Abba Medley (Karaoke Version) with Lyrics On Screen","provider":"Zoom Karaoke Official","videoId":"Act7Q1l7HG4","views":313084,"publishedAt":"2020-11-27","quality":"C — human review"},
+    {"rank":"newer / modest reach","title":"Regine Velasquez Medley (On The Wings Of Love, Kung Maibabalik Ko Lang)","provider":"Amaze Sing Karaoke Channel","videoId":"pZP5_icIQas","views":253535,"publishedAt":"2025-11-24","quality":"C — human review"},
+    {"rank":"newer / modest reach","title":"OPM Medley Karaoke","provider":"2Rs Kara-TV","videoId":"vcHCtqnU6A4","views":137785,"publishedAt":"2025-07-26","quality":"C — metadata and human review"},
+    {"rank":"newer / modest reach","title":"Eraserheads (Medley Karaoke)","provider":"LoveNotes Medley","videoId":"i3qN_q8W1is","views":83111,"publishedAt":"2026-01-29","quality":"C — human review"},
+    {"rank":"modest reach","title":"Queen - The Queen Medley 3 - Karaoke Version from Zoom Karaoke","provider":"Zoom Karaoke Official","videoId":"pXe4l-M1MkM","views":61983,"publishedAt":"2020-10-09","quality":"C — human review"},
+    {"rank":"modest reach","title":"Parokya ni Edgar Medley - karaoke (Aggar Karaoke version)","provider":"Aggar Karaoke tv","videoId":"ENw6M-yV6Uo","views":37082,"publishedAt":"2024-06-10","quality":"C — human review; popularity evidence limited"}
+  ],
+  "providerRuntimeSummary": [
+    {"provider":"Ibarra Music","tested":8,"pass":2,"error150":6,"other":0},
+    {"provider":"Karaoke By TEMARTZ","tested":1,"pass":0,"error150":1,"other":0},
+    {"provider":"Aggar Karaoke tv","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"KaraOcraze","tested":3,"pass":1,"error150":1,"other":1},
+    {"provider":"TVMO Channel","tested":2,"pass":1,"error150":1,"other":0},
+    {"provider":"Zoom Karaoke Official","tested":2,"pass":2,"error150":0,"other":0},
+    {"provider":"LoveNotes Medley","tested":5,"pass":2,"error150":3,"other":0},
+    {"provider":"ConesStudio Karaoke","tested":5,"pass":3,"error150":2,"other":0},
+    {"provider":"YenJohn HD Karaoke","tested":2,"pass":0,"error150":2,"other":0},
+    {"provider":"Rainbow Karaoke Channel","tested":1,"pass":0,"error150":1,"other":0},
+    {"provider":"Sing King","tested":2,"pass":0,"error150":2,"other":0},
+    {"provider":"KaraokeyTV","tested":1,"pass":0,"error150":1,"other":0},
+    {"provider":"Harana Karaoke","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"APMusic","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"Agaw Music Karaoke","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"OPM Karaoke Cover","tested":5,"pass":4,"error150":1,"other":0},
+    {"provider":"2Rs Kara-TV","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"Stingray Karaoke","tested":6,"pass":0,"error150":6,"other":0},
+    {"provider":"SELECT","tested":1,"pass":0,"error150":1,"other":0},
+    {"provider":"Singing Bees","tested":1,"pass":1,"error150":0,"other":0},
+    {"provider":"Amaze Sing Karaoke Channel","tested":1,"pass":1,"error150":0,"other":0}
+  ],
+  "error150RejectedVideoIds": [
+    "Ej8W9fPxOwg", "honAHMAXTew", "TtLQbRH8vD8", "nQZDCe8M7SY", "31vIDf87DoQ", "7hnYsMIy6kc", "2w2s4SezSmg", "wywFQ_bcWu0", "CSw7dIVHh-w", "MjJnLgAW1jc", "ZI8ufXTfCrg", "d8ZYzw7F__o", "gzqSlf6acyk", "E-iidk3e26Q", "aZtHcNEPOvk", "Igyysu-mVX0", "4EtGAafSCx4", "Ys51MfuSrDY", "h0cviQ-qCz0", "wQhsv7R91o4", "1T4Obcze2HQ", "tHzqWAKXrmM", "yys-_nqNW7g", "PjcjPjhwhF4", "T5uLnecqzRM", "2Gb1eYv1VEc", "dFCxh2MSOcA", "QR5ymy9v-o8"
+  ],
+  "inconclusiveCandidates": [
+    {"videoId":"SCfzihUvcmo","title":"Pilipino Medley Karaoke - Mabuhay Singers","provider":"KaraOcraze","publicViewsSnapshot":24552,"resultFile":"tools/medley-expansion-runtime-v10.json","reason":"Official player buffered before the 15-second sustained-playback window completed. Not counted as PASS. No retry prioritized because public reach is modest and song/quality evidence was limited."}
+  ],
+  "deduplicationAndQualityDecisions": {
+    "duplicateOrNearDuplicateLeadsNotRetested": [
+      {"videoId":"MjJnLgAW1jc","decision":"Already rejected in prior audit: Error 150 and generic OPM-love theme overlaps existing OPM collection."},
+      {"videoId":"63kxnleHFWM","decision":"Kitchie Nadal candidate overlaps existing production Kitchie Nadal medley; do not add/retest."},
+      {"videoId":"i3qN_q8W1is","decision":"Technical PASS only; compare against any other E-heads medley before production inclusion."},
+      {"videoId":"-D1irYqKIog","decision":"Technical PASS only; compare sections and listening experience against April Boy video L2Y5wnhyfNI before deciding either/both."},
+      {"videoId":"xC7jpW9PYB0","decision":"Technical PASS only; compare against other Renz Verano medley candidate 5lqlYpJ03qo."},
+      {"videoId":"Y_U22TnRqwM","decision":"Technical PASS only; compare track list and listening experience with J Brothers alternatives that returned Error 150."}
+    ],
+    "productionCollisionCheck": "No production change was made. Candidate IDs were compared with current primary/medley assignments before testing; no candidate was promoted.",
+    "exactSectionsPolicy": "Only description/list evidence is recorded. Blank section lists remain unknown; no sections were inferred by listening or from thumbnails."
+  },
+  "demandMethodology": {
+    "verifiedFacts": ["Public video view totals and publication dates where captured in persisted evidence.", "Runtime statuses from actual KantaCue YouTube IFrame player traces."],
+    "strongInferences": ["Multi-million-view medleys demonstrate established reach; high views accumulated over a shorter publication period are stronger qualitative momentum signals than old lifetime totals, but snapshots are not synchronized."],
+    "unknown": ["Google/YouTube search volume, current search rank, comprehensive recent view velocity, watch time, audience geography, audio quality, mix quality, key, guide vocals, sync, transition quality, and visual polish unless a human actually reviews the video."],
+    "methodLimit": "Public view snapshots come from different capture dates. No precise age-normalized ranking is presented as if measurements were contemporaneous. View count is not search volume or a quality override."
+  },
+  "providerResearch": {
+    "priorityProvidersReviewedAcrossPreservedReports": ["KaraokeyTV", "Atomic Karaoke", "CoversPH", "Sing King Karaoke"],
+    "additionalProvidersWithSeriousCandidatesOrRuntimeResults": ["Ibarra Music", "ConesStudio Karaoke", "YenJohn HD Karaoke", "Zoom Karaoke Official", "Singing Bees", "OPM Karaoke Cover", "LoveNotes Medley", "KaraOcraze", "Harana Karaoke", "APMusic", "TVMO Channel", "Amaze Sing Karaoke Channel", "Aggar Karaoke tv", "2Rs Kara-TV", "Karaoke By TEMARTZ", "Stingray Karaoke", "Rainbow Karaoke Channel", "SELECT"],
+    "providerCaveat": "Provider reputation is only a discovery clue; runtime/quality decisions are per video. Some channels show mixed outcomes; some providers in this sample returned only Error 150. This sample is not a universal provider ranking."
+  },
+  "verifiedPublicEvidence": [
+    {"videoId":"I8ruYoUTetw","url":"https://www.youtube.com/watch?v=I8ruYoUTetw","evidence":"Ibarra Music public description lists three OPM song sections; snapshot 12,635,679 views, 2020-02-01."},
+    {"videoId":"QR5ymy9v-o8","url":"https://www.youtube.com/watch?v=QR5ymy9v-o8","evidence":"LoveNotes Medley public description identifies Celine Dion karaoke, lists three songs, snapshot 2,465,985 views, 2025-11-09; embedded player returned Error 150."},
+    {"videoId":"pXe4l-M1MkM","url":"https://www.youtube.com/watch?v=pXe4l-M1MkM","evidence":"YouTube title identifies Zoom Karaoke's Queen Medley 3; Zoom product catalogue and karaoke retailer list the product. Video exact section list remains unknown from captured video description; snapshot about 61,983 views."},
+    {"videoId":"Act7Q1l7HG4","url":"https://www.youtube.com/watch?v=Act7Q1l7HG4","evidence":"YouTube title/channel identify Zoom Karaoke ABBA medley; snapshot 313,084 views, 2020-11-27."}
+  ],
+  "copyrightAndPrivacy": {
+    "youtubeDataApiUsed": false,
+    "apiKeyUsed": false,
+    "mediaDownloadedOrCached": false,
+    "proxyOrRehosting": false,
+    "embeddingRestrictionsBypassed": false,
+    "productionCatalogChanges": false
+  },
+  "productionDecision": {
+    "songsChanged": 0,
+    "medleysAdded": 0,
+    "finalPrimaryCount": 1067,
+    "finalPlayablePrimaryCount": 1000,
+    "finalUnavailablePrimaryCount": 67,
+    "finalPublicMedleyCount": 11,
+    "reason": "No candidate can receive S/A/B evidence without human listening/presentation review. Keep all 22 technical PASS candidates outside production pending review; reject all Error 150 candidates and do not lower gates."
+  },
+  "filesCreatedThisPass": [
+    "tools/medley-expansion-runtime-manifest-v11.json",
+    "tools/medley-expansion-runtime-v12.json",
+    "tools/medley-expansion-runtime-v12.checkpoint.json",
+    "tools/medley-expansion-runtime-v13.json",
+    "tools/medley-expansion-runtime-v13.checkpoint.json",
+    "tools/medley-expansion-research-v5.json"
+  ],
+  "filesPreserved": [
+    "tools/medley-expansion-research-v2.json",
+    "tools/medley-expansion-research-v3.json",
+    "tools/medley-expansion-research-v4.json",
+    "tools/medley-expansion-runtime-ledger.json",
+    "tools/medley-expansion-runtime-v9.json",
+    "tools/medley-expansion-runtime-v10.json",
+    "tools/medley-expansion-runtime-v11.json",
+    "tools/medley-expansion-runtime-v12.json"
+  ],
+  "limitations": [
+    "No human audio listening or presentation inspection was performed; all runtime-pass records remain C-tier.",
+    "Headless Chrome playback proves technical progression for the tested session, not future availability, all-region behavior, or user-device performance.",
+    "No reliable search-volume data was available; search-demand labels remain UNKNOWN.",
+    "Most candidate track lists are unknown unless captured from a public video description; no lyric text is stored.",
+    "Exact 1080p or consistent HD quality was not verified.",
+    "The full adversarial UX/PWA checks are covered by the existing application regression suite but were not manually re-exercised at every viewport in this metadata-only expansion pass."
+  ]
+}

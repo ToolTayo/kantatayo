@@ -30,8 +30,8 @@
     <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=47" />
-    <script type="module" src="src/app.js?v=62"></script>
+    <link rel="stylesheet" href="styles/main.css?v=49" />
+    <script type="module" src="src/app.js?v=64"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -89,9 +89,11 @@
         <div class="view-panel home-view" data-view-panel="home">
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-copy">
-            <p class="eyebrow">Local karaoke discovery</p>
+            <p class="eyebrow">Your next great karaoke night</p>
             <h1 id="hero-title">Find your next <em>karaoke song.</em></h1>
-            <p class="hero-description">Start with a song from the catalog, follow your taste, or search the full catalog when you already know what you want.</p>
+            <p class="hero-description">Find your song. Build your queue. Keep the mic moving.</p>
+            <div class="home-start-actions"><button class="play-button" type="button" data-action="find-a-song">Find a song <span aria-hidden="true">→</span></button><a class="add-button" href="#collections" data-view="collections">Explore medleys</a><a class="text-button" href="#party" data-view="party">Sing with friends</a></div>
+            <p class="home-catalog-summary" data-home-catalog-summary>Local-first karaoke · No sign-up</p>
           </div>
         </section>
         </div>
@@ -164,7 +166,7 @@
             <section class="song-section featured-section" data-section="recommended" aria-labelledby="recommended-title">
               <div class="section-heading home-section-heading"><div><h3 id="recommended-title" data-home-title>Sing now</h3><p class="section-lede" data-home-lede>Playable picks to get your night moving.</p></div><span class="section-rule"></span></div>
               <div class="find-song-panel" data-find-song>
-                <p class="find-song-guidance" id="find-song-guidance">Optional: choose up to two cues to shape these three playable picks. Leave clear for your general recommendations.</p>
+                <p class="find-song-guidance" id="find-song-guidance">Choose up to two cues, or jump straight into a pick.</p>
                 <div class="find-song-controls">
                   <div class="find-song-modes" data-find-song-modes role="group" aria-label="Choose what you feel like singing" aria-describedby="find-song-guidance"></div>
                   <button class="text-button find-song-clear" type="button" data-action="clear-find-song" hidden>Clear choices</button>
@@ -221,7 +223,7 @@
           <div class="home-secondary-grid">
             <section class="collections-card" aria-labelledby="collections-title">
               <div class="utility-card-heading"><div><p class="eyebrow">Curated locally</p><h3 id="collections-title">Tonight’s collections</h3><p class="utility-card-status" data-collection-description>Fresh picks for the room.</p></div><button class="play-button" type="button" data-action="surprise-me">Surprise me</button></div>
-              <div class="collection-tabs" data-collection-tabs role="tablist" aria-label="Karaoke collections"></div>
+              <div class="collection-tabs" data-collection-tabs role="group" aria-label="Karaoke collections"></div>
               <h4 class="collection-title" data-collection-title>Friday Night Karaoke</h4>
               <div class="song-grid compact-grid" data-collection-grid></div>
               <p class="empty-state section-empty" data-collection-empty hidden>No playable songs in this collection yet.</p>
@@ -259,6 +261,8 @@
               </div>
               <div class="discover-filter-footer"><span data-discovery-filter-summary>All catalog songs</span><button class="text-button" type="button" data-action="reset-discovery-filters" disabled>Reset filters</button></div>
             </section>
+            <div class="active-filter-list" data-active-filters role="group" aria-label="Active filters; select to remove" hidden></div>
+            <div class="search-corrections" data-search-corrections role="status" aria-live="polite" hidden></div>
             <div class="song-grid catalog-grid" data-grid="discover"></div>
             <div class="discover-load-more" data-discover-load-more hidden><button class="add-button" type="button" data-action="load-more-discover">Load more songs</button><span data-discover-remaining></span></div>
             <div class="empty-state" data-discover-empty hidden role="status" aria-live="polite"><span class="empty-icon" aria-hidden="true">⌕</span><div><strong data-discover-empty-title>No songs found</strong><p data-discover-empty-copy>Try a different search or filter.</p><div class="empty-state-actions"><button class="text-button" type="button" data-action="clear-search" data-discover-empty-clear-search hidden>Clear search</button><button class="text-button" type="button" data-action="reset-discovery-filters" data-discover-empty-reset-filters hidden>Reset filters</button><button class="text-button" type="button" data-action="reset-discovery" data-discover-empty-reset hidden>Clear search and filters</button></div></div></div>
@@ -266,20 +270,27 @@
         </section>
 
         <section class="view-panel collection-view" data-view-panel="favorites" hidden>
-          <section class="content-area" id="favorites" aria-labelledby="favorites-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your collection</p><h2 id="favorites-view-title">Favorites</h2><p class="section-lede">Songs you want close at hand.</p></div><p class="view-count" data-favorites-count>0 songs</p></div><div class="song-grid catalog-grid" data-grid="favorites-view"></div><div class="empty-state" data-favorites-empty hidden><span class="empty-icon" aria-hidden="true">♡</span><div><strong>No favorites yet</strong><p>Save songs here for your next karaoke round.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
+          <section class="content-area" id="favorites" aria-labelledby="favorites-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your collection</p><h2 id="favorites-view-title">Favorites</h2><p class="section-lede">Songs you want close at hand.</p></div><p class="view-count" data-favorites-count>0 songs</p></div><div class="browse-toolbar library-toolbar" data-library-toolbar="favorites" hidden><label class="browse-search"><span>Find in favorites</span><input type="search" data-library-search="favorites" maxlength="160" placeholder="Song or artist" autocomplete="off" /></label><label><span>Order</span><select data-library-sort="favorites"><option value="recent">Last saved</option><option value="title">Title A–Z</option><option value="artist">Artist A–Z</option></select></label><button class="add-button" type="button" data-action="queue-library" data-queue-library="favorites">Queue matches</button></div><div class="empty-state" data-library-empty="favorites" role="status" hidden><div><strong>No songs match that search</strong><p>Your saved songs are still here.</p><button class="text-button" type="button" data-action="clear-library-search" data-library="favorites">Clear search</button></div></div><div class="song-grid catalog-grid" data-grid="favorites-view"></div><div class="empty-state" data-favorites-empty hidden><span class="empty-icon" aria-hidden="true">♡</span><div><strong>No favorites yet</strong><p>Save songs here for your next karaoke round.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
         </section>
 
         <section class="view-panel collection-view collections-destination" data-view-panel="collections" hidden>
           <section class="content-area" id="collections" aria-labelledby="collections-view-title">
             <div class="section-heading view-heading"><div><p class="eyebrow">Curated karaoke sets</p><h2 id="collections-view-title">Collections</h2><p class="section-lede">Browse themed sets made for a full karaoke round. Medleys are one YouTube performance with several song sections.</p></div><p class="view-count" data-medley-count>0 medleys</p></div>
-            <section class="collection-landing-card" aria-labelledby="medleys-title"><div><p class="eyebrow">First collection</p><h3 id="medleys-title">Karaoke Medleys</h3><p class="utility-card-status">Keep the mic moving through a connected set of songs without changing videos.</p></div><span class="collection-status-note">Local metadata · YouTube playback</span></section>
+            <section class="collection-landing-card" aria-labelledby="medleys-title"><div><p class="eyebrow">One video. A whole round.</p><h3 id="medleys-title">Karaoke Medleys</h3><p class="utility-card-status">Find an artist, a familiar chorus, or a set for the whole room.</p></div><span class="collection-status-note">Official YouTube playback</span></section>
+            <div class="browse-toolbar" aria-label="Browse medleys">
+              <label class="browse-search"><span>Find a medley</span><input type="search" data-medley-search placeholder="Artist, song section, or theme" maxlength="160" autocomplete="off" /></label>
+              <label><span>Provider</span><select data-medley-provider><option value="">All providers</option></select></label>
+              <label><span>Order</span><select data-medley-sort><option value="curated">Collection order</option><option value="views">Recorded YouTube views</option><option value="title">Title A–Z</option></select></label>
+            </div>
+            <div class="browse-categories" role="group" aria-label="Medley language"><button class="chip is-active" type="button" data-action="filter-medleys" data-medley-category="all" aria-pressed="true">All medleys</button><button class="chip" type="button" data-action="filter-medleys" data-medley-category="opm" aria-pressed="false">OPM / Filipino</button><button class="chip" type="button" data-action="filter-medleys" data-medley-category="international" aria-pressed="false">International / English</button><button class="text-button" type="button" data-action="reset-medley-browse" hidden>Clear filters</button></div>
+            <p class="browse-note" data-medley-sort-note hidden>Public view snapshots recorded during catalog research—not live views or KantaCue trends.</p>
             <div class="song-grid medley-grid" data-medley-grid></div>
             <div class="empty-state" data-medley-empty hidden><span class="empty-icon" aria-hidden="true">♫</span><div><strong>No medleys are available right now</strong><p>Try the regular catalog while this collection is refreshed.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div>
           </section>
         </section>
 
         <section class="view-panel collection-view" data-view-panel="recent" hidden>
-          <section class="content-area" id="recent" aria-labelledby="recent-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your history</p><h2 id="recent-view-title">Recently sung</h2><p class="section-lede">Pick up where your last round left off.</p></div><p class="view-count" data-recent-count>0 songs</p></div><div class="song-grid catalog-grid" data-grid="recent-view"></div><div class="empty-state" data-recent-view-empty hidden><span class="empty-icon" aria-hidden="true">↺</span><div><strong>No songs sung yet</strong><p>Mark a song as Sang it and it will appear here.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
+          <section class="content-area" id="recent" aria-labelledby="recent-view-title"><div class="section-heading view-heading"><div><p class="eyebrow">Your history</p><h2 id="recent-view-title">Recently sung</h2><p class="section-lede">Pick up where your last round left off.</p></div><p class="view-count" data-recent-count>0 songs</p></div><div class="browse-toolbar library-toolbar" data-library-toolbar="recent" hidden><label class="browse-search"><span>Find in your history</span><input type="search" data-library-search="recent" maxlength="160" placeholder="Song or artist" autocomplete="off" /></label><label><span>Order</span><select data-library-sort="recent"><option value="recent">Last sung</option><option value="title">Title A–Z</option><option value="artist">Artist A–Z</option></select></label><button class="add-button" type="button" data-action="queue-library" data-queue-library="recent">Queue matches</button></div><div class="empty-state" data-library-empty="recent" role="status" hidden><div><strong>No songs match that search</strong><p>Your saved songs are still here.</p><button class="text-button" type="button" data-action="clear-library-search" data-library="recent">Clear search</button></div></div><div class="song-grid catalog-grid" data-grid="recent-view"></div><div class="empty-state" data-recent-view-empty hidden><span class="empty-icon" aria-hidden="true">↺</span><div><strong>No songs sung yet</strong><p>Mark a song as Sang it and it will appear here.</p><a class="discover-cta" href="#discover" data-view="discover">Discover songs <span aria-hidden="true">→</span></a></div></div></section>
         </section>
 
         <section class="view-panel collection-view" data-view-panel="preferences" hidden>

@@ -181,6 +181,6 @@ test("cold-start Home copy does not claim every recommendation is popular", asyn
   assert.match(ui, /title: "International picks"/);
   assert.match(html, />Playable picks to get your night moving\.<\/p>/);
   assert.doesNotMatch(html, />Popular, playable picks to get your night moving\.<\/p>/);
-  assert.match(html, /Start with a song from the catalog/);
+  assert.match(html, /Find your song\. Build your queue\. Keep the mic moving\./);
   assert.doesNotMatch(html, /Start with a crowd favorite/);
 });

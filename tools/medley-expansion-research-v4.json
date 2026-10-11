@@ -1,0 +1,200 @@
+{
+  "reportVersion": 4,
+  "generatedAt": "2026-10-07",
+  "project": "KantaCue large-scale medley Collections expansion",
+  "decision": "NO_PRODUCTION_ADDITIONS — HUMAN QUALITY REVIEW REQUIRED; ONE ADDITIONAL RUNTIME BATCH UNAVAILABLE",
+  "executiveSummary": "The repaired verifier passed sample-029 in three independent runs for both completed candidate batches. Across the 33 unique candidate videos actually runtime-tested, 12 passed sustained playback and 21 returned YouTube Error 150. All technical passes remain Tier C because listening/visual quality, guide-vocal status, key, synchronization, transitions, and completeness were not independently verified. A final v5 attempt did not launch because Playwright was not resolvable, so its two candidates remain untested. No medleys or primary songs were changed.",
+  "baseline": {
+    "primarySongs": 1067,
+    "playablePrimarySongs": 1000,
+    "unavailablePrimarySongs": 67,
+    "publicMedleys": 11,
+    "sample029": "QBb9wO3Bj0k",
+    "primaryCatalogSha256": "547796d68ab2b7d09c3bddb8fb3fbd0285323fd913d2e070357352eff132e5b7",
+    "primaryCatalogChanged": false,
+    "productionMedleysChanged": false
+  },
+  "researchUniverse": {
+    "previousDistinctCandidates": 39,
+    "newDistinctCandidatesThisPass": 30,
+    "totalDistinctCandidates": 69,
+    "newCandidatesWithRuntimeResult": 16,
+    "newCandidatesWithSustainedPass": 7,
+    "newCandidatesWithError150": 9,
+    "newCandidatesDeferredOrNotTested": 14,
+    "previousRuntimeReport": "tools/medley-expansion-research-v3.json",
+    "previousReportPreserved": true
+  },
+  "qualityTierCountsAcrossReconciledResearchUniverse": {
+    "S": 0,
+    "A": 0,
+    "B": 0,
+    "C_human_review_required": 12,
+    "rejected_embedding_disabled": 21,
+    "deferred_or_not_runtime_graded": 36,
+    "note": "No S/A/B grade is defensible without actual audio/presentation review. The 12 C records are technical runtime passes only; the other 36 have no unique runtime qualification and include weak, incomplete, or semantically redundant leads rather than 36 presumed viable additions."
+  },
+  "methods": {
+    "discovery": "Targeted public YouTube/channel searches and public descriptions/timestamps; existing research ledgers were reconciled rather than overwritten. No YouTube Data API, API key, downloads, proxy, or rehosting.",
+    "runtime": "tools/run-playability-audit.mjs driving youtube-playability-audit.html and the existing src/youtube.js official IFrame Player API controller in Playwright Chromium.",
+    "passDefinition": "The actual loaded ID matched; onReady and PLAYING were observed; currentTime advanced over at least 15 seconds with repeated readable samples and advancing intervals. READY or PLAYING alone is not PASS.",
+    "popularity": "Public lifetime view-count snapshots and publication dates where available, captured 2026-10-07. These are not search-volume data. Provider-relative velocity and time-series momentum were not available; view velocity/search volume/current trend are UNKNOWN.",
+    "qualityConstraint": "The headless audit cannot listen to the audio or establish visual lyric synchronization, key, guide vocals, transitions, or completion quality. No such properties are claimed."
+  },
+  "verifier": {
+    "rootCauses": [
+      "The YouTube API replaces the controller mount element with its iframe, so a mount-scoped iframe lookup could lose the active frame identity.",
+      "The iframe src can retain the initial video ID while loadVideoById changes the active media; requested ID alone did not prove actual loaded-media identity.",
+      "The controller emits load-accepted on later media switches; this is not a new player-lifecycle onReady callback.",
+      "The old sustained gate did not sufficiently prove playback continued through the end of its observation interval."
+    ],
+    "correction": [
+      "Use the official player's getVideoUrl() as read-only loaded-media identity evidence.",
+      "Record requested and loaded IDs, lifecycle, connected iframe, playback state, duration/currentTime samples, visibility/focus, and advancing intervals.",
+      "Require a full sustained observation window with fresh final samples, repeated advancement, and advancement near the end of the window; callbacks alone never pass.",
+      "Require three independent sample-029 control runs before the candidate batch; stop if any control fails."
+    ],
+    "v3Control": { "status": "PASS", "independentRuns": "3/3", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    "v4Control": { "status": "PASS", "independentRuns": "3/3", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    "v5Attempt": { "status": "NOT RUN", "reason": "Runner failed before browser launch: Playwright is not resolvable in this invocation. No v5 control or candidate results were produced.", "manifest": "tools/medley-expansion-runtime-manifest-v5.json" },
+    "sustainedCandidateResults": { "uniqueTestedVideos": 33, "pass": 12, "error150": 21, "error100": 0, "error101": 0, "error153": 0, "timeout": 0, "playingWithoutProgression": 0, "environmentFailureDuringCandidateRun": 0 }
+  },
+  "runtimeProviderSummary": [
+    { "provider": "ConesStudio Karaoke", "tested": 2, "pass": 2, "error150": 0 },
+    { "provider": "YenJohn HD Karaoke", "tested": 2, "pass": 0, "error150": 2 },
+    { "provider": "Ibarra Music", "tested": 5, "pass": 0, "error150": 5 },
+    { "provider": "LoveNotes Medley", "tested": 4, "pass": 2, "error150": 2 },
+    { "provider": "Rainbow Karaoke Channel", "tested": 1, "pass": 0, "error150": 1 },
+    { "provider": "Sing King", "tested": 2, "pass": 0, "error150": 2 },
+    { "provider": "KaraokeyTV", "tested": 1, "pass": 0, "error150": 1 },
+    { "provider": "Harana Karaoke", "tested": 1, "pass": 1, "error150": 0 },
+    { "provider": "APMusic", "tested": 1, "pass": 1, "error150": 0 },
+    { "provider": "Agaw Music Karaoke", "tested": 1, "pass": 1, "error150": 0 },
+    { "provider": "KaraOcraze", "tested": 2, "pass": 1, "error150": 1 },
+    { "provider": "OPM Karaoke Cover", "tested": 3, "pass": 3, "error150": 0 },
+    { "provider": "2Rs Kara-TV", "tested": 1, "pass": 1, "error150": 0 },
+    { "provider": "Stingray Karaoke", "tested": 6, "pass": 0, "error150": 6 },
+    { "provider": "SELECT", "tested": 1, "pass": 0, "error150": 1 }
+  ],
+  "priorityProviderResearch": [
+    { "provider": "KaraokeyTV", "finding": "Existing medleys cover several artist themes; the newly examined generic OPM Love Song upload MjJnLgAW1jc returned Error 150 and was also too broad/overlapping to justify another generic entry." },
+    { "provider": "Atomic Karaoke", "finding": "Targeted public searches surfaced single-song karaoke or no verifiable distinct medley ID; no addition advanced." },
+    { "provider": "CoversPH", "finding": "The public channel material inspected was predominantly single-song karaoke; no defensible new multi-song medley advanced." },
+    { "provider": "Sing King Karaoke", "finding": "The previously tested Air Supply and Broadway medleys returned Error 150. Public watch-page availability was not treated as embed permission." },
+    { "provider": "Other channels examined", "finding": "APMusic, Agaw Music Karaoke, ConesStudio Karaoke, KaraOcraze, OPM Karaoke Cover, 2Rs Kara-TV, Ibarra Music, LoveNotes Medley, YenJohn HD Karaoke, Rainbow Karaoke Channel, Stingray Karaoke, SELECT, PRO music COVER, Star Magic Karaoke, Singer DreamsPH, and Lariel Station." }
+  ],
+  "demandFindings": {
+    "strongPublicViewSnapshots": [
+      { "candidate": "April Boy Regino Medley", "videoId": "L2Y5wnhyfNI", "views": 16021148, "classification": "Strong established public reach" },
+      { "candidate": "Rey Valera Medley", "videoId": "WO-ZTFltK9A", "views": 14405223, "classification": "Strong established public reach" },
+      { "candidate": "Rivermaya Medley", "videoId": "OHIFuGAaod4", "views": 13203616, "classification": "Strong established public reach" },
+      { "candidate": "Renz Verano Medley", "videoId": "xC7jpW9PYB0", "views": 6450000, "classification": "Strong established public reach; date/sections not captured" },
+      { "candidate": "Donna Cruz Medley", "videoId": "-IVoCF2v2KI", "views": 3880997, "classification": "Strong established public reach; runtime not tested" },
+      { "candidate": "Renz Verano Medley", "videoId": "5lqlYpJ03qo", "views": 3769370, "classification": "Established public reach" },
+      { "candidate": "OPM Men Oppose Medley", "videoId": "0M6EJNL3hTs", "views": 2206429, "classification": "Established public reach; exact theme/title unclear; runtime not tested" }
+    ],
+    "searchVolume": "UNKNOWN",
+    "viralOrTrendingClaims": "UNKNOWN — one-time public view snapshots do not establish recent velocity or search trends.",
+    "interpretation": "Lifetime views are evidence of accumulated attention only; age, track evidence, runtime, and quality remain separate. No view count overrides Error 150 or unresolved quality."
+  },
+  "newCandidates": [
+    { "title": "Rivermaya Medley (Karaoke HQ Version)", "artistOrTheme": "Rivermaya", "provider": "APMusic", "videoId": "OHIFuGAaod4", "url": "https://www.youtube.com/watch?v=OHIFuGAaod4", "publishedAt": "2021-10-31", "publicViews": 13203616, "sections": ["Elesi", "Ulan", "Kissapmata", "Hinahanap-Hanap Kita", "Himala", "214"], "runtime": "PASS — 15.006s progression", "tier": "C — human review", "decision": "HOLD for listening/visual review; valuable OPM band medley with listed tracks." },
+    { "title": "April Boy Regino Medley (HQ Karaoke Version with Lyrics)", "artistOrTheme": "April Boy Regino", "provider": "Agaw Music Karaoke", "videoId": "L2Y5wnhyfNI", "url": "https://www.youtube.com/watch?v=L2Y5wnhyfNI", "publishedAt": "2023-11-16", "publicViews": 16021148, "sections": null, "runtime": "PASS — 15.006s progression", "tier": "C — human review", "decision": "HOLD; strongest new-view count, but audio/key/guide-vocal/section quality unknown." },
+    { "title": "Renz Verano Medley (Karaoke)", "artistOrTheme": "Renz Verano", "provider": "ConesStudio Karaoke", "videoId": "5lqlYpJ03qo", "url": "https://www.youtube.com/watch?v=5lqlYpJ03qo", "publishedAt": "2024-12-24", "publicViews": 3769370, "sections": ["Ibang Iba Ka Na", "Remember Me", "You and I"], "runtime": "PASS — 15.006s progression", "tier": "C — human review", "decision": "HOLD; competing OPM Karaoke Cover version has higher reported views; compare presentation and track selection manually." },
+    { "title": "2006 OPM Hits Medley Karaoke", "artistOrTheme": "Various OPM artists / 2006", "provider": "KaraOcraze", "videoId": "gzqSlf6acyk", "url": "https://www.youtube.com/watch?v=gzqSlf6acyk", "publishedAt": "2024-04-06", "publicViews": 1276388, "sections": null, "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled." },
+    { "title": "2005 OPM Hits Medley Karaoke", "artistOrTheme": "Various OPM artists / 2005", "provider": "KaraOcraze", "videoId": "77eQoouxahI", "url": "https://www.youtube.com/watch?v=77eQoouxahI", "publishedAt": "2024-04-12", "publicViews": 996835, "sections": null, "runtime": "PASS — 15.006s progression", "tier": "C — human review", "decision": "HOLD; distinct year-set concept but exact songs and audio presentation need review." },
+    { "title": "Rey Valera Medley", "artistOrTheme": "Rey Valera", "provider": "OPM Karaoke Cover", "videoId": "WO-ZTFltK9A", "url": "https://www.youtube.com/watch?v=WO-ZTFltK9A", "publishedAt": "2023-11-09", "publicViews": 14405223, "sections": ["Pangako", "Maging Sino Ka Man", "Kung Kailangan Mo Ako"], "runtime": "PASS — 15.004s progression", "tier": "C — human review", "decision": "HOLD; high-reach artist-specific OPM option; audio/key/guide-vocal review required." },
+    { "title": "Mahal Kita, Remember Me — Renz Verano Medley", "artistOrTheme": "Renz Verano", "provider": "OPM Karaoke Cover", "videoId": "xC7jpW9PYB0", "url": "https://www.youtube.com/watch?v=xC7jpW9PYB0", "publishedAt": null, "publicViews": 6450000, "sections": null, "runtime": "PASS — 15.007s progression", "tier": "C — human review", "decision": "HOLD; view snapshot is strong, but publication date, exact sections and audio remain unknown." },
+    { "title": "Freddie Aguilar Nonstop Medley", "artistOrTheme": "Freddie Aguilar", "provider": "OPM Karaoke Cover", "videoId": "EtQeS3ThW14", "url": "https://www.youtube.com/watch?v=EtQeS3ThW14", "publishedAt": "2023-12-21", "publicViews": 660537, "sections": ["Anak", "Sa Kuko Ng Agila", "Kumusta Ka", "Magdalena", "Minamahal Kita", "Himig", "Magbako Ka", "Mindanao"], "runtime": "PASS — 15.006s progression", "tier": "C — human review", "decision": "HOLD; materially longer song set than existing Freddie medley, but overlaps three songs and needs audio review." },
+    { "title": "Best of '80s & '90s Music in Karaoke with Lyrics", "artistOrTheme": "Multiple international artists / decades", "provider": "Stingray Karaoke", "videoId": "E-iidk3e26Q", "url": "https://www.youtube.com/watch?v=E-iidk3e26Q", "publishedAt": "2021-03-27", "publicViews": 879813, "sections": ["Wake Me Up Before You Go-Go", "All Out of Love", "It's All Coming Back to Me Now", "Total Eclipse of the Heart", "I Don't Want to Miss a Thing", "Mickey", "What I Like About You", "Don't Speak", "Every Rose Has Its Thorn", "Super Freak", "Have You Ever Seen the Rain"], "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; listed repertoire is broad but inaccessible in KantaCue." },
+    { "title": "Best Karaoke with Lyrics Dance Hits '80s", "artistOrTheme": "Multiple international artists / 1980s dance", "provider": "Stingray Karaoke", "videoId": "aZtHcNEPOvk", "url": "https://www.youtube.com/watch?v=aZtHcNEPOvk", "publishedAt": "2021-03-28", "publicViews": 17194, "sections": ["Whitney Houston", "Pat Benatar", "Cyndi Lauper", "The Romantics", "David Bowie"], "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; limited public reach." },
+    { "title": "Mega Hits: Best Female Karaoke with Lyrics", "artistOrTheme": "Multiple female artists", "provider": "Stingray Karaoke", "videoId": "Igyysu-mVX0", "url": "https://www.youtube.com/watch?v=Igyysu-mVX0", "publishedAt": null, "publicViews": null, "sections": null, "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; track list and demand evidence absent." },
+    { "title": "Best of Bon Jovi: Karaoke with Lyrics", "artistOrTheme": "Bon Jovi", "provider": "Stingray Karaoke", "videoId": "4EtGAafSCx4", "url": "https://www.youtube.com/watch?v=4EtGAafSCx4", "publishedAt": "2021-01-18", "publicViews": 11934, "sections": ["You Give Love a Bad Name", "Wanted Dead or Alive", "Livin' on a Prayer", "I'll Be There for You", "It's My Life"], "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; competitor LoveNotes version is also blocked." },
+    { "title": "Queen: Best Songs in Karaoke", "artistOrTheme": "Queen", "provider": "Stingray Karaoke", "videoId": "Ys51MfuSrDY", "url": "https://www.youtube.com/watch?v=Ys51MfuSrDY", "publishedAt": "2021-02-17", "publicViews": 10232, "sections": ["Another One Bites the Dust", "Crazy Little Thing Called Love", "Somebody to Love", "Under Pressure", "Don't Stop Me Now", "Radio Ga-Ga"], "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; limited public reach." },
+    { "title": "Bon Jovi Medley Karaoke", "artistOrTheme": "Bon Jovi", "provider": "LoveNotes Medley", "videoId": "h0cviQ-qCz0", "url": "https://www.youtube.com/watch?v=h0cviQ-qCz0", "publishedAt": "2025-09-10", "publicViews": 1016985, "sections": null, "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled despite higher views than Stingray alternative." },
+    { "title": "Taylor Swift Medley Karaoke", "artistOrTheme": "Taylor Swift", "provider": "SELECT", "videoId": "wQhsv7R91o4", "url": "https://www.youtube.com/watch?v=wQhsv7R91o4", "publishedAt": "2022-10-14", "publicViews": 114150, "sections": null, "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; channel/track metadata sparse." },
+    { "title": "1 Hour Non Stop Club Hits Karaoke with Lyrics", "artistOrTheme": "Multiple international artists / party", "provider": "Stingray Karaoke", "videoId": "1T4Obcze2HQ", "url": "https://www.youtube.com/watch?v=1T4Obcze2HQ", "publishedAt": "2021-03-27", "publicViews": 14729, "sections": null, "runtime": "ERROR 150", "tier": "REJECT", "decision": "Reject for embedding disabled; exact continuous medley/section details need review." },
+    { "title": "Adele medley — public listing labels Female Key (exact title text not captured)", "artistOrTheme": "Adele", "provider": "Lariel Station", "videoId": "SODLNkAxHrI", "url": "https://www.youtube.com/watch?v=SODLNkAxHrI", "publishedAt": "2022-03-18", "publicViews": 3130965, "sections": null, "runtime": "NOT TESTED", "tier": "REJECT — key variant", "decision": "Public listing explicitly labels Female Key; rejected for the standard-key preference, not runtime-tested." },
+    { "title": "Stingray female mega-hits alternate (exact title text not captured)", "artistOrTheme": "Multiple female artists", "provider": "Stingray Karaoke", "videoId": "U0maM4yuOMI", "url": "https://www.youtube.com/watch?v=U0maM4yuOMI", "publishedAt": null, "publicViews": null, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER", "decision": "Possible same-theme alternate to an Error 150 upload; no distinct repertoire or popularity evidence captured." },
+    { "title": "Stingray Adele medley (exact title text not captured)", "artistOrTheme": "Adele", "provider": "Stingray Karaoke", "videoId": "hVO9KWHaOB4", "url": "https://www.youtube.com/watch?v=hVO9KWHaOB4", "publishedAt": "2021-02-21", "publicViews": 4483, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER", "decision": "Low captured views and no stronger evidence; not prioritized for runtime testing." },
+    { "title": "Stingray Justin Bieber medley (exact title text not captured)", "artistOrTheme": "Justin Bieber", "provider": "Stingray Karaoke", "videoId": "HwyayJicxJQ", "url": "https://www.youtube.com/watch?v=HwyayJicxJQ", "publishedAt": "2021-03-19", "publicViews": 2329, "sections": ["Intentions", "Stuck with U", "Yummy"], "runtime": "NOT TESTED", "tier": "DEFER", "decision": "Very low captured views; no evidence to prioritize over stronger candidates." },
+    { "title": "Taylor Swift Top 10 medley", "artistOrTheme": "Taylor Swift", "provider": "Stingray Karaoke", "videoId": "u7QPeS1E_ug", "url": "https://www.youtube.com/watch?v=u7QPeS1E_ug", "publishedAt": "2021-02-19", "publicViews": 4294, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER", "decision": "Low captured views and overlap with Error 150 Taylor candidate; not prioritized." },
+    { "title": "Rey Valera Medley", "artistOrTheme": "Rey Valera", "provider": "PRO music COVER", "videoId": "i5vcWmuKeKU", "url": "https://www.youtube.com/watch?v=i5vcWmuKeKU", "publishedAt": "2017-10-28", "publicViews": 411786, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER — vocal/melody risk", "decision": "Channel descriptions elsewhere indicate melody-guide content; this upload's exact form is unverified and not promoted to testing." },
+    { "title": "Donna Cruz Medley", "artistOrTheme": "Donna Cruz", "provider": "Singer DreamsPH", "videoId": "raTqrqvE3oE", "url": "https://www.youtube.com/watch?v=raTqrqvE3oE", "publishedAt": null, "publicViews": 3145, "sections": ["Only Me and You", "Hulog ng Langit", "Rain Songs"], "runtime": "NOT TESTED", "tier": "DEFER — superseded by stronger lead", "decision": "A stronger Ibarra Music Donna Cruz medley has 3,880,997 views and three public sections; the low-view lead was not tested." },
+    { "title": "April Boy Regino medley (exact title/channel metadata not captured)", "artistOrTheme": "April Boy Regino", "provider": null, "videoId": "DpOGyNYw0Mo", "url": "https://www.youtube.com/watch?v=DpOGyNYw0Mo", "publishedAt": null, "publicViews": null, "sections": null, "runtime": "NOT TESTED", "tier": "METADATA INCOMPLETE", "decision": "The public snippet suggested a recent 2026 upload, but exact channel, date, views, track list, and quality evidence were not captured; do not infer rising demand from recency alone." },
+    { "title": "YenJohn Aegis medley (exact title text not captured)", "artistOrTheme": "Aegis", "provider": "YenJohn HD Karaoke", "videoId": "mPAQpza7Vn4", "url": "https://www.youtube.com/watch?v=mPAQpza7Vn4", "publishedAt": "2025-07-26", "publicViews": 50274, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER — duplicate theme", "decision": "The current library already has an Aegis medley; no distinct repertoire is established." },
+    { "title": "Star Magic Aegis medley (exact title text not captured)", "artistOrTheme": "Aegis", "provider": "Star Magic Karaoke", "videoId": "ejnlASgKbMQ", "url": "https://www.youtube.com/watch?v=ejnlASgKbMQ", "publishedAt": "2024-07-25", "publicViews": 3439, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER — duplicate theme/low reach", "decision": "Existing Aegis medley and substantially lower captured views; no distinct value shown." },
+    { "title": "KaraOcraze Rivermaya medley (exact title text not captured)", "artistOrTheme": "Rivermaya", "provider": "KaraOcraze", "videoId": "7-7VHwrZ4Vw", "url": "https://www.youtube.com/watch?v=7-7VHwrZ4Vw", "publishedAt": "2024-05-11", "publicViews": 68512, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER — weaker competing version", "decision": "APMusic candidate OHIFuGAaod4 has a listed six-song set and 13.2M public views; this candidate is much lower reach." },
+    { "title": "Stingray 80s mega-mix (exact title text not captured)", "artistOrTheme": "International / 1980s", "provider": "Stingray Karaoke", "videoId": "neCvVba95L4", "url": "https://www.youtube.com/watch?v=neCvVba95L4", "publishedAt": null, "publicViews": null, "sections": null, "runtime": "NOT TESTED", "tier": "DEFER — evidence incomplete", "decision": "No trustworthy view/date/track details captured; potential overlap with the Stingray 80s/90s medley that returned Error 150." },
+    { "title": "Men Oppose Medley", "artistOrTheme": "Men Oppose", "provider": "OPM Karaoke Cover", "videoId": "0M6EJNL3hTs", "url": "https://www.youtube.com/watch?v=0M6EJNL3hTs", "publishedAt": "2023-12-19", "publicViews": 2206429, "sections": ["Kasalanan Ba", "Pag-Ibig Ko Sayo'y Di Magbabago", "Sabi Mo Ako Lamang", "Sabihin Mong Lagi"], "runtime": "NOT TESTED — v5 runner unavailable", "tier": "C / PENDING RUNTIME", "decision": "High public reach and listed OPM songs justify later test; no runtime result." },
+    { "title": "Karaoke - Donna Cruz Medley", "artistOrTheme": "Donna Cruz", "provider": "Ibarra Music", "videoId": "-IVoCF2v2KI", "url": "https://www.youtube.com/watch?v=-IVoCF2v2KI", "publishedAt": "2021-02-23", "publicViews": 3880997, "sections": ["Rain", "Only Me and You", "Kapag Tumibok ang Puso"], "runtime": "NOT TESTED — v5 runner unavailable", "tier": "C / PENDING RUNTIME", "decision": "Strongest discovered Donna Cruz lead by captured public views and section evidence; Playwright failure prevented the runtime batch." }
+  ],
+  "alreadyKnownCandidateRetested": {
+    "title": "OPM Medley Karaoke",
+    "artistOrTheme": "Various OPM artists",
+    "provider": "2Rs Kara-TV",
+    "videoId": "vcHCtqnU6A4",
+    "runtime": "PASS — 15.002s progression",
+    "decision": "C — track list, audio and presentation not established; no addition."
+  },
+  "humanReviewShortlist": [
+    { "rank": 1, "title": "Michael Learns To Rock Medley", "provider": "ConesStudio Karaoke", "videoId": "BIvD7IJQyME", "views": 22307154, "review": "Listen for standard arrangements, guide vocals, clean track transitions, key, lyrics and completeness; compare against the competing Ibarra version in historical research." },
+    { "rank": 2, "title": "April Boy Regino Medley", "provider": "Agaw Music Karaoke", "videoId": "L2Y5wnhyfNI", "views": 16021148, "review": "High view count, but sections are not listed in captured metadata; manually verify full medley structure and audio/presentation." },
+    { "rank": 3, "title": "Rey Valera Medley", "provider": "OPM Karaoke Cover", "videoId": "WO-ZTFltK9A", "views": 14405223, "review": "Check standard key, backing track, guide vocals, lyric timing and complete transitions." },
+    { "rank": 4, "title": "Rivermaya Medley", "provider": "APMusic", "videoId": "OHIFuGAaod4", "views": 13203616, "review": "Public description lists six songs; verify arrangement, lyrics, key and transitions." },
+    { "rank": 5, "title": "Scorpions Medley", "provider": "LoveNotes Medley", "videoId": "JdoBsqrN5W4", "views": 9413485, "review": "Manual playback/listening and section identity; technical test only proves embed progression." },
+    { "rank": 6, "title": "Renz Verano Medley", "provider": "OPM Karaoke Cover", "videoId": "xC7jpW9PYB0", "views": 6450000, "review": "Compare with ConesStudio candidate; exact tracks/date were not captured for this version." },
+    { "rank": 7, "title": "Renz Verano Medley", "provider": "ConesStudio Karaoke", "videoId": "5lqlYpJ03qo", "views": 3769370, "review": "Compare listed track trio and audio/presentation against the higher-view competitor." },
+    { "rank": 8, "title": "J Brothers Medley", "provider": "Harana Karaoke", "videoId": "Y_U22TnRqwM", "views": 3302530, "review": "Compare sections against two Error-150 versions; decide whether this version adds distinct repertoire." },
+    { "rank": 9, "title": "2005 OPM Hits Medley", "provider": "KaraOcraze", "videoId": "77eQoouxahI", "views": 996835, "review": "Verify the actual set list and suitability; its 2006 counterpart is Error 150." },
+    { "rank": 10, "title": "Freddie Aguilar Nonstop Medley", "provider": "OPM Karaoke Cover", "videoId": "EtQeS3ThW14", "views": 660537, "review": "Check overlap against existing four-song Freddie medley and confirm the additional sections are musically coherent." },
+    { "rank": 11, "title": "Eraserheads Medley", "provider": "LoveNotes Medley", "videoId": "i3qN_q8W1is", "views": 83111, "review": "Recent date is not proof of rising momentum; verify complete, accurate karaoke and audio/presentation." },
+    { "rank": 12, "title": "OPM Medley Karaoke", "provider": "2Rs Kara-TV", "videoId": "vcHCtqnU6A4", "views": null, "review": "First capture view/date and section metadata, then manual audio/visual review; value is currently less evidenced." }
+  ],
+  "deduplication": {
+    "existingLibrary": "All 11 current medleys were compared by artist/theme and known section lists. Primary song/video data is separate and unchanged.",
+    "notable": [
+      "Avoid an additional generic OPM love-song medley overlapping current OPM entries; MjJnLgAW1jc is also Error 150.",
+      "Aegis alternatives are redundant against the existing Aegis medley unless a manual track-list comparison proves distinctive value.",
+      "Renz Verano has two sustained-playback candidates; compare their distinct sets before considering either or both.",
+      "The Freddie Aguilar candidate overlaps three songs with the existing medley but adds five documented sections; treat as a distinct longer experience only if manual review confirms the set.",
+      "J Brothers variants overlap substantially; only one distinct user-valued version should be considered."
+    ],
+    "runtimeTestedUniqueVideoIds": 33,
+    "duplicateTestedVideoIds": 0
+  },
+  "sourceEvidence": {
+    "publicVideoPages": [
+      "https://www.youtube.com/watch?v=OHIFuGAaod4",
+      "https://www.youtube.com/watch?v=L2Y5wnhyfNI",
+      "https://www.youtube.com/watch?v=5lqlYpJ03qo",
+      "https://www.youtube.com/watch?v=77eQoouxahI",
+      "https://www.youtube.com/watch?v=WO-ZTFltK9A",
+      "https://www.youtube.com/watch?v=xC7jpW9PYB0",
+      "https://www.youtube.com/watch?v=EtQeS3ThW14",
+      "https://www.youtube.com/watch?v=-IVoCF2v2KI",
+      "https://www.youtube.com/watch?v=0M6EJNL3hTs"
+    ],
+    "providerPages": ["https://www.dailymotion.com/user/CoverPH"],
+    "historicalResearch": ["tools/medley-expansion-research-v2.json", "tools/medley-expansion-research-v3.json", "tools/karaoke-medley-audit.json"],
+    "runtimeReports": ["tools/medley-expansion-runtime-v3.json", "tools/medley-expansion-runtime-v4.json"],
+    "noApiKeyOrDataApi": true
+  },
+  "productionDecision": {
+    "medleysAdded": 0,
+    "publicMedleysBefore": 11,
+    "publicMedleysAfter": 11,
+    "why": "No candidate reached S/A/B because available tools did not genuinely verify audio/presentation properties. The v5 candidate tester also could not launch. Do not promote technical playback evidence as overall quality.",
+    "humanReviewCanAdvance": ["Manually inspect/listen to top shortlist candidates in KantaCue or official watch pages; record observations before any S/A/B decision."],
+    "nextResearchBatch": "Restore a known Playwright runtime path for the audit runner, re-run sample-029 3/3 before any further candidate tests, then runtime-test Donna Cruz and Men Oppose candidates. Keep the same 15-second gate."
+  },
+  "limitations": [
+    "No actual audio listening or frame-by-frame visual quality review was performed.",
+    "Search volume is unknown; view counts are public lifetime snapshots, not search counts or current velocity.",
+    "Fourteen newly discovered candidates were deferred/not runtime-tested; reasons are recorded individually.",
+    "The v5 runtime manifest was prepared but its run failed before Playwright/browser launch; it yielded no candidate evidence.",
+    "Public embed eligibility and playback can change after the test date."
+  ],
+  "filesCreated": ["tools/medley-expansion-research-v4.json", "tools/medley-expansion-runtime-ledger.json", "tools/medley-expansion-runtime-manifest-v5.json"],
+  "filesPreserved": ["tools/medley-expansion-research-v2.json", "tools/medley-expansion-research-v3.json", "tools/medley-expansion-runtime-v3.json", "tools/medley-expansion-runtime-v4.json", "data/songs.sample.json", "data/medleys.sample.json"]
+}

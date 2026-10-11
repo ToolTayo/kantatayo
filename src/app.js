@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=46";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=48";
 import { loadCatalog } from "./catalog.js?v=3";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
@@ -12,10 +12,11 @@ import { getFeaturedCollectionId } from "./collections.js?v=1";
 import { createInstallController } from "./install.js";
 import { parseMedleyShareId, parseSongShareId, shareMedley, shareSong } from "./share.js";
 import { createDefaultSessionState, loadSessionState, persistSessionState, pruneSessionState, recordSessionCompleted, recordSessionOpened } from "./session.js?v=2";
-import { getMedleyById, loadMedleys, medleyToPlayerItem, reconcileMedleyState } from "./medleys.js?v=7";
-import { getMedleyPlayerSuggestions, getSongPlayerSuggestions } from "./player-suggestions.js?v=3";
+import { getMedleyById, loadMedleys, medleyToPlayerItem, reconcileMedleyState } from "./medleys.js?v=8";
+import { getMedleyPlayerSuggestions, getSongPlayerSuggestions } from "./player-suggestions.js?v=4";
 import { getPlaybackWindowState } from "./player-timing.js?v=1";
 import { FIND_SONG_MODES, toggleFindSongModeSelection } from "./find-song.js?v=2";
+import { getQueueableLibrarySongs } from "./library-browse.js?v=1";
 
 const state = createAppState();
 let youtubeController = null;
@@ -39,6 +40,8 @@ let playerTimePollTimer = null;
 let playerPlaybackHasStarted = false;
 let findSongModes = [];
 let findSongSelectionAnnouncement = "";
+let medleyBrowse = { query: "", category: "all", provider: "", sort: "curated" };
+const libraryBrowse = { favorites: { query: "", sort: "recent" }, recent: { query: "", sort: "recent" } };
 
 const PLAYER_TIME_POLL_MS = 1000;
 
@@ -110,18 +113,30 @@ function render({ refreshRecommendations = false } = {}) {
   if (refreshRecommendations) refreshRecommendationsSnapshot();
   const loading = document.querySelector("[data-catalog-loading]");
   if (loading) loading.hidden = true;
-  renderPreferences(state.songs, state.user.preferences);
-  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId, sessionState, findSongModes, findSongSelectionAnnouncement);
+  if (currentView === "preferences") renderPreferences(state.songs, state.user.preferences);
+  renderSongSections(state.searchIndex, state.query, state.filter, state.sortBy, state.user, recommendationSnapshot, currentView, state.discoveryFilters, state.discoveryPage, selectedCollectionId, sessionState, findSongModes, findSongSelectionAnnouncement, libraryBrowse);
   findSongSelectionAnnouncement = "";
-  renderSongRequests(state.user);
+  if (currentView === "home") renderSongRequests(state.user);
+  const catalogSummary = document.querySelector("[data-home-catalog-summary]");
+  if (catalogSummary) catalogSummary.textContent = `${state.songs.filter(song => isValidYouTubeVideoId(song.youtubeVideoId)).length.toLocaleString("en")} playable songs · ${medleys.length} medleys · No sign-up`;
   const searchInput = document.querySelector("#song-search");
   if (searchInput && searchInput.value !== state.query) searchInput.value = state.query;
   const searchClear = document.querySelector('[data-action="clear-search"]');
   if (searchClear) searchClear.hidden = !state.query.trim();
   const queueSnapshot = getQueueSnapshot(state);
   renderQueue(queueSnapshot, state.user.partySession, getMedleyQueueSnapshot(state.user, medleys));
-  renderCollections(medleys, state.user);
-  renderPartyPanel(state.songs, state.user.partySession, queueSnapshot, rouletteResult, rouletteConstraints, partyStatusMessage, currentView, rouletteRecovery);
+  if (currentView === "collections") renderCollections(medleys, state.user, medleyBrowse);
+  if (currentView === "party") renderPartyPanel(state.songs, state.user.partySession, queueSnapshot, rouletteResult, rouletteConstraints, partyStatusMessage, currentView, rouletteRecovery);
+  const sort = document.querySelector("[data-sort]");
+  if (sort) sort.value = state.sortBy;
+  for (const kind of ["favorites", "recent"]) {
+    const input = document.querySelector(`[data-library-search="${kind}"]`);
+    if (input && input.value !== libraryBrowse[kind].query) input.value = libraryBrowse[kind].query;
+  }
+  const medleySearch = document.querySelector("[data-medley-search]");
+  if (medleySearch && medleySearch.value !== medleyBrowse.query) medleySearch.value = medleyBrowse.query;
+  const medleySort = document.querySelector("[data-medley-sort]");
+  if (medleySort) medleySort.value = medleyBrowse.sort;
 }
 
 function refreshRecommendationsSnapshot() {
@@ -139,6 +154,7 @@ function setViewHash(view) {
 
 function navigateToView(view, { preserveQuery = false, discoveryFilter = "" } = {}) {
   closeMobileMore();
+  const changedView = currentView !== normalizeView(view);
   currentView = normalizeView(view);
   if (!preserveQuery || currentView !== "discover") state.query = "";
   state.filter = "all";
@@ -152,8 +168,12 @@ function navigateToView(view, { preserveQuery = false, discoveryFilter = "" } = 
     partyStatusMessage = "Party Mode is on. Add singers to start a fair rotation.";
   }
   setViewHash(currentView);
-  if (currentView === "home" && typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "auto" });
   render();
+  if ((changedView || currentView === "home") && typeof window.scrollTo === "function") {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    const heading = document.querySelector('.view-panel:not([hidden]) h1, .view-panel:not([hidden]) h2');
+    if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+  }
 }
 
 function bindEvents() {
@@ -178,6 +198,32 @@ function bindEvents() {
     const actionTarget = event.target.closest("[data-action]");
     if (!actionTarget) return;
     const action = actionTarget.dataset.action;
+    if (actionTarget.getAttribute("aria-disabled") === "true") { showToast("Already in your queue"); return; }
+    if (action === "find-a-song") { navigateToView("discover"); document.querySelector("#song-search")?.focus(); return; }
+    if (action === "correct-search") { state.query = actionTarget.dataset.searchValue; state.discoveryPage = 1; render(); document.querySelector("#song-search")?.focus(); return; }
+    if (action === "reset-medley-browse") {
+      medleyBrowse = { query: "", category: "all", provider: "", sort: "curated" };
+      render(); document.querySelector("[data-medley-search]")?.focus(); return;
+    }
+    if (action === "filter-medleys") { medleyBrowse.category = actionTarget.dataset.medleyCategory; render(); return; }
+    if (action === "clear-library-search") {
+      const kind = actionTarget.dataset.library;
+      if (libraryBrowse[kind]) { libraryBrowse[kind].query = ""; render(); document.querySelector(`[data-library-search="${kind}"]`)?.focus(); }
+      return;
+    }
+    if (action === "queue-library") {
+      const kind = actionTarget.dataset.queueLibrary;
+      if (!libraryBrowse[kind]) return;
+      const songs = getQueueableLibrarySongs(state.songs, state.user, kind, libraryBrowse[kind]);
+      for (const song of songs) addSongToQueue(state.user, song.id);
+      syncPartyQueueAssignments(); persistAppState(state); render();
+      showToast(`${songs.length} song${songs.length === 1 ? "" : "s"} added to your queue`); return;
+    }
+    if (action === "remove-discovery-filter") {
+      const key = actionTarget.dataset.filterKey;
+      if (Object.hasOwn(state.discoveryFilters, key)) state.discoveryFilters[key] = key === "favorites" ? false : "any";
+      state.discoveryPage = 1; render(); document.querySelector('[data-action="toggle-discover-filters"]')?.focus(); return;
+    }
     if (action === "toggle-mobile-more") { toggleMobileMore(); return; }
     if (action === "toggle-discover-filters") { toggleDiscoverFilters(); return; }
     if (action === "load-more-discover") { state.discoveryPage += 1; render(); return; }
@@ -293,6 +339,9 @@ function bindEvents() {
   }, true);
 
   document.addEventListener("change", (event) => {
+    if (event.target.matches("[data-medley-provider]")) { medleyBrowse.provider = event.target.value; render(); return; }
+    if (event.target.matches("[data-medley-sort]")) { medleyBrowse.sort = event.target.value; render(); return; }
+    if (event.target.matches("[data-library-sort]")) { libraryBrowse[event.target.dataset.librarySort].sort = event.target.value; render(); return; }
     const renameInput = event.target.closest("[data-party-rename]");
     if (renameInput) {
       renamePartySingerFromUi(renameInput.dataset.partyRename, renameInput.value);
@@ -421,6 +470,8 @@ function bindEvents() {
     }
     render();
   });
+  document.querySelector("[data-medley-search]")?.addEventListener("input", (event) => { medleyBrowse.query = event.target.value; render(); });
+  document.querySelectorAll("[data-library-search]").forEach(input => input.addEventListener("input", event => { libraryBrowse[input.dataset.librarySearch].query = event.target.value; render(); }));
   document.querySelector("[data-sort]").addEventListener("change", (event) => { state.sortBy = event.target.value; state.discoveryPage = 1; render(); });
   document.querySelectorAll(".quick-filters [data-filter]").forEach((button) => button.addEventListener("click", () => {
     currentView = "discover";

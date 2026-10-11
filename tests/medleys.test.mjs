@@ -26,10 +26,12 @@ test("Collections is a first-class destination and medleys reuse the shared play
 
 test("medley dataset validates separately from the song catalog", () => {
   const result = normalizeMedleys(data);
-  assert.equal(result.medleys.length, 11);
+  assert.equal(result.medleys.length, 31);
   assert.equal(result.warnings.length, 0);
   assert.ok(result.medleys.every(isPlayableMedley));
   assert.ok(result.medleys.every((medley) => medley.sectionStatus === "unknown" ? medley.includedSongs.length === 0 : medley.includedSongs.length >= 2));
+  assert.equal(result.medleys.filter((medley) => medley.verification.status === "owner-authorized-provisional").length, 20);
+  assert.ok(result.medleys.filter((medley) => medley.verification.status === "owner-authorized-provisional").every((medley) => medley.verification.manualQuality === "unknown"));
   assert.equal(new Set(result.medleys.map((medley) => medley.id)).size, result.medleys.length);
   assert.equal(new Set(result.medleys.map((medley) => medley.videoId)).size, result.medleys.length);
   assert.equal(result.medleys.find((medley) => medley.videoId === "9AJt_0ZAtQc")?.verification.testedAt, "2026-10-03");

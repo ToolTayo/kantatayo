@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-07",
+  "purpose": "Cumulative index of medley-video runtime tests. Raw reports contain the full event traces; this ledger preserves IDs, decisions, and provenance across batches.",
+  "policy": {
+    "passRequires": "Existing KantaCue player/controller, matching loaded video ID, onReady, PLAYING, and sustained currentTime progression for at least 15 seconds.",
+    "readyOrPlayingAloneIsPass": false,
+    "error150": "Embedding disabled; do not bypass and do not promote.",
+    "technicalPassQuality": "Technical playback does not establish audio, key, vocals, lyrics, transitions, or visual quality; human review remains required."
+  },
+  "controlBatches": [
+    { "batch": "v3", "controlId": "sample-029", "videoId": "QBb9wO3Bj0k", "requiredRuns": 3, "passedRuns": 3, "status": "PASS", "report": "tools/medley-expansion-runtime-v3.json" },
+    { "batch": "v4", "controlId": "sample-029", "videoId": "QBb9wO3Bj0k", "requiredRuns": 3, "passedRuns": 3, "status": "PASS", "report": "tools/medley-expansion-runtime-v4.json" },
+    { "batch": "v5", "controlId": "sample-029", "videoId": "QBb9wO3Bj0k", "requiredRuns": 3, "passedRuns": 0, "status": "NOT RUN", "report": null, "note": "Runner exited before browser launch: Playwright is not resolvable in this invocation. No control or candidate result was produced." }
+  ],
+  "batches": [
+    { "batch": "v3", "manifest": "tools/medley-expansion-runtime-manifest-v3.json", "results": "tools/medley-expansion-runtime-v3.json", "candidateCount": 16, "pass": 4, "error150": 12 },
+    { "batch": "v4", "manifest": "tools/medley-expansion-runtime-manifest-v4.json", "results": "tools/medley-expansion-runtime-v4.json", "candidateCount": 17, "pass": 8, "error150": 9 },
+    { "batch": "v5", "manifest": "tools/medley-expansion-runtime-manifest-v5.json", "results": null, "candidateCount": 0, "pass": 0, "error150": 0, "status": "NOT RUN — Playwright unavailable" }
+  ],
+  "summary": { "uniqueCandidateVideosTested": 33, "pass": 12, "error150": 21, "otherErrors": 0, "timeouts": 0, "inconclusive": 0, "productionAdditions": 0 },
+  "entries": [
+    { "videoId": "BIvD7IJQyME", "title": "Michael Learns To Rock (MLTR) Medley", "provider": "ConesStudio Karaoke", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "Ej8W9fPxOwg", "title": "Modern Talking Medley", "provider": "YenJohn HD Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "honAHMAXTew", "title": "Classic Medley Songs", "provider": "YenJohn HD Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled; weak song identity", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "TtLQbRH8vD8", "title": "Duet Love Songs Medley", "provider": "Ibarra Music", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "JdoBsqrN5W4", "title": "Scorpions Medley Karaoke", "provider": "LoveNotes Medley", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "nQZDCe8M7SY", "title": "J Brothers Medley", "provider": "Rainbow Karaoke Channel", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "31vIDf87DoQ", "title": "J Brothers Medley (Karaoke Version With Lyrics)", "provider": "LoveNotes Medley", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled; near-duplicate sections", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "7hnYsMIy6kc", "title": "Air Supply Karaoke Songs Medley", "provider": "Sing King", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "2w2s4SezSmg", "title": "Broadway Hits Musical Theatre Karaoke Medley Vol. 1", "provider": "Sing King", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled; incomplete list evidence", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "wywFQ_bcWu0", "title": "Bee Gees Medley", "provider": "Ibarra Music", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "CSw7dIVHh-w", "title": "David Pomeranz Medley", "provider": "Ibarra Music", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled despite strong views", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "MjJnLgAW1jc", "title": "OPM Medley (Karaoke) Love Song", "provider": "KaraokeyTV", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled and generic OPM overlap", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "ZI8ufXTfCrg", "title": "Karaoke - Aegis Medley", "provider": "Ibarra Music", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled; existing Aegis medley", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "i3qN_q8W1is", "title": "Eraserheads (Medley Karaoke)", "provider": "LoveNotes Medley", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "d8ZYzw7F__o", "title": "OPM Band Medley - Karaoke", "provider": "Ibarra Music", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "Y_U22TnRqwM", "title": "J Brothers Medley (Karaoke)", "provider": "Harana Karaoke", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human review of sections and duplication required", "resultFile": "tools/medley-expansion-runtime-v3.json" },
+    { "videoId": "OHIFuGAaod4", "title": "Rivermaya Medley (Karaoke HQ Version)", "provider": "APMusic", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "L2Y5wnhyfNI", "title": "April Boy Regino Medley (HQ Karaoke Version with Lyrics)", "provider": "Agaw Music Karaoke", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "5lqlYpJ03qo", "title": "Renz Verano Medley (Karaoke)", "provider": "ConesStudio Karaoke", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "gzqSlf6acyk", "title": "2006 OPM Hits Medley Karaoke", "provider": "KaraOcraze", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "77eQoouxahI", "title": "2005 OPM Hits Medley Karaoke", "provider": "KaraOcraze", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "WO-ZTFltK9A", "title": "Rey Valera Medley", "provider": "OPM Karaoke Cover", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "xC7jpW9PYB0", "title": "Renz Verano Medley", "provider": "OPM Karaoke Cover", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "EtQeS3ThW14", "title": "Freddie Aguilar Nonstop Medley", "provider": "OPM Karaoke Cover", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — human review of overlap and audio/presentation required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "vcHCtqnU6A4", "title": "OPM Medley Karaoke", "provider": "2Rs Kara-TV", "status": "PASS", "progressSeconds": 15, "qualityDecision": "C — metadata and audio/presentation review required", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "E-iidk3e26Q", "title": "Best of '80s & '90s Music in Karaoke with Lyrics", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "aZtHcNEPOvk", "title": "Best Karaoke with Lyrics Dance Hits '80s", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "Igyysu-mVX0", "title": "Mega Hits: Best Female Karaoke with Lyrics", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "4EtGAafSCx4", "title": "Best of Bon Jovi: Karaoke with Lyrics", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "Ys51MfuSrDY", "title": "Queen: Best Songs in Karaoke", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "h0cviQ-qCz0", "title": "Bon Jovi Medley Karaoke", "provider": "LoveNotes Medley", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "wQhsv7R91o4", "title": "Taylor Swift Medley Karaoke", "provider": "SELECT", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" },
+    { "videoId": "1T4Obcze2HQ", "title": "1 Hour Non Stop Club Hits Karaoke with Lyrics", "provider": "Stingray Karaoke", "status": "ERROR 150", "errorCode": 150, "qualityDecision": "REJECT — embedding disabled", "resultFile": "tools/medley-expansion-runtime-v4.json" }
+  ]
+}

@@ -15,15 +15,17 @@ import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { buildPlayabilityAudit } from "./build-playability-audit.mjs";
-import { summarizeAuditEntries } from "../src/playability-audit.js";
+import { applyValidatedControlGate, evaluateSustainedPlayback, summarizeAuditEntries } from "../src/playability-audit.js";
 
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
-const STORAGE_KEY = "kantacue:youtube-full-playability-audit:v1";
+const STORAGE_KEY = "kantacue:youtube-full-playability-audit:v2";
 const DEFAULT_MANIFEST = path.join(ROOT, "tools", "youtube-full-playability-audit.json");
 const DEFAULT_RUNTIME_REPORT = path.join(ROOT, "tools", "youtube-full-playability-audit.runtime.json");
 const DEFAULT_CHECKPOINT = path.join(ROOT, "tools", "youtube-full-playability-audit.runtime.checkpoint.json");
-const CONTROL_IDS = ["sample-029", "sample-486", "sample-001", "sample-002", "sample-003"];
-const TERMINAL_STATUSES = new Set(["PASS", "ERROR 2", "ERROR 5", "ERROR 100", "ERROR 101", "ERROR 150", "ERROR 153", "TIMEOUT", "AUTOPLAY POLICY ONLY", "INCONCLUSIVE", "UNAVAILABLE"]);
+const CONTROL_ID = "sample-029";
+const CONTROL_VIDEO_ID = "QBb9wO3Bj0k";
+const CONTROL_RUNS_REQUIRED = 3;
+const TERMINAL_STATUSES = new Set(["PASS", "ERROR 2", "ERROR 5", "ERROR 100", "ERROR 101", "ERROR 150", "ERROR 153", "TIMEOUT", "READY-ONLY", "AUTOPLAY POLICY ONLY", "PLAYING WITHOUT PROGRESSION", "INCONCLUSIVE", "ENVIRONMENT FAILURE", "CONTROL FAILURE", "UNAVAILABLE"]);
 
 const args = parseArgs(process.argv.slice(2));
 if (args.help) {
@@ -38,15 +40,18 @@ Options:
   --manifest PATH           Preflight manifest path (default: ${path.relative(ROOT, DEFAULT_MANIFEST)}).
   --page-manifest PATH      JSON manifest fetched by the local audit page (development-only).
   --checkpoint PATH         Isolated browser result checkpoint (default: tools/youtube-full-playability-audit.runtime.checkpoint.json).
-  --per-song-timeout MS     Maximum wait for one browser row (default: 45000).
+  --per-song-timeout MS     Maximum wait for one browser row (default: 60000).
   --concurrency N           Low safe browser-page concurrency, capped at 3 (default: 3).
+  --control-only            Run the three independent sample-029 controls and stop.
+  KANTACUE_PLAYWRIGHT_EXECUTABLE  Optional path to an already-installed Chromium-based browser.
   --resume                  Keep prior local audit results instead of clearing them.
   --visible                 Use a visible browser window; headless is the default.
   --help                    Show this help.
 
-The control gate runs first. The full catalog is attempted only if at least one
-control reaches PASS with onReady, PLAYING, advancing currentTime, and 15s of
-sustained playback. Timeout and inconclusive results are never promoted to PASS.
+The control gate runs first. Three isolated sample-029 player runs must each
+reach onReady, PLAYING, advancing currentTime, and 15 seconds of sustained
+playback before any catalog/candidate audit starts. Timeout and inconclusive
+results are never promoted to PASS.
 
 Playwright must already be available. Set KANTACUE_PLAYWRIGHT_MODULE to its
 package directory or index.mjs when it is not resolvable as the normal package.
@@ -57,62 +62,85 @@ package directory or index.mjs when it is not resolvable as the normal package.
 const manifestPath = path.resolve(ROOT, args.manifest || DEFAULT_MANIFEST);
 const outputPath = path.resolve(ROOT, args.output || DEFAULT_RUNTIME_REPORT);
 const checkpointPath = path.resolve(ROOT, args.checkpoint || DEFAULT_CHECKPOINT);
-const perSongTimeout = Math.max(35_000, Number(args.perSongTimeout) || 45_000);
+const perSongTimeout = Math.max(35_000, Number(args.perSongTimeout) || 60_000);
 const concurrency = Math.min(3, Math.max(1, Number(args.concurrency) || 3));
 
+let localServer = null;
+let activeBrowser = null;
 try {
   const { chromium } = await loadPlaywright();
   const manifest = existsSync(manifestPath)
     ? JSON.parse(await readFile(manifestPath, "utf8"))
     : await buildPlayabilityAudit({ outputPath: manifestPath });
   if (!Array.isArray(manifest.entries) || !manifest.entries.length) throw new Error("The playability manifest has no valid entries.");
+  const controlEntry = manifest.entries.find((entry) => entry.songId === CONTROL_ID);
+  if (!controlEntry || controlEntry.videoId !== CONTROL_VIDEO_ID) throw new Error(`${CONTROL_ID} must resolve to the protected known-good control video ${CONTROL_VIDEO_ID}.`);
 
-  const localServer = args.url ? null : await startStaticServer(ROOT);
+  localServer = args.url ? null : await startStaticServer(ROOT);
   const auditUrl = args.url || `${localServer.url}/youtube-playability-audit.html?dev=1${args.pageManifest ? `&manifest=${encodeURIComponent(toWebPath(args.pageManifest))}` : ""}`;
   const workerUrl = (worker) => { const url = new URL(auditUrl); url.searchParams.set("worker", worker); return url.href; };
-  const browser = await chromium.launch({
+  const launchOptions = {
     headless: !args.visible,
     args: ["--autoplay-policy=no-user-gesture-required"]
-  });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  const diagnostics = { consoleErrors: [], pageErrors: [], requestFailures: [] };
-  attachDiagnostics(page, diagnostics);
-  const checkpoint = args.resume && existsSync(checkpointPath) ? JSON.parse(await readFile(checkpointPath, "utf8")) : null;
-  await preparePage(page, workerUrl("main"), checkpoint, `${STORAGE_KEY}:main`);
-
-  const results = [];
-  for (const songId of CONTROL_IDS) {
-    results.push(await runSong(page, songId, perSongTimeout, true));
-    await writeCheckpoint(page, checkpointPath);
+  };
+  if (process.env.KANTACUE_PLAYWRIGHT_EXECUTABLE) {
+    launchOptions.executablePath = process.env.KANTACUE_PLAYWRIGHT_EXECUTABLE;
   }
-  const controlPasses = results.filter((result) => result.status === "PASS");
-  console.log("CONTROL TESTS");
-  for (const result of results) console.log(`${result.songId} | ${result.status} | ${result.videoId}${result.errorCode ? ` | error ${result.errorCode}` : ""}`);
+  const diagnostics = { consoleErrors: [], pageErrors: [], requestFailures: [], expectedRequestAbortCount: 0 };
+  const checkpointFile = args.resume && existsSync(checkpointPath) ? JSON.parse(await readFile(checkpointPath, "utf8")) : null;
+  const checkpoint = checkpointFile?.evidenceVersion === 2 && checkpointFile?.version === 2 ? checkpointFile : null;
+  if (args.resume && checkpointFile && !checkpoint) console.warn("Ignoring an older runtime checkpoint because it predates the current stricter playback evidence rules.");
+  const controlRuns = [];
+  let browser = null;
+  let context = null;
+  let page = null;
+  let browserVersion = null;
 
-  if (!controlPasses.length) {
-    const report = await collectRuntimeReport([page], manifest, diagnostics, "CONTROL_GATE_FAILED");
+  for (let runIndex = 0; runIndex < CONTROL_RUNS_REQUIRED; runIndex += 1) {
+    browser = await chromium.launch(launchOptions);
+    activeBrowser = browser;
+    browserVersion = browser.version?.() || browserVersion;
+    context = await browser.newContext();
+    page = await context.newPage();
+    attachDiagnostics(page, diagnostics);
+    await preparePage(page, workerUrl(`control-${runIndex + 1}`), null, `${STORAGE_KEY}:control-${runIndex + 1}`);
+    const result = await runSong(page, CONTROL_ID, perSongTimeout, true);
+    const validation = validateControlEvidence(result);
+    controlRuns.push({ run: runIndex + 1, independentBrowserContext: true, independentBrowserProcess: true, ...result, validation });
+    console.log(`CONTROL ${runIndex + 1}/${CONTROL_RUNS_REQUIRED} | ${CONTROL_ID} | ${validation.status} | ${result.videoId}${result.errorCode ? ` | error ${result.errorCode}` : ""}`);
+    if (runIndex < CONTROL_RUNS_REQUIRED - 1) {
+      await browser.close();
+      browser = null;
+      activeBrowser = null;
+      context = null;
+      page = null;
+    }
+  }
+
+  const controlGatePassed = controlRuns.length === CONTROL_RUNS_REQUIRED && controlRuns.every((run) => run.validation.status === "PASS");
+  const controlGate = { status: controlGatePassed ? "PASS" : "CONTROL FAILURE", controlSongId: CONTROL_ID, requiredIndependentRuns: CONTROL_RUNS_REQUIRED, runs: controlRuns };
+  console.log(`CONTROL GATE | ${controlGate.status} | ${controlRuns.filter((run) => run.validation.status === "PASS").length}/${CONTROL_RUNS_REQUIRED} independent sustained runs`);
+
+  if (!controlGatePassed || args.controlOnly) {
+    const report = buildControlReport(manifest, controlGate, diagnostics, browserVersion);
     await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-    console.log(`CONTROL GATE FAILED: no control reached PASS; full catalog was not started.`);
     console.log(`Runtime report: ${path.relative(ROOT, outputPath)}`);
-    await browser.close();
-    localServer?.close();
-    process.exitCode = 3;
+    if (!controlGatePassed) process.exitCode = 3;
   } else {
+    context = await browser.newContext();
+    page = await context.newPage();
+    attachDiagnostics(page, diagnostics);
+    await preparePage(page, workerUrl("main"), checkpoint, `${STORAGE_KEY}:main`);
     const pages = [page];
     for (let index = 1; index < concurrency; index += 1) {
       const extraPage = await context.newPage();
       attachDiagnostics(extraPage, diagnostics);
-      // Worker pages only need fresh rows for entries assigned to them. Loading
-      // the shared checkpoint into every page can let stale results overwrite a
-      // newer control/candidate result when reports are merged at the end.
       await preparePage(extraPage, workerUrl(`worker-${index}`), null, `${STORAGE_KEY}:worker-${index}`);
       pages.push(extraPage);
     }
-    const controlSet = new Set(CONTROL_IDS);
     const pendingEntries = [];
     for (const entry of manifest.entries) {
-      if (controlSet.has(entry.songId)) continue;
+      if (entry.songId === CONTROL_ID) continue;
       if (entry.iframeStatus === "UNAVAILABLE" || !entry.videoId) continue;
       if (args.resume && await hasRecordedResult(page, entry.videoId)) continue;
       pendingEntries.push(entry);
@@ -127,13 +155,23 @@ try {
       }
     }));
     const report = await collectRuntimeReport(pages, manifest, diagnostics, "COMPLETE_OR_PARTIAL");
+    report.entries = applyValidatedControlGate(report.entries, controlGate, CONTROL_ID, CONTROL_VIDEO_ID);
+    report.counts = summarizeAuditEntries(report.entries);
+    report.runtime.controlGate = controlGate;
+    report.runtime.browserVersion = browserVersion;
+    report.runtime.browserExecutable = path.basename(process.env.KANTACUE_PLAYWRIGHT_EXECUTABLE || "Playwright bundled Chromium");
+    report.runtime.headless = !args.visible;
     await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
     printSummary(report);
-    await browser.close();
-    localServer?.close();
   }
+  if (browser) await browser.close();
+  activeBrowser = null;
+  localServer?.close();
+  localServer = null;
 } catch (error) {
-  console.error(`playability audit runner unavailable: ${error.message || error}`);
+  try { await activeBrowser?.close(); } catch { /* best-effort browser cleanup after a runner failure */ }
+  try { localServer?.close(); } catch { /* best-effort local server cleanup after a runner failure */ }
+  console.error(`ENVIRONMENT FAILURE: playability audit runner could not launch or drive its existing browser runtime: ${error.message || error}`);
   process.exitCode = 2;
 }
 
@@ -149,16 +187,16 @@ async function runSong(page, songId, timeout, isControl) {
   if (result.status === "INCONCLUSIVE") return result;
 
   try {
-    await page.waitForFunction((id) => {
+    await page.waitForFunction(({ id, terminalStatuses }) => {
       const row = [...document.querySelectorAll("tbody[data-candidate-rows] tr")].find((candidate) => candidate.children[0]?.textContent?.trim() === id);
       const status = row?.querySelector("[data-result]")?.textContent?.trim();
-      return status && ["PASS", "ERROR 2", "ERROR 5", "ERROR 100", "ERROR 101", "ERROR 150", "ERROR 153", "TIMEOUT", "AUTOPLAY POLICY ONLY", "INCONCLUSIVE"].includes(status);
-    }, songId, { timeout });
+      return status && terminalStatuses.includes(status);
+    }, { id: songId, terminalStatuses: [...TERMINAL_STATUSES] }, { timeout });
   } catch {
     await page.evaluate(({ id }) => {
-      const key = window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1";
+      const key = window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v2";
       const raw = window.localStorage.getItem(key);
-      const parsed = raw ? JSON.parse(raw) : { version: 1, results: {} };
+      const parsed = raw ? JSON.parse(raw) : { version: 2, evidenceVersion: 2, results: {} };
       parsed.results = parsed.results || {};
       parsed.results[id] = { ...(parsed.results[id] || {}), iframeStatus: "TIMEOUT", failureClassification: "AUTOMATION_WAIT_TIMEOUT", note: "The browser runner stopped waiting before the page produced a terminal result.", testedAt: new Date().toISOString() };
       window.localStorage.setItem(key, JSON.stringify(parsed));
@@ -167,49 +205,86 @@ async function runSong(page, songId, timeout, isControl) {
 
   const final = await page.evaluate((id) => {
     const row = [...document.querySelectorAll("tbody[data-candidate-rows] tr")].find((candidate) => candidate.children[0]?.textContent?.trim() === id);
-    const status = row?.querySelector("[data-result]")?.textContent?.trim() || "INCONCLUSIVE";
+    const rowStatus = row?.querySelector("[data-result]")?.textContent?.trim() || "INCONCLUSIVE";
     const title = row?.children[1]?.textContent?.trim() || "";
     const videoId = row?.children[3]?.textContent?.trim() || "";
-    const key = window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1";
+    const key = window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v2";
     const raw = window.localStorage.getItem(key);
     const stored = raw ? JSON.parse(raw) : { results: {} };
-    return { songId: id, status, title, videoId, errorCode: stored.results?.[videoId]?.errorCode || null };
+    const storedResult = stored.results?.[videoId] || {};
+    const status = storedResult.iframeStatus || rowStatus;
+    return { songId: id, status, title, videoId, errorCode: storedResult.errorCode || null, failureClassification: storedResult.failureClassification || null, note: storedResult.note || "", testedAt: storedResult.testedAt || null, trace: Array.isArray(storedResult.trace) ? storedResult.trace : [], browserEnvironment: { userAgent: navigator.userAgent, origin: location.origin, visibilityState: document.visibilityState } };
   }, songId);
   if (isControl) console.log(`${final.songId} | ${final.status}`);
   return final;
 }
 
-async function collectRuntimeReport(pages, manifest, diagnostics, auditStatus) {
-  const stored = await collectStoredResults(pages);
-  const entries = manifest.entries.map((entry) => stored.results?.[entry.videoId] ? { ...entry, ...stored.results[entry.videoId] } : entry);
-  const complete = entries.every((entry) => ["PASS", "ERROR 2", "ERROR 5", "ERROR 100", "ERROR 101", "ERROR 150", "ERROR 153", "TIMEOUT", "AUTOPLAY POLICY ONLY", "INCONCLUSIVE", "UNAVAILABLE"].includes(entry.iframeStatus));
+function validateControlEvidence(result) {
+  const trace = Array.isArray(result?.trace) ? result.trace : [];
+  const readyObserved = trace.some((entry) => entry.kind === "onReady");
+  const playingObserved = trace.some((entry) => entry.kind === "state-change" && Number(entry.detail) === 1);
+  const playerIdentityMatched = trace.some((entry) => entry.kind === "playback-sample" && entry.iframeConnected && entry.playerReady && entry.playerVideoId === CONTROL_VIDEO_ID && entry.loadedVideoId === CONTROL_VIDEO_ID);
+  const samples = trace.filter((entry) => entry.kind === "playback-sample").map((entry) => ({ elapsedMs: entry.playbackElapsedMs, currentTime: entry.currentTime, visibilityState: entry.visibilityState, playerVideoId: entry.playerVideoId, loadedVideoId: entry.loadedVideoId, playerReady: entry.playerReady, iframeConnected: entry.iframeConnected }));
+  const elapsedMs = Math.max(0, ...samples.map((sample) => Number(sample.elapsedMs) || 0));
+  const evidence = evaluateSustainedPlayback({ elapsedMs, samples, visibilityTrace: trace.map((entry) => entry.visibilityState), expectedVideoId: CONTROL_VIDEO_ID });
+  const missing = [];
+  if (!readyObserved) missing.push("onReady was not captured");
+  if (!playingObserved) missing.push("PLAYING was not captured");
+  if (!playerIdentityMatched) missing.push("the active official iframe identity did not match the control video");
+  if (result?.status !== "PASS") missing.push(`the audit page result was ${result?.status || "missing"}`);
+  if (evidence.status !== "PASS") missing.push(evidence.reason);
+  const status = missing.length ? (result?.status === "TIMEOUT" ? "TIMEOUT" : "CONTROL FAILURE") : "PASS";
+  return { status, readyObserved, playingObserved, playerIdentityMatched, playbackEvidence: evidence, failureReasons: missing };
+}
+
+function buildControlReport(manifest, controlGate, diagnostics, browserVersion) {
+  const entries = manifest.entries.map((entry) => {
+    if (entry.songId !== CONTROL_ID) return entry;
+    const latestRun = controlGate.runs.at(-1);
+    return {
+      ...entry,
+      iframeStatus: latestRun?.status === "PASS" && latestRun?.validation?.status !== "PASS" ? "CONTROL FAILURE" : latestRun?.status || "CONTROL FAILURE",
+      errorCode: latestRun?.errorCode ?? null,
+      failureClassification: latestRun?.failureClassification || latestRun?.validation?.status || "CONTROL_FAILURE",
+      note: latestRun?.note || latestRun?.validation?.failureReasons?.join("; ") || "",
+      trace: latestRun?.trace || [],
+      testedAt: latestRun?.testedAt || new Date().toISOString()
+    };
+  });
   return {
     ...manifest,
     generatedAt: new Date().toISOString(),
-    auditStatus: complete ? "COMPLETE" : auditStatus,
-    runtime: { environment: "Playwright Chromium through the real audit page", diagnostics },
+    auditStatus: controlGate.status === "PASS" ? "CONTROL_GATE_PASSED" : "CONTROL_GATE_FAILED",
+    runtime: { environment: "Playwright Chromium through KantaCue's real audit page/controller", browserVersion, browserExecutable: path.basename(process.env.KANTACUE_PLAYWRIGHT_EXECUTABLE || "Playwright bundled Chromium"), headless: !args.visible, controlGate, diagnostics },
     counts: summarizeAuditEntries(entries),
     entries
   };
 }
 
-async function writeCheckpoint(page, checkpointPath) {
-  const payload = await page.evaluate(() => {
-    try { return JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1") || "{}"); } catch { return {}; }
-  });
-  await writeFile(checkpointPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+async function collectRuntimeReport(pages, manifest, diagnostics, auditStatus) {
+  const stored = await collectStoredResults(pages);
+  const entries = manifest.entries.map((entry) => stored.results?.[entry.videoId] ? { ...entry, ...stored.results[entry.videoId] } : entry);
+  const complete = entries.every((entry) => TERMINAL_STATUSES.has(entry.iframeStatus));
+  return {
+    ...manifest,
+    generatedAt: new Date().toISOString(),
+    auditStatus: complete ? "COMPLETE" : auditStatus,
+    runtime: { environment: "Playwright Chromium through KantaCue's real audit page/controller", diagnostics },
+    counts: summarizeAuditEntries(entries),
+    entries
+  };
 }
 
 async function writeCombinedCheckpoint(pages, checkpointPath) {
   const payload = await collectStoredResults(pages);
-  await writeFile(checkpointPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  await writeFile(checkpointPath, `${JSON.stringify({ ...payload, version: 2, evidenceVersion: 2 }, null, 2)}\n`, "utf8");
 }
 
 async function collectStoredResults(pages) {
   const results = {};
   for (const page of pages) {
     const stored = await page.evaluate(() => {
-      try { return JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1") || "{}"); } catch { return {}; }
+      try { return JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v2") || "{}"); } catch { return {}; }
     });
     for (const [videoId, result] of Object.entries(stored.results || {})) {
       const previous = results[videoId];
@@ -218,13 +293,24 @@ async function collectStoredResults(pages) {
       if (!previous || resultTime >= previousTime) results[videoId] = result;
     }
   }
-  return { version: 1, results };
+  return { version: 2, evidenceVersion: 2, results };
 }
 
 function attachDiagnostics(page, diagnostics) {
-  page.on("console", (message) => { if (message.type() === "error") diagnostics.consoleErrors.push(message.text()); });
+  page.on("console", (message) => {
+    if (message.type() !== "error") return;
+    const location = message.location?.() || {};
+    diagnostics.consoleErrors.push({ text: message.text(), url: location.url || null, line: location.lineNumber ?? null });
+  });
   page.on("pageerror", (error) => diagnostics.pageErrors.push(String(error?.message || error)));
-  page.on("requestfailed", (request) => diagnostics.requestFailures.push(`${request.url()} :: ${request.failure()?.errorText || "failed"}`));
+  page.on("requestfailed", (request) => {
+    const errorText = request.failure()?.errorText || "failed";
+    if (errorText === "net::ERR_ABORTED") {
+      diagnostics.expectedRequestAbortCount += 1;
+      return;
+    }
+    diagnostics.requestFailures.push(`${request.url()} :: ${errorText}`);
+  });
 }
 
 async function preparePage(page, auditUrl, checkpoint, storageKey) {
@@ -238,18 +324,18 @@ async function preparePage(page, auditUrl, checkpoint, storageKey) {
 }
 
 async function hasRecordedResult(page, videoId) {
-  return page.evaluate((id) => {
+  return page.evaluate(({ id, terminalStatuses }) => {
     try {
-      const stored = JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v1") || "{}");
+      const stored = JSON.parse(window.localStorage.getItem(window.__KANTACUE_PLAYABILITY_STORAGE_KEY__ || "kantacue:youtube-full-playability-audit:v2") || "{}");
       const status = stored.results?.[id]?.iframeStatus;
-      return ["PASS", "ERROR 2", "ERROR 5", "ERROR 100", "ERROR 101", "ERROR 150", "ERROR 153", "TIMEOUT", "AUTOPLAY POLICY ONLY", "INCONCLUSIVE", "UNAVAILABLE"].includes(status);
+      return terminalStatuses.includes(status);
     } catch { return false; }
-  }, videoId);
+  }, { id: videoId, terminalStatuses: [...TERMINAL_STATUSES] });
 }
 
 function printSummary(report) {
   const counts = report.counts;
-  console.log(`FULL CATALOG | total ${counts.total} | PASS ${counts.confirmedPlayable} | errors ${counts.errors} | unavailable ${counts.unavailable} | timeout ${counts.timeouts} | autoplay ${counts.autoplayPolicyOnly} | inconclusive ${counts.ambiguous}`);
+  console.log(`AUDIT | total ${counts.total} | PASS ${counts.confirmedPlayable} | errors ${counts.errors} | unavailable ${counts.unavailable} | timeout ${counts.timeouts} | ready-only ${counts.readyOnly} | autoplay-only ${counts.autoplayPolicyOnly} | playing-without-progression ${counts.playingWithoutProgression} | unresolved ${counts.ambiguous}`);
   console.log(`Runtime report: ${path.relative(ROOT, outputPath)}`);
 }
 
@@ -292,12 +378,13 @@ function toWebPath(filePath) {
 }
 
 function parseArgs(values) {
-  const parsed = { resume: false, visible: false, help: false };
+  const parsed = { resume: false, visible: false, help: false, controlOnly: false };
   for (let index = 0; index < values.length; index += 1) {
     const value = values[index];
     if (value === "--help") parsed.help = true;
     else if (value === "--resume") parsed.resume = true;
     else if (value === "--visible") parsed.visible = true;
+    else if (value === "--control-only") parsed.controlOnly = true;
     else if (value === "--url") parsed.url = values[++index];
     else if (value === "--output") parsed.output = values[++index];
     else if (value === "--manifest") parsed.manifest = values[++index];

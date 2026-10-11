@@ -73,10 +73,13 @@ test("stage ambience uses CSS gradients without loading a heavy background image
 });
 
 test("shell cache version follows the stylesheet and module revisions", () => {
-  assert.match(index, /styles\/main\.css\?v=47/);
-  assert.match(index, /src\/app\.js\?v=62/);
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=47"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=62"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=46"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v109"/);
+  assert.match(index, /styles\/main\.css\?v=49/);
+  assert.match(index, /src\/app\.js\?v=64/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=49"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=64"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=48"/);
+  assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=8"/);
+  assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=8"/);
+  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=4"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v112"/);
 });

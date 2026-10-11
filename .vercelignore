@@ -1,0 +1,10 @@
+# Keep internal audit artifacts and development-only browser tools out of the public deployment.
+/tools
+/tests
+/youtube-playability-audit.html
+/youtube-candidate-tester.html
+/logo-lab.html
+/src/candidate-tester.js
+/src/full-playability-audit.js
+/src/playability-audit.js
+/styles/candidate-tester.css

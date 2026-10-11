@@ -109,7 +109,7 @@ function getMedleyReason({ sameProvider, sameLanguage, sameTheme, theme, languag
   if (sameTheme) return `More ${theme} medleys`;
   if (sameLanguage) return `More ${language} medleys`;
   if (sameProvider) return `More medleys from ${provider}`;
-  return "Another verified karaoke medley";
+  return "Another karaoke medley";
 }
 
 function normalizeLimit(value) {

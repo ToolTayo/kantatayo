@@ -32,6 +32,10 @@ test("player preserves the official 16:9 embed and has real expanded/fullscreen 
   assert.match(app, /Full screen is not available here/);
 });
 
+test("desktop expanded player resolves width from its insets, including mobile-to-desktop resizing", () => {
+  assert.match(css, /\.player-panel\.is-expanded\s*\{[^}]*left:\s*calc\(15rem \+ 1\.5rem\)[^}]*right:\s*1\.5rem;\s*width:\s*auto;/);
+});
+
 test("video completion automatically advances queued songs but keeps recommendations explicit", () => {
   assert.match(app, /function handleVideoEnded\(videoId\)/);
   assert.match(app, /const queuedNext = snapshot\.currentIndex >= 0/);

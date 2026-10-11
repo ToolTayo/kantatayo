@@ -193,6 +193,17 @@ export function createYouTubePlayerController({
     destroy,
     isReady: () => playerReady,
     getCurrentVideoId: () => currentVideoId,
+    getLoadedVideoId: () => {
+      try {
+        const value = player?.getVideoUrl?.();
+        const url = new URL(value || "");
+        if (!new Set(["youtube.com", "www.youtube.com"]).has(url.hostname.toLowerCase())) return null;
+        const videoId = url.searchParams.get("v");
+        return isValidYouTubeVideoId(videoId) ? videoId : null;
+      } catch {
+        return null;
+      }
+    },
     getCurrentTime: () => {
       try {
         const value = player?.getCurrentTime?.();

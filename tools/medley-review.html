@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>Medley Review Workspace · KantaCue</title>
+  <link rel="stylesheet" href="medley-review.css">
+  <script type="module" src="medley-review.js"></script>
+</head>
+<body>
+  <div class="workspace-shell">
+    <header class="workspace-header">
+      <div class="wordmark" aria-label="KantaCue local review workspace"><span class="mark" aria-hidden="true">KC</span><span>Kanta<span>Cue</span></span></div>
+      <div class="header-label"><span class="local-dot" aria-hidden="true"></span> Local review workspace</div>
+    </header>
+
+    <main id="workspace" hidden>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Collections · private quality review</p>
+          <h1 id="page-title">Medley Review Workspace</h1>
+          <p class="intro-copy">Listen and inspect each technically verified candidate yourself. Runtime PASS confirms sustained embed playback only—it does not approve audio, lyrics, key, or presentation.</p>
+        </div>
+        <div class="review-summary" aria-live="polite" aria-label="Review progress">
+          <strong id="progress-count">0 / 22</strong><span>reviewed</span>
+          <span class="summary-divider" aria-hidden="true"></span>
+          <strong id="approved-count">0</strong><span>approved</span>
+        </div>
+      </section>
+
+      <p id="workspace-status" class="status-message" role="status" aria-live="polite" hidden></p>
+
+      <section class="workspace-tools" aria-label="Review tools">
+        <label class="search-label" for="candidate-search">Find a candidate
+          <input id="candidate-search" type="search" autocomplete="off" placeholder="Artist, title, provider, or video ID">
+        </label>
+        <label for="candidate-filter">Show
+          <select id="candidate-filter">
+            <option value="all">All 22 candidates</option>
+            <option value="unreviewed">Not reviewed</option>
+            <option value="in-progress">In progress</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="needs-another-review">Needs another review</option>
+          </select>
+        </label>
+        <div class="file-actions">
+          <button class="button button-secondary" id="export-reviews" type="button">Export JSON</button>
+          <button class="button button-secondary" id="import-trigger" type="button">Import JSON</button>
+          <input id="import-file" class="visually-hidden" type="file" accept="application/json,.json" tabindex="-1" aria-hidden="true">
+        </div>
+      </section>
+
+      <div class="review-layout">
+        <aside class="candidate-panel" aria-labelledby="candidate-list-title">
+          <div class="panel-heading"><div><p class="eyebrow">22 technical passes</p><h2 id="candidate-list-title">Review queue</h2></div><span id="visible-count" class="count-pill">22</span></div>
+          <ol id="candidate-list" class="candidate-list" aria-label="Medley candidates ordered for review"></ol>
+          <p id="no-results" class="empty-copy" hidden>No candidates match this search.</p>
+        </aside>
+
+        <section id="candidate-detail" class="detail-panel" aria-labelledby="candidate-title">
+          <div class="detail-empty"><span class="empty-mark" aria-hidden="true">♫</span><h2>Choose a medley to review</h2><p>Your ratings stay in this browser until you export them.</p></div>
+        </section>
+      </div>
+
+      <footer class="workspace-footer">
+        <div><strong>Local only.</strong> Decisions are stored in this browser, never sent to KantaCue or a server.</div>
+        <div class="footer-actions">
+          <button class="text-button" id="undo-reset" type="button" hidden>Undo last reset</button>
+          <button class="text-button danger-text" id="reset-all" type="button">Reset all local reviews</button>
+        </div>
+      </footer>
+      <p class="compliance-note">Official YouTube player only. Playback, ads, controls, and branding remain YouTube’s. No video or audio is downloaded or cached by this workspace.</p>
+    </main>
+
+    <main id="access-denied" class="access-denied" hidden>
+      <p class="eyebrow">Not available here</p>
+      <h1>Local development only</h1>
+      <p>This review workspace is restricted to <code>localhost</code> and loopback addresses. It is not a KantaCue production page.</p>
+    </main>
+  </div>
+
+  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title">
+    <form method="dialog" class="dialog-card">
+      <p class="eyebrow">Confirm local action</p>
+      <h2 id="confirm-title">Reset review data?</h2>
+      <p id="confirm-copy">The review state will be cleared from this browser. You can undo immediately.</p>
+      <div class="dialog-actions"><button class="button button-secondary" value="cancel">Cancel</button><button class="button button-danger" id="confirm-action" value="confirm">Reset</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="import-dialog" class="confirm-dialog" aria-labelledby="import-title">
+    <form method="dialog" class="dialog-card">
+      <p class="eyebrow">Validated local import</p>
+      <h2 id="import-title">Import review decisions?</h2>
+      <p id="import-copy">No changes have been made yet.</p>
+      <div class="dialog-actions"><button class="button button-secondary" value="cancel">Cancel</button><button class="button button-primary" id="confirm-import" value="import">Import decisions</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

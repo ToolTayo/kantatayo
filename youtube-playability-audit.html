@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>KantaCue Local YouTube Playability Audit</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg" />
     <link rel="stylesheet" href="styles/candidate-tester.css?v=1" />
     <script type="module" src="src/full-playability-audit.js?v=1"></script>
   </head>
@@ -27,7 +28,7 @@
           <div class="tester-actions"><button type="button" data-action="next" class="primary-button">Test next untested</button><button type="button" data-action="mark-inconclusive">Mark inconclusive</button><button type="button" data-action="export">Export report</button></div>
           <label class="audit-note">Operator note <textarea data-audit-note rows="3" placeholder="Optional playback, quality, or region note"></textarea></label>
           <button type="button" data-action="save-note">Save note locally</button>
-          <p class="tester-help">PASS requires onReady, PLAYING, advancing playback time, and 15 seconds of sustained playback. READY without PLAYING is recorded as autoplay-policy-only after the grace period.</p>
+          <p class="tester-help">PASS requires onReady, the matching official iframe, visible PLAYING state for 15 seconds, at least eight readable playback-time samples, and sustained time progression. READY without PLAYING is recorded separately; PLAYING without progression, a hidden/background page, timeout and player errors remain distinct.</p>
         </div>
         <div class="tester-player-frame" data-youtube-mount aria-label="Official YouTube audit player"></div>
       </section>

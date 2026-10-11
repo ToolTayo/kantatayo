@@ -43,6 +43,7 @@ test("Home and Discover are separate UI surfaces with a complete-catalog CTA", a
   assert.match(html, /data-filter="filipino"/);
   assert.match(html, /data-filter="english"/);
   assert.match(app, /closest\("\.primary-nav a, \.mobile-nav a, \.mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]"\)/);
-  assert.match(app, /currentView === "home" && typeof window\.scrollTo === "function"/);
+  assert.match(app, /\(changedView \|\| currentView === "home"\) && typeof window\.scrollTo === "function"/);
+  assert.match(app, /heading\.focus\(\{ preventScroll: true \}\)/);
   assert.match(ui, /mobile-more-menu a, \.brand, \.sidebar-brand, a\[data-view\]/);
 });

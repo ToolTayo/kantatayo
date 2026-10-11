@@ -71,6 +71,26 @@ test("controller forwards the official player error code without changing the vi
   assert.equal(errors.length, 0);
 });
 
+test("controller exposes the official player's currently loaded video ID for audit identity checks", async () => {
+  const windowRef = {
+    location: { protocol: "http:", origin: "http://localhost:54048" },
+    YT: {
+      Player: function Player(_container, options) {
+        this.currentUrl = `https://www.youtube.com/watch?v=${options.videoId}`;
+        this.loadVideoById = (videoId) => { this.currentUrl = `https://www.youtube.com/watch?v=${videoId}`; };
+        this.getVideoUrl = () => this.currentUrl;
+        options.events.onReady({ target: this });
+      }
+    }
+  };
+  const controller = createYouTubePlayerController({ container: {}, windowRef, documentRef: {}, logger: { warn() {} } });
+  await controller.load("abcdefghijk", { autoplay: false });
+  assert.equal(controller.getCurrentVideoId(), "abcdefghijk");
+  assert.equal(controller.getLoadedVideoId(), "abcdefghijk");
+  await controller.load("bcdefghijkl", { autoplay: false });
+  assert.equal(controller.getLoadedVideoId(), "bcdefghijkl");
+});
+
 test("known YouTube embed errors stay distinct without exposing codes in production", () => {
   assert.match(uiSource, /100: \["This karaoke video is no longer available\./);
   assert.match(uiSource, /101: \["This video cannot play inside KantaCue\./);

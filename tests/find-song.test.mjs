@@ -145,7 +145,7 @@ test("Home uses one Sing now decision surface for Find My Song cues and results"
   assert.doesNotMatch(html, /What feels right\?|Find My Song picks/);
   assert.match(html, /Swipe or tab through these three picks\./);
   assert.match(html, /data-find-song-status[^>]+role="status"[^>]+aria-live="polite"/);
-  assert.match(html, /choose up to two cues to shape these three playable picks/i);
+  assert.match(html, /choose up to two cues, or jump straight into a pick/i);
   assert.match(app, /toggle-find-song-mode/);
   assert.match(app, /toggleFindSongModeSelection/);
   assert.match(app, /action === "clear-find-song"[^\n]*document\.querySelector\("\[data-find-song-mode\]"\)\?\.focus\(\)/);

@@ -80,27 +80,27 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=47"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=62"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=49"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=64"/);
   assert.match(serviceWorker, /"\.\/src\/catalog\.js\?v=3"/);
   assert.match(serviceWorker, /"\.\/src\/view\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=6"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=6"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=46"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=48"/);
   assert.match(serviceWorker, /"\.\/src\/state\.js\?v=8"/);
-  assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=7"/);
-  assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=7"/);
+  assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=8"/);
+  assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=8"/);
   assert.match(serviceWorker, /"\.\/src\/party\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/focus\.js"/);
   assert.match(serviceWorker, /"\.\/src\/install\.js"/);
   assert.match(serviceWorker, /"\.\/src\/share\.js"/);
   assert.match(serviceWorker, /"\.\/src\/session\.js\?v=2"/);
-  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=3"/);
+  assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/player-timing\.js\?v=1"/);
   assert.match(serviceWorker, /"\.\/src\/find-song\.js\?v=2"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v109"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v112"/);
   assert.doesNotMatch(serviceWorker, /kantatayo-stage-bg\.png/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);
@@ -110,6 +110,16 @@ test("service worker caches only the explicit first-party app shell", () => {
   assert.match(serviceWorker, /caches\.match\(INDEX_URL\)/);
   assert.doesNotMatch(serviceWorker, /https?:\/\//i);
   assert.doesNotMatch(serviceWorker, /youtube\.com|ytimg\.com|\.(?:mp4|webm|m4a|mp3)(?:["'])/i);
+});
+
+test("Vercel deployment excludes development audit pages, tests and tooling while retaining runtime app assets", async () => {
+  const ignored = (await readFile(".vercelignore", "utf8")).split(/\r?\n/);
+  for (const path of ["/tools", "/tests", "/youtube-playability-audit.html", "/youtube-candidate-tester.html", "/logo-lab.html", "/src/candidate-tester.js", "/src/full-playability-audit.js", "/src/playability-audit.js", "/styles/candidate-tester.css"]) {
+    assert.ok(ignored.includes(path), `Expected ${path} to be excluded from the Vercel deployment`);
+  }
+  for (const runtime of ["/index.html", "/service-worker.js", "/src/app.js", "/src/ui.js", "/src/youtube.js", "/src/medleys.js", "/styles/main.css", "/data/medleys.sample.json"]) {
+    assert.ok(!ignored.includes(runtime), `Runtime asset ${runtime} must remain deployable`);
+  }
 });
 
 test("app registers the service worker safely and keeps offline playback explicit", () => {

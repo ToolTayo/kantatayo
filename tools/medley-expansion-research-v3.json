@@ -1,0 +1,213 @@
+{
+  "reportVersion": 3,
+  "generatedAt": "2026-10-07T13:45:06Z",
+  "project": "KantaCue Collections medley expansion",
+  "decision": "NO_PRODUCTION_ADDITIONS_AUDIO_REVIEW_REQUIRED",
+  "summary": "The sustained-playback verifier is now identity-safe and passed its known-good control three independent times. Sixteen distinct new-candidate videos were tested through KantaCue's existing official YouTube player: four passed sustained playback and twelve returned Error 150. All four technical passes remain quality tier C because audio, guide-vocal status, key, lyric sync, transitions, completeness, and presentation were not genuinely listened to/visually reviewed. Under the explicit quality gate, none qualifies for production addition yet. Existing 11 medleys and all 1067 primary records remain unchanged.",
+  "baseline": {
+    "primarySongs": 1067,
+    "playablePrimarySongs": 1000,
+    "unavailablePrimarySongs": 67,
+    "publicMedleys": 11,
+    "primaryCatalogSha256": "547796d68ab2b7d09c3bddb8fb3fbd0285323fd913d2e070357352eff132e5b7",
+    "primaryCatalogChanged": false,
+    "productionMedleyDataChanged": false,
+    "sample029": "QBb9wO3Bj0k"
+  },
+  "scopeAndEvidence": {
+    "researchSources": "Public YouTube watch/search pages, public descriptions/timestamps, existing KantaCue research ledgers, plus real-browser playback via KantaCue's existing controller. No YouTube Data API, API key, media download, proxy, or rehosting.",
+    "researchUniverse": {
+      "priorDistinctCandidateIds": 37,
+      "newRuntimeOnlyIds": ["ZI8ufXTfCrg", "i3qN_q8W1is"],
+      "distinctIdsAfterThisPass": 39,
+      "runtimeCandidatesTestedThisPass": 16,
+      "note": "The v2 research report counted 21 historical candidates plus 16 later candidates (37 distinct IDs). This pass added two additional distinct runtime candidates, Aegis and Eraserheads. Harana J Brothers was already in the v2 research universe and is now runtime-tested. IDs mentioned only as comparison notes are not counted as qualified candidates."
+    },
+    "popularityMethod": {
+      "facts": "Public lifetime view-count snapshots and publication dates are recorded per candidate where captured. Candidate age is considered alongside views; view counts are not search volume.",
+      "ageNormalization": "Where both date and view snapshot exist, relative age is considered qualitatively. A lifetime average is not described as current velocity. Missing dates remain unknown.",
+      "searchVolume": "UNKNOWN; no reliable numerical search-volume source was used.",
+      "trendOrVirality": "UNKNOWN unless a time-series source establishes recent acceleration; no candidate is labelled viral or trending from lifetime views alone."
+    },
+    "providerCoverage": [
+      {"provider":"KaraokeyTV","result":"One additional OPM love-song medley surfaced; it overlaps the existing generic OPM collection concept and returned Error 150. No addition."},
+      {"provider":"Atomic Karaoke","result":"Targeted public searches surfaced single-song videos/playlists, not a clearly documented one-video multi-song medley."},
+      {"provider":"CoversPH","result":"Targeted public searches did not establish a distinct multi-song karaoke video suitable for this phase."},
+      {"provider":"Sing King Karaoke","result":"The two candidates in this runtime batch both returned Error 150. Prior research also had four tested Sing King uploads return 150; no Sing King medley was promoted."},
+      {"provider":"ConesStudio Karaoke","result":"One very high-view MLTR medley passed sustained playback; manual audio/presentation review remains required."},
+      {"provider":"YenJohn HD Karaoke","result":"Two medley-labelled candidates returned Error 150."},
+      {"provider":"Ibarra Music","result":"Five candidates, including high-view OPM/international/duet entries, returned Error 150."},
+      {"provider":"LoveNotes Medley","result":"Scorpions and Eraserheads passed sustained playback; J Brothers returned Error 150."},
+      {"provider":"Harana Karaoke","result":"A timestamped J Brothers medley passed sustained playback. It is the strongest of three tested J Brothers alternatives technically, but still requires human audio/presentation review."},
+      {"provider":"Rainbow Karaoke Channel","result":"J Brothers candidate returned Error 150."},
+      {"provider":"Other screened sources","result":"Public searches also screened AJ KARAOKE COVER, PRO Music COVER, Clean Audio, Zoom Karaoke, Musisi Karaoke, 2Rs Kara-TV, KantaSonata, Cysoheartchannel, and KuyaPoy. No additional candidate met the combined distinctness/evidence bar for runtime promotion in this pass; PRO Music COVER's own description indicates melody-guide content, so it was not treated as a clean-guide-free source."}
+    ]
+  },
+  "verifier": {
+    "rootCauses": [
+      "The YouTube API replaces the controller mount element with its iframe, so a mount-scoped iframe lookup could lose the active frame identity.",
+      "The iframe src retains the initial video ID while loadVideoById changes the active media. The controller's requested ID is not proof of the currently loaded media; stale playback could be misattributed.",
+      "The controller emits a synthetic load-accepted notification on later media loads. It must not be mistaken for a fresh YouTube onReady event.",
+      "The earlier sustained gate could accept early progression without sufficiently proving that playback continued through the end of the observation interval."
+    ],
+    "correction": [
+      "Added a read-only controller query using the official player's getVideoUrl() to identify the actually loaded YouTube video.",
+      "The browser harness records requested ID, loaded ID, player-ready lifecycle, connected iframe, state, duration/time, visibility/focus, and per-second progression; stale state/errors are not attributed to a different requested ID.",
+      "PASS now requires a 15-second observation, at least eight readable samples spanning 12 seconds, fresh final sample, at least eight seconds net progression, five advancing intervals, and at least two advancing intervals in the final five seconds while visible.",
+      "The runner creates three independent browser processes/contexts for sample-029 before testing candidates. A failed control stops candidate qualification. Reports now count the control only after all required independent runs validate, rather than leaving it as a misleading UNTESTED/ambiguous row."
+    ],
+    "control": {
+      "videoId": "QBb9wO3Bj0k",
+      "requiredIndependentRuns": 3,
+      "passed": 3,
+      "browser": "Chrome Headless 154.0.8037.98",
+      "eachRun": "PASS: official onReady, PLAYING, matching loaded video identity, connected iframe, visible document, 17 readable samples over approximately 15 seconds, about 15 seconds net currentTime advancement, and 15 advancing intervals including at least five in the final five seconds.",
+      "result": "CONTROL GATE PASS"
+    },
+    "candidatePassSemantics": "YouTube fires onReady for the player instance lifecycle, not for every loadVideoById media switch. The first candidate and the separately resumed Harana candidate each observed onReady. Other candidates reused the same already-ready official player; the audit recorded load-accepted, playerReady, matching actual getVideoUrl() identity, PLAYING, and sustained progression. Error 150 candidates were attributed only after the actual loaded video ID matched the requested ID."
+  },
+  "runtimeResults": {
+    "candidateCount": 16,
+    "pass": 4,
+    "error150": 12,
+    "error100": 0,
+    "error101": 0,
+    "error153": 0,
+    "timeout": 0,
+    "playingWithoutProgression": 0,
+    "environmentFailure": 0,
+    "identityMismatchOrInconclusiveCandidates": 0,
+    "control": "3/3 independent sample-029 runs passed",
+    "fullReportCountsIncludingControl": {"total":17,"pass":5,"error150":12,"ambiguous":0},
+    "browserDiagnosticsAfterTesterIconFix": {"consoleErrors":0,"pageErrors":0,"requestFailures":0,"expectedRequestAbortsDuringYouTubeVideoSwitchOrBrowserCleanup":19},
+    "rawReport": "tools/medley-expansion-runtime-v3.json",
+    "manifest": "tools/medley-expansion-runtime-manifest-v3.json"
+  },
+  "candidateAudit": [
+    {
+      "title":"Michael Learns To Rock (MLTR) Medley","artist":"Michael Learns To Rock","provider":"ConesStudio Karaoke","videoId":"BIvD7IJQyME","publicViews":22307154,"publishedAt":"2023-07-08","source":"https://www.youtube.com/watch?v=BIvD7IJQyME","sections":{"status":"public description lists four songs","items":["That's Why (You Go Away)","Out of the Blue","Paint My Love","25 Minutes"]},"runtime":{"status":"PASS","actualLoadedIdMatched":true,"playing":true,"samples":17,"observationSeconds":15.005,"timeAdvancedSeconds":15.0,"advancingIntervals":15,"advancingIntervalsInFinalFiveSeconds":5},"qualityTier":"C — human review required","decision":"TECHNICAL PASS; do not add until human audio/presentation review. Public metadata and views do not establish backing-track quality, key, guide vocals, synchronization, or complete transitions."
+    },
+    {
+      "title":"Modern Talking Medley","artist":"Modern Talking","provider":"YenJohn HD Karaoke","videoId":"Ej8W9fPxOwg","publicViews":378559,"publishedAt":"2025-02-22","source":"https://www.youtube.com/watch?v=Ej8W9fPxOwg","sections":{"status":"unknown","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject for KantaCue embedded playback; do not bypass. Public description's production claims do not override Error 150."
+    },
+    {
+      "title":"Classic Medley Songs","artist":"Multiple artists","provider":"YenJohn HD Karaoke","videoId":"honAHMAXTew","publicViews":53801,"publishedAt":null,"source":"https://www.youtube.com/watch?v=honAHMAXTew","sections":{"status":"unknown; generic title and no section list","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled; metadata weak","decision":"Reject; low relative reach and unclear songs compound the embedding failure."
+    },
+    {
+      "title":"Duet Love Songs Medley","artist":"Multiple artists","provider":"Ibarra Music","videoId":"TtLQbRH8vD8","publicViews":4572997,"publishedAt":"2020-07-19","source":"https://www.youtube.com/watch?v=TtLQbRH8vD8","sections":{"status":"public description lists three songs","items":["Always","Destiny","Forever"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject. One listed section, Destiny, overlaps an existing Jim Brickman medley, but the broader duet theme is distinct; Error 150 is decisive."
+    },
+    {
+      "title":"Scorpions Medley Karaoke","artist":"Scorpions","provider":"LoveNotes Medley","videoId":"JdoBsqrN5W4","publicViews":9413485,"publishedAt":"2025-09-11","source":"https://www.youtube.com/watch?v=JdoBsqrN5W4","sections":{"status":"unknown; no reliable list captured","items":[]},"runtime":{"status":"PASS","actualLoadedIdMatched":true,"playing":true,"samples":17,"observationSeconds":15.003,"timeAdvancedSeconds":15.0,"advancingIntervals":15,"advancingIntervalsInFinalFiveSeconds":5},"qualityTier":"C — human review required","decision":"Technically strong and high public reach, but section identity and all audio/presentation characteristics remain unverified. Human review before any addition."
+    },
+    {
+      "title":"J Brothers Medley","artist":"J Brothers","provider":"Rainbow Karaoke Channel","videoId":"nQZDCe8M7SY","publicViews":3633367,"publishedAt":"2025-03-30","source":"https://www.youtube.com/watch?v=nQZDCe8M7SY","sections":{"status":"unknown","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject."
+    },
+    {
+      "title":"J Brothers Medley (Karaoke Version With Lyrics)","artist":"J Brothers","provider":"LoveNotes Medley","videoId":"31vIDf87DoQ","publicViews":3217323,"publishedAt":"2026-03-19","source":"https://www.youtube.com/watch?v=31vIDf87DoQ","sections":{"status":"public description provides seven chapter titles","items":["Sana'y Bigyan Mo Ng Pansin","Miss Kita","Kung Sakaling Ikaw Ay Lalayo","Labanan Natin Ang Tukso","Sana'y Pag-ibig Mo Ay Tunay Na","Baby I Love You","Wait For Me"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject. Track list has substantial overlap with the Harana version; only one distinct playable J Brothers collection would be considered."
+    },
+    {
+      "title":"Air Supply Karaoke Songs Medley","artist":"Air Supply","provider":"Sing King","videoId":"7hnYsMIy6kc","publicViews":567000,"publishedAt":null,"source":"https://www.youtube.com/watch?v=7hnYsMIy6kc","sections":{"status":"unknown in captured evidence","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject for KantaCue; public watch-page availability is not embed permission."
+    },
+    {
+      "title":"Broadway Hits Musical Theatre Karaoke Medley Vol. 1","artist":"Multiple musical theatre artists","provider":"Sing King","videoId":"2w2s4SezSmg","publicViews":48000,"publishedAt":null,"source":"https://www.youtube.com/watch?v=2w2s4SezSmg","sections":{"status":"unknown in captured evidence","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled; list evidence incomplete","decision":"Reject."
+    },
+    {
+      "title":"Bee Gees Medley","artist":"Bee Gees","provider":"Ibarra Music","videoId":"wywFQ_bcWu0","publicViews":8903942,"publishedAt":"2025-07-18","source":"https://www.youtube.com/watch?v=wywFQ_bcWu0","sections":{"status":"public description lists five songs and says Original Key; EastSide Band arrangement","items":["To Love Somebody","Massachusetts","Words","I Started a Joke","Don't Forget to Remember Me"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject. Description's original-key claim was not independently listened to and would not override the embed failure."
+    },
+    {
+      "title":"David Pomeranz Medley","artist":"David Pomeranz","provider":"Ibarra Music","videoId":"CSw7dIVHh-w","publicViews":18815544,"publishedAt":"2022-03-12","source":"https://www.youtube.com/watch?v=CSw7dIVHh-w","sections":{"status":"public description lists four songs; East Side Band arrangement","items":["King and Queen of Hearts","Born for You","On This Day","Got to Believe in Magic"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject despite strong lifetime views; popularity cannot override embedding restrictions."
+    },
+    {
+      "title":"OPM Medley (Karaoke) Love Song","artist":"OPM artists","provider":"KaraokeyTV","videoId":"MjJnLgAW1jc","publicViews":2751572,"publishedAt":"2024-09-14","source":"https://www.youtube.com/watch?v=MjJnLgAW1jc","sections":{"status":"unknown","items":[]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled; near-duplicate concern","decision":"Reject. In addition to Error 150, broad OPM-love concept overlaps the existing generic OPM medley; no distinct track list supports adding another."
+    },
+    {
+      "title":"Karaoke - Aegis Medley","artist":"Aegis","provider":"Ibarra Music","videoId":"ZI8ufXTfCrg","publicViews":13271551,"publishedAt":"2018-10-25","source":"https://www.youtube.com/watch?v=ZI8ufXTfCrg","sections":{"status":"public description lists four songs","items":["Luha","Sinta","Basang Basa sa Ulan","Halik"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject alternative. The current library already includes a distinct Aegis medley; this alternative cannot play embedded."
+    },
+    {
+      "title":"Eraserheads (Medley Karaoke)","artist":"Eraserheads","provider":"LoveNotes Medley","videoId":"i3qN_q8W1is","publicViews":83111,"publishedAt":"2026-01-29","source":"https://www.youtube.com/watch?v=i3qN_q8W1is","sections":{"status":"public description timestamps five songs","items":["Ligaya","Huwag Mo Nang Itanong","With a Smile","Pare Ko","Ang Huling El Bimbo"]},"runtime":{"status":"PASS","actualLoadedIdMatched":true,"playing":true,"samples":17,"observationSeconds":15.003,"timeAdvancedSeconds":15.0,"advancingIntervals":15,"advancingIntervalsInFinalFiveSeconds":5},"qualityTier":"C — human review required","decision":"Technically valid and a distinct OPM band/theme. It is relatively recent but its lifetime views do not prove rising momentum. Manual audio/presentation review required."
+    },
+    {
+      "title":"OPM Band Medley - Karaoke","artist":"Side A, Southborder, Freestyle","provider":"Ibarra Music","videoId":"d8ZYzw7F__o","publicViews":8477104,"publishedAt":"2024-09-06","source":"https://www.youtube.com/watch?v=d8ZYzw7F__o","sections":{"status":"public description lists three songs","items":["Tell Me","Kahit Kailan","Before I Let You Go"]},"runtime":{"status":"ERROR 150","actualLoadedIdMatched":true,"errorCode":150},"qualityTier":"REJECT — embedding disabled","decision":"Reject despite strong OPM fit and public reach."
+    },
+    {
+      "title":"J Brothers Medley (Karaoke)","artist":"J Brothers","provider":"Harana Karaoke","videoId":"Y_U22TnRqwM","publicViews":3302530,"publishedAt":"2025-12-31","source":"https://www.youtube.com/watch?v=Y_U22TnRqwM","sections":{"status":"public description lists five songs with timestamps","items":["Sana'y Bigyan Mo Ng Pansin","Kung Sakaling Ikaw Ay Lalayo","Sana'y Pag-ibig Mo'y Tunay Na","Baby I Love You","Miss Kita"]},"runtime":{"status":"PASS","actualLoadedIdMatched":true,"playing":true,"samples":17,"observationSeconds":15.001,"timeAdvancedSeconds":15.0,"advancingIntervals":15,"advancingIntervalsInFinalFiveSeconds":5},"qualityTier":"C — human review required","decision":"Strongest tested J Brothers candidate technically; its sections overlap the LoveNotes version. Human review must decide whether the remaining track-list/presentation difference creates enough value. Do not add automatically."
+    }
+  ],
+  "qualityAndSelection": {
+    "tiers": {"S":0,"A":0,"B":0,"C":4,"REJECT":12},
+    "whyNoProductionAdditions": "All four candidates that passed the embed/runtime gate still lack genuine listening/visual review of audio mix, lead/guide vocals, key, lyric timing, transitions, completeness, and presentation. The task explicitly requires C when these properties cannot be verified and permits production additions only at S/A/B. Thus zero additions is the evidence-correct outcome, not a quota shortfall.",
+    "top25StrongestCandidates": ["BIvD7IJQyME","CSw7dIVHh-w","ZI8ufXTfCrg","JdoBsqrN5W4","wywFQ_bcWu0","d8ZYzw7F__o","Y_U22TnRqwM","nQZDCe8M7SY","TtLQbRH8vD8","31vIDf87DoQ","MjJnLgAW1jc","Ej8W9fPxOwg","i3qN_q8W1is","7hnYsMIy6kc","2w2s4SezSmg","honAHMAXTew"],
+    "humanReviewShortlist": [
+      {"priority":1,"title":"Michael Learns To Rock Medley","provider":"ConesStudio Karaoke","videoId":"BIvD7IJQyME","views":22307154,"runtime":"PASS","review":"Listen for backing-track/mix quality, lead/guide vocals, standard arrangement/key, lyric synchronization, completeness and transitions. Public description has four sections."},
+      {"priority":2,"title":"Scorpions Medley Karaoke","provider":"LoveNotes Medley","videoId":"JdoBsqrN5W4","views":9413485,"runtime":"PASS","review":"High public reach and actual embed pass, but section list is unknown; inspect content identity, track diversity, quality and transitions."},
+      {"priority":3,"title":"J Brothers Medley (Karaoke)","provider":"Harana Karaoke","videoId":"Y_U22TnRqwM","views":3302530,"runtime":"PASS","review":"Timed five-song list is public. Compare track list and singing quality against the blocked LoveNotes/Rainbow versions; decide whether it adds useful OPM breadth."},
+      {"priority":4,"title":"Eraserheads Medley Karaoke","provider":"LoveNotes Medley","videoId":"i3qN_q8W1is","views":83111,"runtime":"PASS","review":"Distinct OPM band choice with five public timestamped sections; lower lifetime reach, newer upload. Verify audio, key, guide vocal, lyric timing and transitions."}
+    ],
+    "duplicateAndNearDuplicateFindings": [
+      "The KaraokeyTV OPM Love video MjJnLgAW1jc has a generic OPM-love theme similar to current medley 9AJt_0ZAtQc; no song list was captured to prove a distinct set, and it returns Error 150.",
+      "Three J Brothers candidates overlap materially. Harana's five listed songs overlap most of LoveNotes' seven; Rainbow has no captured sections. Only Harana passed runtime, but quality and distinctness still need human review.",
+      "The Ibarra MLTR alternative 3GgYr8pq8g0 was not runtime-tested in this batch and its list was not established; do not add beside ConesStudio's MLTR without section and quality comparison.",
+      "Historical KantaSonata Freestyle candidate 1cwOo9eFCJI overlaps three listed sections with existing medley jfBGyW_JYp8 and was rejected as redundant.",
+      "Historical KaraokeyTV Carpenters alternative cdfBBrbRUI0 was rejected as a near duplicate of existing 71mZANyGS64.",
+      "No other new candidate video ID collides with one of the 11 current medley videos or the primary catalog, as verified in the final integrity check."
+    ],
+    "historicalFindings": {
+      "preservedReports": ["tools/karaoke-medley-audit.json","tools/medley-expansion-research-v2.json"],
+      "historicalAcceptedTechnicalButAudioPending": "The prior 11 public medleys are unchanged; the historical report marks the set as technically accepted with manual audio review pending. This phase does not retroactively claim human audio verification.",
+      "historicalRuntimeFailures": "The historical report records several Sing King Error 150 results and prior duplicate/metadata-incomplete/non-medley rejects. Those records remain in place."
+    }
+  },
+  "integrityAndValidation": {
+    "primaryRecords": 1067,
+    "primaryPlayable": 1000,
+    "primaryUnavailable": 67,
+    "publicMedleysBefore": 11,
+    "publicMedleysAfter": 11,
+    "sample029": "QBb9wO3Bj0k",
+    "duplicatePrimarySongIds": 0,
+    "duplicatePrimaryPlayableVideoIds": 0,
+    "duplicateNormalizedPrimaryTitleArtistPairs": 0,
+    "brokenDemandReferences": 0,
+    "duplicateMedleyIds": 0,
+    "duplicateMedleyVideoIds": 0,
+    "primaryMedleyVideoCollisions": 0,
+    "productionSongOrMedleyDataChanged": false
+  },
+  "implementationAndFiles": {
+    "trackedChanges": ["service-worker.js","src/full-playability-audit.js","src/playability-audit.js","src/youtube.js","tests/phase2-design-system.test.mjs","tests/playability-audit.test.mjs","tests/pwa.test.mjs","tests/youtube-player.test.mjs","tools/run-playability-audit.mjs","youtube-playability-audit.html"],
+    "newTaskArtifacts": ["tools/medley-expansion-runtime-manifest-v3.json","tools/medley-expansion-runtime-v3.json","tools/medley-expansion-runtime-v3.checkpoint.json","tools/medley-expansion-control-runs.json","tools/medley-expansion-research-v3.json"],
+    "productionDataFilesChanged": [],
+    "serviceWorkerOrCacheChanged": true,
+    "dependenciesAdded": false,
+    "firstPartyProductionChange": "Only src/youtube.js gains a read-only getLoadedVideoId() query backed by the official YT.Player.getVideoUrl(); it does not alter playback or assignments. Audit UI and runner changes are development tooling.",
+    "firstPartyFootprint": {"srcYoutubeJsDeltaRawBytes":401,"srcYoutubeJsDeltaGzipBytes":111,"serviceWorkerCacheVersion": "v109 -> v110"}
+  },
+  "finalVerification": {
+    "focusedTests": {"passed":79,"failed":0,"skipped":0},
+    "completeDiscoveredSuite": {"command":"$testFiles = @(rg --files -g '*.test.mjs' -g '*.test.js' -g '*.spec.mjs' -g '*.spec.js' | Sort-Object); & node --test $testFiles","discoveredFiles":40,"passed":406,"failed":0,"skipped":0},
+    "syntax": {"javascriptAndMjsFilesChecked":102,"failed":0},
+    "json": {"jsonFilesChecked":79,"manifestWebmanifestChecked":true,"failed":0},
+    "diffCheck": "PASS; only Git LF-to-CRLF advisory warnings for modified source files.",
+    "secretPatternScan": "PASS; no API-key or bearer-token patterns in changed/new task files.",
+    "catalogIntegrity": "PASS; 1067/1000/67 primary records, unchanged catalog SHA-256, 11 medleys, sample-029 preserved, all duplicate/reference/collision counts zero.",
+    "responsiveBrowser": {
+      "browser": "Windows Chrome 154.0.8037.98 via Playwright",
+      "widths": [320,360,390,430,768,1366],
+      "all11CardsRendered": true,
+      "horizontalOverflow": false,
+      "minimumMedleyActionHeightCssPx": 44,
+      "mobileCollectionsAndQueueInteraction": "Collections reached through More at 320px; all cards rendered; medley queue opened in a viewport-fitting drawer.",
+      "zoomCheck": "CSS zoom 200% approximation at 390px; this was not a browser UI zoom test.",
+      "consoleAndPageErrors": 0
+    },
+    "pwa": "Service-worker shell advanced from v109 to v110 because the cache-first shell includes src/youtube.js; this prevents an installed v109 shell from serving a stale audit controller. No other shell assets or cache behavior changed.",
+    "runtimeManualLimitations": "No physical-device test, browser UI zoom test, network-offline transition test, or human audio/listening review was performed."
+  },
+  "limitations": [
+    "No genuine listening or visual review was performed in this environment; audio/key/guide vocals/lyric timing/transitions/presentation remain UNKNOWN for every new technical pass.",
+    "Runtime proof is from Windows HeadlessChrome 154 through a localhost origin and KantaCue's official IFrame Player API path. Device-specific production-browser acceptance was not performed.",
+    "YouTube public views and publication dates are snapshots; recent velocity and numerical search volume remain UNKNOWN.",
+    "The provider discovery was broad and targeted, not an exhaustive scrape of every channel's entire historical catalog."
+  ],
+  "releaseDecision": "NO MEDLEYS ADDED. Preserve the existing 11. Offer the four technical-pass candidates for focused human listening/visual review before any future promotion."
+}

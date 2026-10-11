@@ -6,10 +6,11 @@
  * normal song would corrupt song history, recommendations, and Party Mode.
  */
 
-export const DEFAULT_MEDLEYS_URL = "data/medleys.sample.json?v=7";
+export const DEFAULT_MEDLEYS_URL = "data/medleys.sample.json?v=8";
 export const MEDLEY_ID_PATTERN = /^medley-[a-z0-9-]+$/;
 export const MEDLEY_STATUS = "technical-verified-pending-manual-quality-review";
-export const PUBLIC_MEDLEY_STATUSES = new Set([MEDLEY_STATUS, "verified-for-release"]);
+export const OWNER_AUTHORIZED_PROVISIONAL_STATUS = "owner-authorized-provisional";
+export const PUBLIC_MEDLEY_STATUSES = new Set([MEDLEY_STATUS, "verified-for-release", OWNER_AUTHORIZED_PROVISIONAL_STATUS]);
 
 export class MedleyLoadError extends Error {
   constructor(message, code = "medley-load-failed") {
@@ -72,11 +73,13 @@ export function getMedleyById(medleys, medleyId) {
 }
 
 export function isPlayableMedley(medley) {
+  const verification = medley?.verification;
   return Boolean(
     medley
       && MEDLEY_ID_PATTERN.test(medley.id)
       && isValidVideoId(medley.videoId)
-      && PUBLIC_MEDLEY_STATUSES.has(medley.verification?.status)
+      && PUBLIC_MEDLEY_STATUSES.has(verification?.status)
+      && (verification.status !== OWNER_AUTHORIZED_PROVISIONAL_STATUS || isValidOwnerAuthorization(verification.ownerAuthorization))
   );
 }
 
@@ -138,8 +141,12 @@ function normalizeMedley(record, index, seenIds, seenVideoIds) {
   const includedSongs = normalizeIncludedSongs(record.includedSongs);
   const sectionStatus = text(record.sectionStatus) || (includedSongs.length >= 2 ? "known" : "unknown");
   const medleyEvidence = text(record.medleyEvidence);
+  const verification = normalizeVerification(record.verification);
   if (includedSongs.length < 2 && !(sectionStatus === "unknown" && medleyEvidence)) warnings.push(`Medley record ${index + 1} was rejected because it needs at least two known included songs or explicit unknown-section medley evidence.`);
   if (includedSongs.length >= 2 && sectionStatus !== "known") warnings.push(`Medley record ${index + 1} was rejected because sectionStatus conflicts with its section list.`);
+  if (verification.status === OWNER_AUTHORIZED_PROVISIONAL_STATUS && !isValidOwnerAuthorization(verification.ownerAuthorization)) {
+    warnings.push(`Medley record ${index + 1} was rejected because provisional owner authorization must explicitly state that human quality review was not performed.`);
+  }
   if (warnings.length) return { medley: null, warnings };
 
   return {
@@ -157,7 +164,7 @@ function normalizeMedley(record, index, seenIds, seenVideoIds) {
       publishedAt: normalizeDate(record.publishedAt),
       sourceUrl: text(record.sourceUrl),
       provenance: text(record.provenance),
-      verification: normalizeVerification(record.verification)
+      verification
     },
     warnings
   };
@@ -176,12 +183,27 @@ function normalizeIncludedSongs(value) {
 
 function normalizeVerification(value) {
   const source = value && typeof value === "object" ? value : {};
-  return {
+  const verification = {
     status: text(source.status) || "pending-review",
     testedAt: normalizeDate(source.testedAt),
     method: text(source.method),
     manualQuality: text(source.manualQuality) || "pending-listen"
   };
+  if (source.ownerAuthorization && typeof source.ownerAuthorization === "object") {
+    verification.ownerAuthorization = {
+      type: text(source.ownerAuthorization.type),
+      authorizedAt: normalizeDate(source.ownerAuthorization.authorizedAt),
+      humanAudioPresentationReview: text(source.ownerAuthorization.humanAudioPresentationReview)
+    };
+  }
+  return verification;
+}
+
+function isValidOwnerAuthorization(value) {
+  return Boolean(value
+    && value.type === "explicit-project-owner-authorization"
+    && value.authorizedAt
+    && value.humanAudioPresentationReview === "not-performed");
 }
 
 function normalizeOptionalCount(value) {

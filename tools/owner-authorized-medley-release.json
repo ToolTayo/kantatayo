@@ -1,0 +1,34 @@
+{
+  "format": "kantacue-owner-authorized-medley-release",
+  "version": 1,
+  "authorization": {
+    "status": "explicit-project-owner-authorization",
+    "authorizedAt": "2026-10-11",
+    "scope": "A provisional public release of technically verified medley candidates; this is not a claim that the owner listened to or quality-approved them.",
+    "humanAudioPresentationReview": "not-performed"
+  },
+  "decisions": [
+    { "videoId": "BIvD7IJQyME", "decision": "include", "id": "medley-mltr-conesstudio-001", "language": "English", "theme": "Artist medley", "reason": "Distinct artist collection; four public section names were captured; strongest view evidence in the reviewed pool." },
+    { "videoId": "L2Y5wnhyfNI", "decision": "include", "id": "medley-april-boy-agaw-001", "language": "Filipino", "theme": "OPM artist medley", "reason": "Retained over the competing April Boy version because its public view snapshot is substantially higher (16.0M vs 6.6M); the competing entry has no captured section list." },
+    { "videoId": "-D1irYqKIog", "decision": "exclude", "reason": "Competing April Boy Regino medley with no captured section list; defer as materially redundant to the substantially more-viewed L2Y5wnhyfNI candidate." },
+    { "videoId": "WO-ZTFltK9A", "decision": "include", "id": "medley-rey-valera-opm-karaoke-cover-001", "language": "Filipino", "theme": "OPM love songs", "reason": "Distinct Rey Valera medley with three public section names captured." },
+    { "videoId": "OHIFuGAaod4", "decision": "include", "id": "medley-rivermaya-apmusic-001", "language": "Filipino", "theme": "OPM band medley", "reason": "Distinct Rivermaya collection with six public section names captured." },
+    { "videoId": "I8ruYoUTetw", "decision": "include", "id": "medley-classic-opm-love-ibarra-002", "language": "English", "theme": "Classic OPM love songs", "reason": "Distinct multi-artist classic OPM love-song set; three named sections and artists captured." },
+    { "videoId": "JdoBsqrN5W4", "decision": "include", "id": "medley-scorpions-lovenotes-001", "language": "English", "theme": "Rock band medley", "reason": "Distinct Scorpions karaoke medley with strong public-view evidence; section list was not captured and is labeled unknown." },
+    { "videoId": "8ToBsPKxlko", "decision": "include", "id": "medley-celine-dion-tvmo-001", "language": "English", "theme": "Artist medley", "reason": "Distinct Celine Dion collection with three public section names captured." },
+    { "videoId": "-IVoCF2v2KI", "decision": "include", "id": "medley-donna-cruz-ibarra-001", "language": "Filipino / English", "theme": "OPM artist medley", "reason": "Distinct Donna Cruz collection with three public section names captured." },
+    { "videoId": "rewX8w9pw9E", "decision": "include", "id": "medley-bee-gees-singing-bees-001", "language": "English", "theme": "Artist medley", "reason": "Distinct Bee Gees karaoke medley; section list was not captured and is labeled unknown." },
+    { "videoId": "Y_U22TnRqwM", "decision": "include", "id": "medley-j-brothers-harana-001", "language": "Filipino / English", "theme": "OPM group medley", "reason": "Distinct J Brothers collection with five public section names captured." },
+    { "videoId": "77eQoouxahI", "decision": "include", "id": "medley-2005-opm-hits-karaocraze-001", "language": "Filipino / English", "theme": "2005 OPM hits", "reason": "A defined 2005-era collection, distinct from the broader generic OPM medley; section names were not captured and remain unknown." },
+    { "videoId": "EtQeS3ThW14", "decision": "include", "id": "medley-freddie-aguilar-opm-karaoke-cover-002", "language": "Filipino", "theme": "OPM artist medley", "reason": "Eight public sections were captured; two overlap the existing Freddie Aguilar medley, while six additional sections make this a materially different set." },
+    { "videoId": "vcHCtqnU6A4", "decision": "exclude", "reason": "Generic OPM medley with no captured section list; materially less distinct and lower-view than the defined 2005 OPM collection retained as 77eQoouxahI." },
+    { "videoId": "i3qN_q8W1is", "decision": "include", "id": "medley-eraserheads-lovenotes-001", "language": "Filipino / English", "theme": "OPM band medley", "reason": "Distinct Eraserheads collection with five public section names captured." },
+    { "videoId": "xC7jpW9PYB0", "decision": "include", "id": "medley-renz-verano-opm-karaoke-cover-001", "language": "Filipino / English", "theme": "OPM artist medley", "reason": "Title identifies Mahal Kita and Remember Me; retained alongside the ConesStudio version because its known selection differs, sharing only Remember Me with the latter's three captured sections." },
+    { "videoId": "5lqlYpJ03qo", "decision": "include", "id": "medley-renz-verano-conesstudio-001", "language": "Filipino / English", "theme": "OPM artist medley", "reason": "Three public sections were captured; the selection differs from the other Renz Verano entry and shares only Remember Me." },
+    { "videoId": "0M6EJNL3hTs", "decision": "include", "id": "medley-men-opposers-opm-karaoke-cover-001", "language": "Filipino", "theme": "OPM artist medley", "reason": "Distinct Men Oppose collection with four public section names captured." },
+    { "videoId": "Act7Q1l7HG4", "decision": "include", "id": "medley-abba-zoom-001", "language": "English", "theme": "Artist medley", "reason": "Distinct ABBA karaoke collection from Zoom Karaoke Official; section list was not captured and remains unknown." },
+    { "videoId": "pZP5_icIQas", "decision": "include", "id": "medley-regine-velasquez-amaze-sing-001", "language": "Filipino / English", "theme": "OPM artist medley", "reason": "Distinct Regine Velasquez collection; title identifies two sections, but detailed public section evidence was not captured, so the list remains unknown." },
+    { "videoId": "pXe4l-M1MkM", "decision": "include", "id": "medley-queen-zoom-medley-3-001", "language": "English", "theme": "Rock band medley", "reason": "Distinct Queen Medley 3 from Zoom Karaoke Official; section list was not captured and remains unknown." },
+    { "videoId": "ENw6M-yV6Uo", "decision": "include", "id": "medley-parokya-ni-edgar-aggar-001", "language": "Filipino / English", "theme": "OPM band medley", "reason": "Distinct Parokya ni Edgar collection with five public section names captured; popularity evidence is limited, but owner authorization does not waive distinctness or runtime gates." }
+  ]
+}
