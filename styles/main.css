@@ -1109,6 +1109,7 @@ body { line-height: 1.45; }
 
 .daily-challenge-card {
   border-color: rgba(163, 242, 99, .22);
+  min-height: 12rem;
 }
 
 .daily-challenge-layout {
@@ -1116,6 +1117,30 @@ body { line-height: 1.45; }
   display: grid;
   gap: 1rem;
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+}
+
+.daily-challenge-loading[hidden] { display: none; }
+
+.daily-challenge-skeleton-art {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(145deg, rgba(163, 242, 99, .1), rgba(20, 31, 50, .72));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  width: min(100%, 16rem);
+}
+
+.daily-challenge-skeleton-button {
+  align-items: center;
+  border: 1px solid rgba(163, 242, 99, .25);
+  border-radius: var(--radius-sm);
+  color: var(--brand-lime);
+  display: inline-flex;
+  font-size: .75rem;
+  font-weight: 700;
+  justify-content: center;
+  margin-top: .8rem;
+  min-height: 2.75rem;
+  padding: .55rem .9rem;
 }
 
 .daily-challenge-thumbnail {
@@ -1998,6 +2023,233 @@ body { line-height: 1.45; }
     transition: none !important;
   }
 }
+
+/* Native fullscreen must escape the desktop sidebar inset and use the full top layer. */
+.player-panel:fullscreen,
+.player-panel:-webkit-full-screen {
+  border: 0;
+  border-radius: 0;
+  inset: 0;
+  height: 100vh;
+  height: 100dvh;
+  left: 0;
+  margin: 0;
+  max-height: 100vh;
+  max-height: 100dvh;
+  max-width: none;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: max(.75rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left));
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 9999;
+}
+
+.player-panel:fullscreen::backdrop,
+.player-panel:-webkit-full-screen::backdrop {
+  background: var(--bg-base);
+}
+
+/* In landscape, keep the official 16:9 video and singing controls visible together. */
+@media (orientation: landscape) {
+  .player-panel:fullscreen,
+  .player-panel:-webkit-full-screen {
+    align-items: stretch;
+    display: grid;
+    gap: .55rem 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, min(32vw, 28rem));
+    grid-template-rows: minmax(0, 1fr) auto auto auto auto;
+    overflow-y: auto;
+  }
+
+  .player-panel:fullscreen .player-header,
+  .player-panel:-webkit-full-screen .player-header {
+    align-self: start;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .player-panel:fullscreen .player-header .eyebrow,
+  .player-panel:-webkit-full-screen .player-header .eyebrow,
+  .player-panel:fullscreen .player-position,
+  .player-panel:-webkit-full-screen .player-position,
+  .player-panel:fullscreen .player-meta,
+  .player-panel:-webkit-full-screen .player-meta {
+    display: none;
+  }
+
+  .player-panel:fullscreen .player-header h2,
+  .player-panel:-webkit-full-screen .player-header h2 {
+    font-size: clamp(1rem, 2.8vh, 1.5rem);
+    line-height: 1.12;
+    margin: 0 0 .2rem;
+  }
+
+  .player-panel:fullscreen .player-heading > .muted,
+  .player-panel:-webkit-full-screen .player-heading > .muted {
+    font-size: .78rem;
+    margin: 0;
+  }
+
+  .player-panel:fullscreen .player-media,
+  .player-panel:-webkit-full-screen .player-media {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    justify-content: center;
+    margin: 0;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .player-panel:fullscreen .youtube-player-shell,
+  .player-panel:-webkit-full-screen .youtube-player-shell {
+    height: auto;
+    max-height: 100%;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .player-panel:fullscreen .player-placeholder,
+  .player-panel:-webkit-full-screen .player-placeholder {
+    min-height: 0;
+  }
+
+  .player-panel:fullscreen .player-actions,
+  .player-panel:-webkit-full-screen .player-actions {
+    align-self: center;
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+  }
+
+  .player-panel:fullscreen .player-actions .add-button,
+  .player-panel:-webkit-full-screen .player-actions .add-button,
+  .player-panel:fullscreen .player-controls button,
+  .player-panel:-webkit-full-screen .player-controls button {
+    min-height: 44px;
+  }
+
+  .player-panel:fullscreen .player-controls,
+  .player-panel:-webkit-full-screen .player-controls {
+    display: grid;
+    gap: .5rem;
+    grid-column: 2;
+    grid-row: 3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  .player-panel:fullscreen .player-completion,
+  .player-panel:-webkit-full-screen .player-completion {
+    grid-column: 2;
+    grid-row: 4;
+    margin-top: 0;
+    max-height: 20dvh;
+    overflow: auto;
+  }
+
+  .player-panel:fullscreen .player-feedback,
+  .player-panel:-webkit-full-screen .player-feedback {
+    grid-column: 2;
+    grid-row: 5;
+    margin-top: 0;
+    max-height: 24dvh;
+    overflow: auto;
+  }
+
+  .player-panel:fullscreen .player-header-actions .icon-button,
+  .player-panel:-webkit-full-screen .player-header-actions .icon-button {
+    height: 44px;
+    min-height: 44px;
+    min-width: 44px;
+    width: 44px;
+  }
+}
+
+@media (max-width: 799px) {
+  .site-header {
+    gap: .55rem;
+    padding: .55rem .75rem;
+  }
+
+  .topbar-search {
+    min-height: 2.65rem;
+  }
+
+  .player-header-actions .icon-button {
+    height: 44px;
+    min-height: 44px;
+    min-width: 44px;
+    width: 44px;
+  }
+
+  .queue-select,
+  .queue-control,
+  .queue-singer-control select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .remove-button {
+    height: 44px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Keep a rotated phone on the touch navigation even when its width crosses desktop's breakpoint. */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-height: 560px) {
+  .app-sidebar {
+    display: none !important;
+  }
+
+  .app-main,
+  .site-header {
+    margin-left: 0;
+  }
+
+  .site-header {
+    gap: .55rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    min-height: 3.5rem;
+    padding: .4rem .65rem;
+  }
+
+  .site-header .header-identity {
+    display: block;
+  }
+
+  .topbar-search {
+    grid-column: 2;
+    grid-row: 1;
+    max-width: none;
+  }
+
+  .header-actions {
+    grid-column: 3;
+  }
+
+  .mobile-nav {
+    display: grid !important;
+  }
+
+  .hero {
+    display: block;
+    padding: .85rem .75rem .7rem;
+  }
+
+  .content-area {
+    padding-left: .75rem;
+    padding-right: .75rem;
+  }
+}
 /* Focused product browsing: shared controls, no new visual language or motion. */
 .home-start-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-top: 1.2rem; }
 .home-start-actions a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
@@ -2037,5 +2289,5 @@ body { line-height: 1.45; }
   .daily-challenge-layout { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); align-items: start; gap: .75rem; }
   .daily-challenge-copy .eyebrow { letter-spacing: .12em; font-size: .65rem; }
   .daily-challenge-copy .play-button { width: 100%; white-space: normal; min-height: 2.75rem; }
-  .daily-challenge-card { padding: .85rem; }
+  .daily-challenge-card { min-height: 12.5rem; padding: .85rem; }
 }

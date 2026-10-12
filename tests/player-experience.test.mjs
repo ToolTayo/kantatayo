@@ -36,6 +36,21 @@ test("desktop expanded player resolves width from its insets, including mobile-t
   assert.match(css, /\.player-panel\.is-expanded\s*\{[^}]*left:\s*calc\(15rem \+ 1\.5rem\)[^}]*right:\s*1\.5rem;\s*width:\s*auto;/);
 });
 
+test("native fullscreen resets desktop offsets and keeps a landscape phone video and actions in view", () => {
+  const fullscreenRule = css.match(/\.player-panel:fullscreen,\s*\.player-panel:-webkit-full-screen\s*\{([^}]+)\}/)?.[1] || "";
+  assert.match(fullscreenRule, /inset:\s*0;/);
+  assert.match(fullscreenRule, /width:\s*100vw;/);
+  assert.match(fullscreenRule, /height:\s*100dvh;/);
+  assert.match(css, /@media\s*\(orientation:\s*landscape\)[\s\S]*?\.player-panel:fullscreen,[\s\S]*?display:\s*grid;[\s\S]*?grid-template-columns:[^;]+;/);
+  assert.match(css, /\.player-panel:fullscreen\s+\.player-media[\s\S]*?grid-row:\s*1\s*\/\s*span\s*3;/);
+  assert.match(css, /\.player-panel:fullscreen\s+\.player-header-actions\s+\.icon-button[\s\S]*?min-height:\s*44px;[\s\S]*?min-width:\s*44px;/);
+  assert.match(app, /getFullscreenElement\(\) === player[\s\S]*?void exitPlayerFullscreen\(\);/);
+  assert.match(app, /if \(playerWasFullscreen && !active && !panel\.hidden\) button\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(app, /function closePlayer\([\s\S]*?getFullscreenElement\(\) === document\.querySelector\("\[data-player-panel\]"\)\) void exitPlayerFullscreen\(\)/);
+  assert.match(css, /@media\s*\(hover:\s*none\)\s*and\s*\(pointer:\s*coarse\)\s*and\s*\(orientation:\s*landscape\)[\s\S]*?\.mobile-nav\s*\{\s*display:\s*grid\s*!important;/);
+  assert.match(css, /\.queue-select,[\s\S]*?\.queue-control,[\s\S]*?\.queue-singer-control select\s*\{\s*min-height:\s*44px;\s*min-width:\s*44px;/);
+});
+
 test("video completion automatically advances queued songs but keeps recommendations explicit", () => {
   assert.match(app, /function handleVideoEnded\(videoId\)/);
   assert.match(app, /const queuedNext = snapshot\.currentIndex >= 0/);

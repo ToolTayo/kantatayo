@@ -30,8 +30,8 @@
     <link rel="icon" href="assets/brand/kantacue-mark-small.svg" type="image/svg+xml" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" sizes="192x192" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="stylesheet" href="styles/main.css?v=49" />
-    <script type="module" src="src/app.js?v=64"></script>
+    <link rel="stylesheet" href="styles/main.css?v=50" />
+    <script type="module" src="src/app.js?v=65"></script>
   </head>
   <body>
     <a class="skip-link" href="#home-content">Skip to song discovery</a>
@@ -138,8 +138,17 @@
           </div>
 
           <div class="home-utility-grid" aria-label="Your karaoke progress">
-            <section class="daily-challenge-card" data-daily-challenge aria-labelledby="daily-challenge-title" hidden>
-              <div class="daily-challenge-layout">
+            <section class="daily-challenge-card" data-daily-challenge aria-label="Loading today’s karaoke challenge" aria-busy="true">
+              <div class="daily-challenge-layout daily-challenge-loading" data-daily-loading data-catalog-loading role="status" aria-live="polite">
+                <div class="daily-challenge-thumbnail" aria-hidden="true"><div class="daily-challenge-skeleton-art"></div></div>
+                <div class="daily-challenge-copy">
+                  <div class="utility-card-heading"><div><p class="eyebrow">Today’s karaoke challenge</p><h3>Choosing today’s song…</h3><p class="utility-card-artist">Finding a playable karaoke pick</p></div></div>
+                  <p class="daily-challenge-meta">One song from the local catalog</p>
+                  <p class="utility-card-status">Your challenge will be ready in a moment.</p>
+                  <span class="daily-challenge-skeleton-button" aria-hidden="true">Preparing challenge</span>
+                </div>
+              </div>
+              <div class="daily-challenge-layout" data-daily-content hidden>
                 <div class="daily-challenge-thumbnail" data-daily-thumbnail></div>
                 <div class="daily-challenge-copy">
                   <div class="utility-card-heading"><div><p class="eyebrow">Today’s karaoke challenge</p><h3 id="daily-challenge-title" data-daily-title>Today’s featured song</h3><p class="utility-card-artist" data-daily-artist></p></div><span class="streak-badge" aria-label="Current challenge streak" hidden><span aria-hidden="true">🔥</span> <span data-daily-streak>0 days</span></span></div>
@@ -157,7 +166,6 @@
             </section>
           </div>
 
-          <div class="catalog-loading empty-state" data-catalog-loading role="status" aria-live="polite"><span class="empty-icon" aria-hidden="true">♫</span><div><strong>Loading your karaoke picks…</strong><p>The catalog will be ready in a moment.</p></div></div>
           <div class="song-sections" data-song-sections>
             <section class="song-section engagement-section" data-section="continue" aria-labelledby="continue-title" hidden>
               <div class="section-heading home-section-heading"><div><h3 id="continue-title" data-home-title>Continue singing</h3><p class="section-lede" data-home-lede>Unfinished songs you opened in the last 30 days.</p></div><a class="section-link" href="#recent-title" data-view="recent">Open history <span aria-hidden="true">→</span></a></div>

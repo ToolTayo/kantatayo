@@ -253,7 +253,14 @@ function renderHomeEngagement(allSongs, userState) {
   const card = document.querySelector("[data-daily-challenge]");
   if (card) {
     card.hidden = !challenge.song;
+    card.setAttribute("aria-busy", "false");
+    const loading = card.querySelector("[data-daily-loading]");
+    const content = card.querySelector("[data-daily-content]");
+    if (loading) loading.hidden = true;
+    if (content) content.hidden = !challenge.song;
     if (challenge.song) {
+      card.removeAttribute("aria-label");
+      card.setAttribute("aria-labelledby", "daily-challenge-title");
       const title = card.querySelector("[data-daily-title]");
       const artist = card.querySelector("[data-daily-artist]");
       const meta = card.querySelector("[data-daily-meta]");
@@ -287,6 +294,8 @@ function renderHomeEngagement(allSongs, userState) {
       }
       card.classList.toggle("is-complete", challenge.completed);
     } else {
+      card.removeAttribute("aria-labelledby");
+      card.setAttribute("aria-label", "Today’s karaoke challenge is unavailable");
       const thumbnail = card.querySelector("[data-daily-thumbnail]");
       if (thumbnail) thumbnail.replaceChildren();
     }

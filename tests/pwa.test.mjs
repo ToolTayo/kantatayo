@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const manifest = JSON.parse(await readFile("manifest.webmanifest", "utf8"));
 const serviceWorker = await readFile("service-worker.js", "utf8");
+const index = await readFile("index.html", "utf8");
 const app = await readFile("src/app.js", "utf8");
 const ui = await readFile("src/ui.js", "utf8");
 const vercel = JSON.parse(await readFile("vercel.json", "utf8"));
@@ -80,15 +81,15 @@ test("service worker caches only the explicit first-party app shell", () => {
   ];
 
   for (const resource of expectedResources) assert.match(serviceWorker, new RegExp(`"${resource.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`));
-  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=49"/);
-  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=64"/);
+  assert.match(serviceWorker, /"\.\/styles\/main\.css\?v=50"/);
+  assert.match(serviceWorker, /"\.\/src\/app\.js\?v=65"/);
   assert.match(serviceWorker, /"\.\/src\/catalog\.js\?v=3"/);
   assert.match(serviceWorker, /"\.\/src\/view\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/engagement\.js\?v=6"/);
   assert.match(serviceWorker, /"\.\/src\/daily-challenge\.js\?v=2"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=5"/);
   assert.match(serviceWorker, /"\.\/src\/discovery\.js\?v=6"/);
-  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=48"/);
+  assert.match(serviceWorker, /"\.\/src\/ui\.js\?v=49"/);
   assert.match(serviceWorker, /"\.\/src\/state\.js\?v=8"/);
   assert.match(serviceWorker, /"\.\/src\/medleys\.js\?v=8"/);
   assert.match(serviceWorker, /"\.\/data\/medleys\.sample\.json\?v=8"/);
@@ -100,7 +101,10 @@ test("service worker caches only the explicit first-party app shell", () => {
   assert.match(serviceWorker, /"\.\/src\/player-suggestions\.js\?v=4"/);
   assert.match(serviceWorker, /"\.\/src\/player-timing\.js\?v=1"/);
   assert.match(serviceWorker, /"\.\/src\/find-song\.js\?v=2"/);
-  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v112"/);
+  assert.match(serviceWorker, /CACHE_NAME = "kantacue-shell-v114"/);
+  assert.match(index, /styles\/main\.css\?v=50[\s\S]*src\/app\.js\?v=65/);
+  assert.match(serviceWorker, /styles\/main\.css\?v=50/);
+  assert.match(serviceWorker, /src\/app\.js\?v=65/);
   assert.doesNotMatch(serviceWorker, /kantatayo-stage-bg\.png/);
   assert.match(serviceWorker, /LEGACY_CACHE_PREFIX = "kantatayo-"/);
   assert.match(serviceWorker, /key\.startsWith\(LEGACY_CACHE_PREFIX\)/);

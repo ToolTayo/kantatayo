@@ -1,4 +1,4 @@
-import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=48";
+import { focusSongAction, hidePlayer, renderCollections, renderPartyPanel, renderPreferences, renderQueue, renderSongRequests, renderSongSections, setPlayerExpanded, setPlayerFeedbackStatus, setPlayerPreEndVisible, showPlayer, showPlayerError, showPlayerFinished, showPlayerLoading, showPlayerOffline, showPlayerPlaybackState, showPlayerReady, showPlayerSangIt, showPlayerUnavailable, showQueueFinished, showToast, togglePlayerFeedbackReasons, updatePlayerActions } from "./ui.js?v=49";
 import { loadCatalog } from "./catalog.js?v=3";
 import { createDefaultDiscoveryFilters, createQuickFilterState, createSearchIndex } from "./discovery.js?v=6";
 import { addMedleyToQueue, addSongRequest, addSongToQueue, advanceMedleyQueue, advanceQueue, clearMedleyQueue, clearPreferences, clearQueue, completeDailyChallenge, createAppState, getMedleyQueueSnapshot, getQueueSnapshot, markSung, moveQueueItem, moveQueueItemToTop, persistAppState, recordPlaybackFeedback, recordSongPlayed, removeMedleyFromQueue, removeSongFromQueue, selectPreviousMedley, selectPreviousQueueSong, setCatalog, setCurrentMedley, setCurrentSong, setPreferenceValues, setRecentRecommendations, toggleDislike, toggleFavorite, toggleLike } from "./state.js?v=8";
@@ -34,6 +34,7 @@ let selectedCollectionId = getFeaturedCollectionId();
 let installController = null;
 let queueConfirmReturnFocus = null;
 let lastPlaybackErrorSongId = null;
+let playerWasFullscreen = false;
 let sessionState = createDefaultSessionState();
 let medleys = [];
 let playerTimePollTimer = null;
@@ -104,6 +105,11 @@ async function startApp() {
   } catch (error) {
     console.error(error);
     document.querySelector("[data-catalog-loading]")?.remove();
+    const challengeCard = document.querySelector("[data-daily-challenge]");
+    if (challengeCard) {
+      challengeCard.hidden = true;
+      challengeCard.setAttribute("aria-busy", "false");
+    }
     const sections = document.querySelector("[data-song-sections]");
     if (sections) sections.innerHTML = `<div class="empty-state"><div><strong>We could not load the song catalog.</strong><p>Refresh the page to try again.</p></div></div>`;
   }
@@ -182,6 +188,7 @@ function bindEvents() {
   window.addEventListener("offline", updateConnectionStatus);
   window.addEventListener("online", updateConnectionStatus);
   document.addEventListener("fullscreenchange", syncFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", syncFullscreenButton);
   window.addEventListener("hashchange", () => {
     currentView = viewFromHash(window.location.hash);
     render();
@@ -392,6 +399,11 @@ function bindEvents() {
       return;
     }
     if (event.key !== "Escape") return;
+    if (player && getFullscreenElement() === player) {
+      event.preventDefault();
+      void exitPlayerFullscreen();
+      return;
+    }
     if (!document.querySelector("[data-mobile-more]")?.hidden) {
       closeMobileMore();
       return;
@@ -1331,7 +1343,7 @@ async function togglePlayerFullscreen() {
   const button = panel?.querySelector('[data-action="fullscreen-player"]');
   if (!panel || !button) return;
   try {
-    if (document.fullscreenElement) await document.exitFullscreen?.();
+    if (getFullscreenElement() === panel) await exitPlayerFullscreen();
     else if (panel.requestFullscreen) await panel.requestFullscreen();
     else if (panel.webkitRequestFullscreen) panel.webkitRequestFullscreen();
     else { showToast("Full screen is not available here"); return; }
@@ -1342,15 +1354,32 @@ async function togglePlayerFullscreen() {
   syncFullscreenButton();
 }
 
+function getFullscreenElement() {
+  return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+
+async function exitPlayerFullscreen() {
+  const panel = document.querySelector("[data-player-panel]");
+  if (!panel || getFullscreenElement() !== panel) return;
+  try {
+    if (document.exitFullscreen) await document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  } catch (error) {
+    console.info("[KantaCue] Full screen could not be closed by the app.", error);
+  }
+}
+
 function syncFullscreenButton() {
   const button = document.querySelector('[data-action="fullscreen-player"]');
   const panel = document.querySelector("[data-player-panel]");
   if (!button || !panel) return;
-  const supported = Boolean(document.fullscreenEnabled || panel.requestFullscreen || panel.webkitRequestFullscreen);
+  const supported = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled || panel.requestFullscreen || panel.webkitRequestFullscreen);
   button.hidden = !supported;
-  const active = Boolean(document.fullscreenElement);
+  const active = getFullscreenElement() === panel;
   button.setAttribute("aria-label", active ? "Exit full screen player" : "Full screen player");
   button.title = active ? "Exit full screen player" : "Full screen player";
+  if (playerWasFullscreen && !active && !panel.hidden) button.focus({ preventScroll: true });
+  playerWasFullscreen = active;
 }
 
 function toggleQueue() {
@@ -1393,6 +1422,7 @@ function rememberPlayerLauncher(launcher = null) {
 }
 
 function closePlayer({ restoreFocus = true } = {}) {
+  if (getFullscreenElement() === document.querySelector("[data-player-panel]")) void exitPlayerFullscreen();
   stopPlayerTimePolling();
   playerPlaybackHasStarted = false;
   youtubeController?.stop();

@@ -61,6 +61,17 @@ test("Home places the challenge before Continue Singing and hides Continue when 
   assert.match(ui, /sectionElement\.hidden = isRecommended \? false : songs\.length === 0/);
 });
 
+test("Daily Challenge reserves its Home slot during catalog loading to prevent layout shift", () => {
+  assert.match(html, /data-daily-challenge[^>]*aria-busy="true"[\s\S]*?data-daily-loading data-catalog-loading/);
+  assert.match(html, /data-daily-content hidden/);
+  assert.doesNotMatch(html, /<div class="catalog-loading empty-state" data-catalog-loading/);
+  assert.match(ui, /card\.setAttribute\("aria-busy", "false"\)/);
+  assert.match(ui, /if \(loading\) loading\.hidden = true/);
+  assert.match(ui, /if \(content\) content\.hidden = !challenge\.song/);
+  assert.match(css, /\.daily-challenge-card \{[^}]*min-height:\s*12rem/);
+  assert.match(css, /\.daily-challenge-skeleton-art\s*\{[^}]*aspect-ratio:\s*16\s*\/\s*9/);
+});
+
 test("challenge status is announced accessibly and sparse shelves stay bounded", () => {
   assert.match(html, /data-daily-status[^>]*role="status"[^>]*aria-live="polite"/);
   assert.match(html, /data-daily-streak[^>]*>0 days/);
